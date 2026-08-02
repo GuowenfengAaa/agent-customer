@@ -1,0 +1,82 @@
+:root {
+  color-scheme: light;
+  --customer-ink: #17211f;
+  --customer-muted: #6e7976;
+  --customer-line: #e4e9e7;
+  --customer-surface: #ffffff;
+  --customer-bg: #f4f7f6;
+  --customer-primary: #16785c;
+  --customer-primary-dark: #0f5c46;
+  --customer-primary-soft: #e5f3ee;
+  --customer-amber: #a96813;
+  --customer-amber-soft: #fff3df;
+  --customer-coral: #bd554f;
+  --customer-coral-soft: #fae9e7;
+  --customer-blue: #496da8;
+  --customer-blue-soft: #eaf0fa;
+  --customer-shadow: 0 8px 24px rgba(25, 50, 43, 0.08);
+  --customer-header-height: 52px;
+  --customer-bottom-height: 87px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--customer-ink);
+  background: #e8eeec;
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.adm-button-primary {
+  --color: var(--customer-primary);
+  --border-color: var(--customer-primary);
+  --background-color: var(--customer-primary);
+  --text-color: #fff;
+}
+
+.adm-card {
+  --border-radius: 8px;
+}
+
+.adm-nav-bar {
+  --height: 44px;
+  --border-bottom: 1px solid var(--customer-line);
+  background: rgba(246, 248, 247, 0.96);
+}
+
+.adm-button {
+  --border-radius: 7px;
+}
+
+.adm-tab-bar-item-active {
+  color: var(--customer-primary);
+}
+
+@media (min-width: 481px) {
+  body {
+    min-height: 100dvh;
+    padding: 12px 0;
+  }
+}

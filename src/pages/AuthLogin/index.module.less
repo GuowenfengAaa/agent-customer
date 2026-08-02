@@ -1,0 +1,124 @@
+.page {
+  min-height: 100dvh;
+  padding: 0 14px 28px;
+  background: var(--customer-bg);
+}
+
+.glow { display: none; }
+
+.navBar {
+  margin: 0 -14px;
+  background: rgba(246, 248, 247, 0.96);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 15px;
+}
+
+.logo {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  color: #fff;
+  background: var(--customer-primary);
+  border-radius: 8px;
+  box-shadow: 0 7px 18px rgba(23, 79, 65, 0.2);
+  font-size: 21px;
+  font-weight: 850;
+}
+
+.kicker {
+  color: var(--customer-primary);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1px;
+}
+
+h1 {
+  margin: 4px 0;
+  font-size: 23px;
+  line-height: 1.25;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.card {
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  background: var(--customer-surface);
+  box-shadow: var(--customer-shadow);
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.cardHint {
+  margin-top: 5px;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.form {
+  display: grid;
+  gap: 11px;
+  margin-top: 19px;
+}
+
+.input {
+  --font-size: 14px;
+  --background-color: #fafcfb;
+  --border-radius: 7px;
+  padding: 10px 11px;
+  border: 1px solid var(--customer-line);
+}
+
+.passwordRow { position: relative; }
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  padding: 0;
+  color: var(--customer-muted);
+  background: transparent;
+  border: 0;
+  transform: translateY(-50%);
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.links button {
+  padding: 0;
+  color: var(--customer-muted);
+  background: transparent;
+  border: 0;
+  font-size: 12px;
+}
+
+.links button:last-child {
+  color: var(--customer-primary-dark);
+  font-weight: 700;
+}
+
+.footer {
+  margin-top: 20px;
+  color: #87928e;
+  font-size: 10px;
+  text-align: center;
+}

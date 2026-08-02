@@ -1,0 +1,193 @@
+.page {
+  min-height: 100vh;
+  padding: 0 16px 30px;
+  background: var(--customer-bg);
+}
+
+.pageHeading {
+  padding: 18px 0 14px;
+}
+
+.kicker {
+  margin-bottom: 5px;
+  color: var(--customer-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.pageHeading h1 {
+  margin: 0 0 5px;
+  font-size: 23px;
+}
+
+.pageHeading p {
+  margin: 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.orderList {
+  display: grid;
+  gap: 10px;
+}
+
+.orderItem {
+  margin: 0;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.orderHead,
+.orderActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.orderHead {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--customer-line);
+  font-size: 13px;
+}
+
+.statusPaid { color: var(--customer-primary); font-size: 11px; font-weight: 700; }
+.statusPending { color: var(--customer-amber); font-size: 11px; font-weight: 700; }
+
+.orderMain {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.orderPoster {
+  width: 54px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.posterWarm { background: #8d4d3e; }
+.posterCool { background: #3c567d; }
+
+.orderMain h3 {
+  overflow: hidden;
+  margin: 0 0 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.orderMain p {
+  overflow: hidden;
+  margin: 0 0 4px;
+  color: var(--customer-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+
+.orderActions {
+  margin-top: 10px;
+}
+
+.orderPrice {
+  color: var(--customer-coral);
+  font-size: 17px;
+}
+
+.paymentAmount {
+  padding: 14px 0 20px;
+  color: var(--customer-coral);
+  font-size: 34px;
+  font-weight: 840;
+  text-align: center;
+}
+
+.ticketCard {
+  margin-top: 14px;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.ticketCard h1 {
+  margin: 14px 0 5px;
+  font-size: 21px;
+}
+
+.ticketCard > p {
+  margin: 0 0 14px;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.ticketRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 45px;
+  border-top: 1px solid var(--customer-line);
+  font-size: 13px;
+}
+
+.ticketRow span {
+  color: var(--customer-muted);
+  font-size: 11px;
+}
+
+.emptyTicket {
+  padding: 34px 14px;
+  color: var(--customer-muted);
+  text-align: center;
+  font-size: 12px;
+}
+
+.orderCard {
+  margin-top: 14px;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+h1 {
+  margin: 14px 0 20px;
+  font-size: 21px;
+}
+
+.orderCard p {
+  margin: 0 0 24px;
+  color: var(--customer-muted);
+  line-height: 1.7;
+}
+
+.summary,
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--customer-line);
+  font-size: 13px;
+}
+
+.summary span {
+  color: var(--customer-muted);
+}
+
+.total {
+  margin: 8px 0 22px;
+  border-bottom: 0;
+}
+
+.total strong {
+  color: var(--customer-coral);
+  font-size: 22px;
+}
