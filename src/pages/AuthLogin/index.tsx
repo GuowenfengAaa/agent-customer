@@ -1,33 +1,94 @@
-import { Button, Card, Input, NavBar, Toast } from 'antd-mobile';
-import { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons';
+import { Button, Input, Toast } from 'antd-mobile';
+import {
+  EyeInvisibleOutline,
+  EyeOutline,
+  LockOutline,
+  MailOutline,
+  UserOutline,
+} from 'antd-mobile-icons';
 import { history } from '@umijs/max';
-import React, { useState } from 'react';
-import { login } from '@/services/auth';
+import React, { useEffect, useState } from 'react';
+import { login, loginByEmail, sendEmailCode } from '@/services/auth';
 import styles from './index.module.less';
 
+type LoginMode = 'password' | 'email';
+
 const AuthLogin: React.FC = () => {
+  const [mode, setMode] = useState<LoginMode>('password');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [agreed, setAgreed] = useState(false);
 
-  const submit = async () => {
-    if (!/^1\d{10}$/.test(phone.trim())) {
-      Toast.show({ content: '请输入正确的手机号' });
+  useEffect(() => {
+    if (cooldown <= 0) return undefined;
+    const timer = window.setTimeout(() => setCooldown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
+
+  const normalizedEmail = email.trim();
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
+
+  const requestCode = async () => {
+    if (!isValidEmail) {
+      Toast.show({ content: '请输入正确的邮箱地址' });
       return;
     }
-    if (!password.trim()) {
-      Toast.show({ content: '请输入密码' });
+
+    setSendingCode(true);
+    try {
+      await sendEmailCode(normalizedEmail, 2);
+      setCooldown(60);
+      Toast.show({ content: '验证码已发送，请查收邮件' });
+    } catch (error) {
+      Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败，请稍后重试' });
+    } finally {
+      setSendingCode(false);
+    }
+  };
+
+  const submit = async () => {
+    if (!agreed) {
+      Toast.show({ content: '请先同意《用户协议》和《隐私政策》' });
       return;
+    }
+
+    if (mode === 'password') {
+      if (!/^1\d{10}$/.test(phone.trim())) {
+        Toast.show({ content: '请输入正确的手机号' });
+        return;
+      }
+      if (!password.trim()) {
+        Toast.show({ content: '请输入密码' });
+        return;
+      }
+    } else {
+      if (!isValidEmail) {
+        Toast.show({ content: '请输入正确的邮箱地址' });
+        return;
+      }
+      if (!/^\d{6}$/.test(code.trim())) {
+        Toast.show({ content: '请输入 6 位邮箱验证码' });
+        return;
+      }
     }
 
     setLoading(true);
     try {
-      await login(phone.trim(), password);
+      if (mode === 'password') {
+        await login(phone.trim(), password);
+      } else {
+        await loginByEmail(normalizedEmail, code.trim());
+      }
       const redirect = new URLSearchParams(window.location.search).get('redirect');
       history.replace(redirect ? decodeURIComponent(redirect) : '/home');
     } catch (error) {
-      Toast.show({ content: error instanceof Error ? error.message : '登录失败，请稍后再试' });
+      Toast.show({ content: error instanceof Error ? error.message : '登录失败，请稍后重试' });
     } finally {
       setLoading(false);
     }
@@ -35,45 +96,131 @@ const AuthLogin: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.glow} />
-      <NavBar className={styles.navBar}>登录</NavBar>
-      <div className={styles.hero}>
-        <div className={styles.logo}>M</div>
-        <div>
-          <div className={styles.kicker}>MOVIE TICKET</div>
-          <h1>把好电影，留给好心情</h1>
-          <p>选片、找影院、挑座位，一次完成。</p>
+      <header className={styles.header}>
+        <span className={styles.headerSide} />
+        <span className={styles.appName}>光影票务</span>
+        <span className={styles.headerSide} />
+      </header>
+      <section className={styles.brandPanel}>
+        <div className={styles.brandRow}>
+          <span className={styles.logo}>M</span>
+          <span className={styles.kicker}>MOVIE TICKET</span>
         </div>
-      </div>
-      <Card className={styles.card}>
-        <div className={styles.cardTitle}>欢迎回来</div>
-        <div className={styles.cardHint}>使用手机号登录你的观影账户</div>
+        <h1>好电影，正当时</h1>
+        <p>登录后同步订单、观影偏好和选座草稿。</p>
+        <div className={styles.ticketLine} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      </section>
+      <main className={styles.sheet}>
+        <span className={styles.handle} aria-hidden="true" />
+        <div className={styles.sheetHeading}>
+          <h2>欢迎回来</h2>
+          <p>{mode === 'password' ? '使用手机号和密码登录观影账户' : '使用已注册邮箱的验证码快捷登录'}</p>
+        </div>
+
+        <div className={styles.modeSwitch} role="tablist" aria-label="登录方式">
+          <button
+            className={mode === 'password' ? styles.modeActive : ''}
+            type="button"
+            role="tab"
+            aria-selected={mode === 'password'}
+            onClick={() => setMode('password')}
+          >
+            密码登录
+          </button>
+          <button
+            className={mode === 'email' ? styles.modeActive : ''}
+            type="button"
+            role="tab"
+            aria-selected={mode === 'email'}
+            onClick={() => setMode('email')}
+          >
+            邮箱登录
+          </button>
+        </div>
+
         <div className={styles.form}>
-          <Input
-            className={styles.input}
-            placeholder="手机号"
-            value={phone}
-            onChange={setPhone}
-            clearable
-            type="tel"
-            maxLength={11}
-          />
-          <div className={styles.passwordRow}>
-            <Input
-              className={styles.input}
-              placeholder="密码"
-              value={password}
-              onChange={setPassword}
-              type={visible ? 'text' : 'password'}
-            />
-            <button className={styles.eye} type="button" onClick={() => setVisible((value) => !value)}>
-              {visible ? <EyeOutline /> : <EyeInvisibleOutline />}
-            </button>
-          </div>
-          <Button color="primary" block loading={loading} onClick={submit}>
-            登录
+          {mode === 'password' ? (
+            <>
+              <label className={styles.field}>
+                <span className={styles.fieldIcon}><UserOutline /></span>
+                <Input
+                  className={styles.input}
+                  placeholder="请输入手机号"
+                  value={phone}
+                  onChange={setPhone}
+                  clearable
+                  type="tel"
+                  maxLength={11}
+                />
+              </label>
+              <label className={[styles.field, styles.passwordField].join(' ')}>
+                <span className={styles.fieldIcon}><LockOutline /></span>
+                <Input
+                  className={styles.input}
+                  placeholder="请输入密码"
+                  value={password}
+                  onChange={setPassword}
+                  type={visible ? 'text' : 'password'}
+                />
+                <button
+                  className={styles.eye}
+                  type="button"
+                  title={visible ? '隐藏密码' : '显示密码'}
+                  aria-label={visible ? '隐藏密码' : '显示密码'}
+                  onClick={() => setVisible((value) => !value)}
+                >
+                  {visible ? <EyeOutline /> : <EyeInvisibleOutline />}
+                </button>
+              </label>
+            </>
+          ) : (
+            <>
+              <label className={styles.field}>
+                <span className={styles.fieldIcon}><MailOutline /></span>
+                <Input
+                  className={styles.input}
+                  placeholder="请输入已注册邮箱"
+                  value={email}
+                  onChange={setEmail}
+                  clearable
+                  type="email"
+                />
+              </label>
+              <div className={styles.codeRow}>
+                <label className={styles.field}>
+                  <span className={styles.fieldIcon}><LockOutline /></span>
+                  <Input
+                    className={styles.input}
+                    placeholder="6 位验证码"
+                    value={code}
+                    onChange={setCode}
+                    inputMode="numeric"
+                    maxLength={6}
+                  />
+                </label>
+                <Button
+                  className={styles.codeButton}
+                  fill="outline"
+                  loading={sendingCode}
+                  disabled={sendingCode || cooldown > 0}
+                  onClick={requestCode}
+                >
+                  {cooldown > 0 ? cooldown + 's 后重发' : '获取验证码'}
+                </Button>
+              </div>
+            </>
+          )}
+
+          <Button className={styles.submit} color="primary" block loading={loading} onClick={submit}>
+            {mode === 'password' ? '登录' : '邮箱验证码登录'}
           </Button>
         </div>
+
         <div className={styles.links}>
           <button type="button" onClick={() => history.push('/auth/forgot-password')}>
             忘记密码
@@ -82,8 +229,39 @@ const AuthLogin: React.FC = () => {
             注册账号
           </button>
         </div>
-      </Card>
-      <div className={styles.footer}>安全登录 · 购票信息仅用于本次服务</div>
+        <label className={styles.agreement}>
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(event) => setAgreed(event.target.checked)}
+          />
+          <span className={styles.checkbox} aria-hidden="true" />
+          <span className={styles.agreementText}>
+            我已阅读并同意
+            <a
+              href="/legal/terms"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                history.push('/legal/terms');
+              }}
+            >
+              《用户协议》
+            </a>
+            和
+            <a
+              href="/legal/privacy"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                history.push('/legal/privacy');
+              }}
+            >
+              《隐私政策》
+            </a>
+          </span>
+        </label>
+      </main>
     </div>
   );
 };

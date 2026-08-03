@@ -13,6 +13,8 @@ export default defineConfig({
     { path: '/auth/login', component: './AuthLogin' },
     { path: '/auth/register', component: './AuthPlaceholder' },
     { path: '/auth/forgot-password', component: './AuthPlaceholder' },
+    { path: '/legal/terms', component: './Legal' },
+    { path: '/legal/privacy', component: './Legal' },
     {
       path: '/home',
       component: './Home',

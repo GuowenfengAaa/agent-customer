@@ -34,9 +34,11 @@ const Poster: React.FC<{ movie: MovieSummary; index: number; compact?: boolean }
 
 const Home: React.FC = () => {
   const { city, setMode } = useAppStore();
-  const movieQuery = useQuery({ queryKey: queryKeys.movies({ page: 1, size: 20 }), queryFn: () => customerApi.listMovies({ page: 1, size: 20 }) });
+  const movieQuery = useQuery({ queryKey: queryKeys.movies({ page: 1, size: 10 }), queryFn: () => customerApi.listMovies({ page: 1, size: 10 }) });
   const cinemaQuery = useQuery({ queryKey: queryKeys.cinemas({ city }), queryFn: () => customerApi.listCinemas({ page: 1, size: 20 }) });
   const movies = movieQuery.data?.records?.length ? movieQuery.data.records : fallbackMovies;
+  const movieTotal = Math.max(movieQuery.data?.total || 0, movies.length);
+  const hotMovies = movies.slice(0, 10);
   const cinemas = cinemaQuery.data?.records?.length ? cinemaQuery.data.records.slice(0, 2) : [];
   const nearby = cinemas.length ? cinemas : [
     { id: 'cinema-1', name: '万达影城 · 五角场店', address: 'IMAX · 杜比', distance: 2.1, minPrice: 45 },
@@ -73,8 +75,27 @@ const Home: React.FC = () => {
       </div>
 
       <section className={styles.homeBand} id="hotBand">
-        <div className={styles.bandHead}><div><h2>热映电影</h2><p>今天 {city} · 按口碑推荐</p></div><button type="button" onClick={() => history.push('/movies')}>全部 {movies.length} 部 ›</button></div>
-        <div className={styles.posterScroller}>{movies.slice(0, 3).map((movie, index) => <button key={movie.id} type="button" className={styles.compactMovie} onClick={() => history.push(`/movies/${movie.id}`)}><Poster movie={movie} index={index} compact /><strong>{movie.title}</strong><span>¥{movie.score ? Math.round(movie.score * 5) : 35} 起</span></button>)}</div>
+        <div className={styles.bandHead}><div><h2>热映电影</h2><p>今天 {city} · 按口碑推荐</p></div><button type="button" onClick={() => history.push('/movies')}>全部 {movieTotal} 部 ›</button></div>
+        <div className={styles.posterScroller}>
+          {hotMovies.map((movie, index) => (
+            <button key={movie.id} type="button" className={styles.compactMovie} onClick={() => history.push(`/movies/${movie.id}`)}>
+              <Poster movie={movie} index={index} />
+              <strong>{movie.title}</strong>
+              <span>¥{movie.score ? Math.round(movie.score * 5) : 35} 起</span>
+            </button>
+          ))}
+          {movieTotal > hotMovies.length ? (
+            <button type="button" className={styles.viewAllMovie} onClick={() => history.push('/movies')} aria-label={'查看全部 ' + movieTotal + ' 部电影'}>
+              <span className={styles.viewAllPoster}>
+                <strong>查看全部</strong>
+                <small>{movieTotal} 部</small>
+                <i>›</i>
+              </span>
+              <strong>更多热映电影</strong>
+              <span>完整片单</span>
+            </button>
+          ) : null}
+        </div>
       </section>
 
       <section className={styles.homeBand} id="dealBand">

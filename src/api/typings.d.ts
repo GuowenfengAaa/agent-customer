@@ -153,6 +153,11 @@ declare namespace API {
     orderId?: number;
   };
 
+  type EmailLoginDTO = {
+    email: string;
+    code: string;
+  };
+
   type HallBriefVO = {
     id?: number;
     name?: string;
@@ -345,6 +350,7 @@ declare namespace API {
     description?: string;
     cast?: string;
     releaseDate?: string;
+    status?: "COMING_SOON" | "NOW_SHOWING" | "OFFLINE";
   };
 
   type MovieVO = {
@@ -490,7 +496,6 @@ declare namespace API {
     email: string;
     password: string;
     code: string;
-    agreeAgreement?: boolean;
   };
 
   type ResetPasswordDTO = {
