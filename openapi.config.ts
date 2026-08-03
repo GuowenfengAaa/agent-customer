@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const config = {
   requestLibPath: "import request from '@/services/openapiRequest'",
-  schemaPath: 'http://localhost:8080/v3/api-docs',
+  schemaPath: process.env.OPENAPI_SCHEMA_URL ?? 'http://localhost:8080/v3/api-docs',
   serversPath: './src',
 };
 

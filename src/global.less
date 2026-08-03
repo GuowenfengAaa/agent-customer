@@ -66,6 +66,31 @@ a {
   background: rgba(246, 248, 247, 0.96);
 }
 
+.adm-nav-bar-back {
+  margin-right: 12px;
+  padding: 4px 0;
+}
+
+.adm-nav-bar-back-arrow {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  margin-right: 5px;
+  color: #fff;
+  background: var(--customer-primary-dark);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(15, 92, 70, 0.24);
+  font-size: 20px;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.adm-nav-bar-back:active .adm-nav-bar-back-arrow {
+  background: var(--customer-primary);
+  transform: scale(0.92);
+}
+
 .adm-button {
   --border-radius: 7px;
 }

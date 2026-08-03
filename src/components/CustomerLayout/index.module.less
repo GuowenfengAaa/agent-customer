@@ -20,20 +20,13 @@
 
 .topRow {
   display: grid;
-  height: var(--customer-header-height);
-  grid-template-columns: 88px 1fr 88px;
+  height: 42px;
+  grid-template-columns: 1fr;
   align-items: center;
-  padding: 8px 14px 4px;
+  padding: 3px 14px 1px;
 }
 
-.brand {
-  font-size: 17px;
-  font-weight: 760;
-  text-align: center;
-}
-
-.cityButton,
-.orderEntry {
+.cityButton {
   min-height: 36px;
   padding: 0 4px;
   color: var(--customer-ink);
@@ -58,28 +51,8 @@
   line-height: 1;
 }
 
-.orderEntry {
-  display: flex;
-  align-items: center;
-  justify-self: end;
-  gap: 5px;
-  color: #3f4c49;
-  font-size: 13px;
-}
-
-.ticketMark {
-  display: grid;
-  width: 23px;
-  height: 18px;
-  place-items: center;
-  color: var(--customer-primary-dark);
-  border: 1.5px solid currentColor;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
 .content {
-  min-height: calc(100% - var(--customer-header-height));
+  min-height: calc(100% - 42px);
   padding-bottom: calc(var(--customer-bottom-height) + 12px);
 }
 

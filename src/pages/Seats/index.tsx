@@ -1,11 +1,12 @@
 import { Button, Card, NavBar, Toast } from 'antd-mobile';
-import { history, useParams } from '@umijs/max';
+import { history, useLocation, useParams } from '@umijs/max';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
 import type { SeatSummary } from '@/types/domain';
+import { getPosterThumbnailUrl } from '@/utils/poster';
 import styles from './index.module.less';
 
 const fallbackRows: Array<{ rowNo: number; seats: SeatSummary[] }> = Array.from({ length: 7 }, (_, row) => ({
@@ -24,7 +25,14 @@ const isBlocked = (status: SeatSummary['status']) => status === 'LOCKED' || stat
 
 const Seats: React.FC = () => {
   const { showtimeId = '' } = useParams<{ showtimeId: string }>();
+  const location = useLocation();
+  const movieId = new URLSearchParams(location.search).get('movieId') || '';
   const isRemoteShowtime = /^\d+$/.test(showtimeId);
+  const movieQuery = useQuery({
+    queryKey: queryKeys.movie(movieId),
+    queryFn: () => customerApi.getMovie(movieId),
+    enabled: /^\d+$/.test(movieId),
+  });
   const query = useQuery({
     queryKey: queryKeys.seatLayout(showtimeId),
     queryFn: () => customerApi.getSeatLayout(showtimeId),
@@ -79,10 +87,35 @@ const Seats: React.FC = () => {
 
   const title = query.data?.hallName || 'IMAX 厅';
   const time = query.data?.startAt ? dayjs(query.data.startAt).format('HH:mm') : '19:30';
+  const movieName = movieQuery.data?.title || query.data?.movieName;
+  const moviePoster = movieQuery.data?.posterUrl;
 
   return (
     <div className={styles.page}>
       <NavBar onBack={() => history.back()}>选择座位</NavBar>
+      {movieName ? (
+        <section className={styles.movieSummary} aria-label="影片信息">
+          <div className={styles.moviePoster}>
+            <div className={styles.moviePosterFallback}>{movieName.slice(0, 1)}</div>
+            {moviePoster ? (
+              <img
+                src={getPosterThumbnailUrl(moviePoster)}
+                alt={`${movieName}海报`}
+                loading="eager"
+                decoding="async"
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : null}
+          </div>
+          <div className={styles.movieSummaryInfo}>
+            <span className={styles.movieKicker}>NOW BOOKING</span>
+            <strong>{movieName}</strong>
+            <span>{title} · {time}</span>
+          </div>
+        </section>
+      ) : null}
       <div className={styles.info}>
         <div>
           <div className={styles.kicker}>SEAT MAP</div>

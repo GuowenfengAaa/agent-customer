@@ -4,6 +4,75 @@
   background: var(--customer-bg);
 }
 
+.movieSummary {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin: 8px 0 2px;
+  padding: 10px 12px;
+  overflow: hidden;
+  color: #f7fbf9;
+  background: linear-gradient(135deg, #203d34, #152b25);
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(25, 58, 47, 0.15);
+}
+
+.moviePoster {
+  position: relative;
+  width: 54px;
+  height: 76px;
+  overflow: hidden;
+  background: #49695e;
+  border-radius: 8px;
+}
+
+.moviePosterFallback,
+.moviePoster img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.moviePosterFallback {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.moviePoster img {
+  z-index: 1;
+  object-fit: cover;
+}
+
+.movieSummaryInfo {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.movieSummaryInfo strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+.movieSummaryInfo > span:last-child {
+  color: rgba(247, 251, 249, 0.66);
+  font-size: 11px;
+}
+
+.movieKicker {
+  color: #a9d6c4;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
 .header {
   display: flex;
   align-items: flex-end;
@@ -33,6 +102,32 @@ h1 {
 .list {
   display: grid;
   gap: 10px;
+}
+
+.stateCard,
+.emptyCard {
+  margin-bottom: 12px;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.stateCard strong,
+.emptyCard strong {
+  color: var(--customer-ink);
+  font-size: 15px;
+}
+
+.stateCard p,
+.emptyCard p {
+  margin: 8px 0 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.emptyCard {
+  padding: 18px;
+  text-align: center;
 }
 
 .showtimeCard {

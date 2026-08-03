@@ -3,11 +3,166 @@
   padding: 0 14px 30px;
 }
 
+.movieSummary {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 10px;
+  margin: 9px 0 10px;
+  padding: 9px;
+  overflow: hidden;
+  color: #fff;
+  background: #454545;
+  border: 1px solid #5b5b5b;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(27, 30, 29, 0.16);
+}
+
+.moviePoster {
+  position: relative;
+  width: 82px;
+  height: 116px;
+  overflow: hidden;
+  background: #263e3a;
+  border-radius: 7px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.22);
+}
+
+.moviePosterFallback,
+.moviePoster img {
+  width: 100%;
+  height: 100%;
+}
+
+.moviePosterFallback {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.moviePoster img {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+}
+
+.movieSummaryInfo {
+  min-width: 0;
+}
+
+.movieKicker {
+  color: #c1e4d7;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.movieSummaryInfo strong {
+  display: block;
+  overflow: hidden;
+  margin: 4px 0 1px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movieSubtitle {
+  display: block;
+  margin: 0 0 6px;
+  overflow: hidden;
+  color: #d0d0d0;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movieGenreTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.movieGenreTags span {
+  padding: 2px 5px;
+  color: #d9d9d9;
+  background: #666;
+  border-radius: 3px;
+  font-size: 9px;
+}
+
+.movieSummaryInfo > p {
+  margin: 0 0 6px;
+  color: #d0d0d0;
+  font-size: 10px;
+}
+
+.movieRating {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.movieRating em {
+  color: #ffc226;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.movieRating em small {
+  margin-left: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.movieRating span {
+  color: #e0e0e0;
+  font-size: 10px;
+}
+
+.wantButton {
+  width: 90px;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 7px;
+  padding: 0 10px;
+  color: #fff;
+  background: #858585;
+  border: 0;
+  border-radius: 13px;
+  font-size: 12px;
+}
+
+.wantButton :global(.adm-button-content) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wantButton svg {
+  font-size: 13px;
+}
+
+.movieArrow {
+  align-self: center;
+  color: #d6d6d6;
+  font-size: 19px;
+}
+
 .header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 18px 0 14px;
+  gap: 12px;
+  padding: 12px 0 10px;
 }
 
 .kicker {
@@ -19,13 +174,37 @@
 
 h1 {
   margin: 5px 0 0;
-  font-size: 25px;
+  font-size: 23px;
 }
 
-.stateCard {
+.header p {
+  margin: 5px 0 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+}
+
+.stateCard,
+.emptyCard {
   margin-bottom: 12px;
   border: 1px solid var(--customer-line);
   border-radius: 8px;
+  box-shadow: none;
+}
+
+.emptyCard {
+  padding: 18px;
+  text-align: center;
+}
+
+.emptyCard strong {
+  color: var(--customer-ink);
+  font-size: 15px;
+}
+
+.emptyCard p {
+  margin: 8px 0 0;
+  color: var(--customer-muted);
+  font-size: 12px;
 }
 
 .list {
@@ -41,8 +220,8 @@ h1 {
 
 .tags {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 6px;
 }
 
 .tags span {
@@ -51,4 +230,55 @@ h1 {
   background: var(--customer-primary-soft);
   border-radius: 6px;
   font-size: 11px;
+}
+
+.sessionSummary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 3px;
+}
+
+.sessionSummary > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sessionSummary strong {
+  color: var(--customer-ink);
+  font-size: 13px;
+}
+
+.sessionSummary span {
+  overflow: hidden;
+  color: var(--customer-primary-dark);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionSummary em {
+  flex: 0 0 auto;
+  color: var(--customer-coral);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+@media (max-width: 360px) {
+  .movieSummary {
+    grid-template-columns: 82px minmax(0, 1fr) 16px;
+    gap: 10px;
+  }
+
+  .moviePoster {
+    width: 82px;
+    height: 118px;
+  }
+
+  .movieSummaryInfo strong {
+    font-size: 19px;
+  }
 }
