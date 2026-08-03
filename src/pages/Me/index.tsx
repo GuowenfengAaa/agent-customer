@@ -17,6 +17,14 @@ const Me: React.FC = () => {
     enabled: location.pathname === '/me',
   });
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      history.replace('/auth/login');
+    }
+  };
+
   if (location.pathname !== '/me') {
     return <PagePlaceholder eyebrow="ACCOUNT" title="账号设置" description="偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。" primaryLabel="返回我的" primaryPath="/me" />;
   }
@@ -42,7 +50,7 @@ const Me: React.FC = () => {
         <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>
         <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>
       </List>
-      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>
+      <Button className={styles.logout} block onClick={handleLogout}>退出登录</Button>
       <Space justify="center" block className={styles.note}>当前会话由后端 Token 管理</Space>
     </div>
   );

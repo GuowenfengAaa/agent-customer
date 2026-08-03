@@ -1,6 +1,7 @@
-import { Button, Card, Input, NavBar, Space, Toast } from 'antd-mobile';
+import { Button, Input, Toast } from 'antd-mobile';
+import { EyeInvisibleOutline, EyeOutline, LeftOutline, LockOutline, MailOutline, UserOutline } from 'antd-mobile-icons';
 import { history, useLocation } from '@umijs/max';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';
 import styles from './index.module.less';
 
@@ -12,17 +13,31 @@ const AuthPlaceholder: React.FC = () => {
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (cooldown <= 0) return undefined;
+    const timer = window.setTimeout(() => setCooldown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
 
   const requestCode = async () => {
-    if (!email.trim()) {
-      Toast.show({ content: '请先填写邮箱' });
+    const normalizedEmail = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      Toast.show({ content: '请输入正确的邮箱地址' });
       return;
     }
+    setSendingCode(true);
     try {
-      await sendEmailCode(email.trim(), isRegister ? 0 : 1);
+      await sendEmailCode(normalizedEmail, isRegister ? 0 : 1);
+      setCooldown(60);
       Toast.show({ content: '验证码已发送，请查收邮件（也请检查垃圾邮件）' });
     } catch (error) {
       Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败' });
+    } finally {
+      setSendingCode(false);
     }
   };
 
@@ -50,23 +65,88 @@ const AuthPlaceholder: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <NavBar onBack={() => history.push('/auth/login')}>智能购票</NavBar>
-      <Card className={styles.card}>
-        <div className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</div>
-        <h1>{isRegister ? '注册账号' : '找回密码'}</h1>
-        <p>{isRegister ? '使用手机号和邮箱验证码创建观影账户。' : '通过邮箱验证码设置新的登录密码。'}</p>
-        <Space direction="vertical" block className={styles.form}>
-          {isRegister ? <Input className={styles.input} placeholder="手机号" value={phone} onChange={setPhone} type="tel" maxLength={11} /> : null}
-          <Input className={styles.input} placeholder="邮箱" value={email} onChange={setEmail} type="email" />
+      <header className={styles.header}>
+        <button className={styles.backButton} type="button" aria-label="返回登录" title="返回登录" onClick={() => history.push('/auth/login')}>
+          <LeftOutline />
+        </button>
+        <span className={styles.appName}>光影票务</span>
+        <span className={styles.headerSide} />
+      </header>
+      <section className={styles.brandPanel}>
+        <div className={styles.brandRow}>
+          <span className={styles.logo}>M</span>
+          <span className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</span>
+        </div>
+        <h1>{isRegister ? '加入光影票务' : '找回登录密码'}</h1>
+        <p>{isRegister ? '完成注册后，随时保存想看的电影和座位。' : '验证邮箱后，为账户设置一个新的登录密码。'}</p>
+        <div className={styles.ticketLine} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      </section>
+      <main className={styles.sheet}>
+        <span className={styles.handle} aria-hidden="true" />
+        <div className={styles.sheetHeading}>
+          <h2>{isRegister ? '创建账户' : '重置密码'}</h2>
+          <p>{isRegister ? '填写信息后即可开始选片和购票。' : '输入邮箱验证码，保护你的账户安全。'}</p>
+        </div>
+        <div className={styles.form}>
+          {isRegister ? (
+            <label className={styles.field}>
+              <span className={styles.fieldIcon}><UserOutline /></span>
+              <Input className={styles.input} placeholder="请输入手机号" value={phone} onChange={setPhone} type="tel" maxLength={11} />
+            </label>
+          ) : null}
+          <label className={styles.field}>
+            <span className={styles.fieldIcon}><MailOutline /></span>
+            <Input className={styles.input} placeholder="请输入邮箱地址" value={email} onChange={setEmail} type="email" />
+          </label>
           <div className={styles.codeRow}>
-            <Input className={styles.input} placeholder="邮箱验证码" value={code} onChange={setCode} />
-            <Button fill="outline" onClick={requestCode}>获取验证码</Button>
+            <label className={styles.field}>
+              <span className={styles.fieldIcon}><MailOutline /></span>
+              <Input className={styles.input} placeholder="邮箱验证码" value={code} onChange={setCode} inputMode="numeric" maxLength={6} />
+            </label>
+            <Button
+              className={styles.codeButton}
+              fill="outline"
+              loading={sendingCode}
+              disabled={sendingCode || cooldown > 0}
+              onClick={requestCode}
+            >
+              {cooldown > 0 ? `${cooldown}s 后重发` : '获取验证码'}
+            </Button>
           </div>
-          <Input className={styles.input} placeholder={isRegister ? '密码（8-32位，含字母和数字）' : '新密码（8-32位，含字母和数字）'} value={password} onChange={setPassword} type="password" />
-          <Button color="primary" block loading={loading} onClick={submit}>{isRegister ? '注册并登录' : '重置密码'}</Button>
-          <Button fill="none" block onClick={() => history.push('/auth/login')}>返回登录</Button>
-        </Space>
-      </Card>
+          <label className={`${styles.field} ${styles.passwordField}`}>
+            <span className={styles.fieldIcon}><LockOutline /></span>
+            <Input
+              className={styles.input}
+              placeholder={isRegister ? '设置登录密码' : '设置新密码'}
+              value={password}
+              onChange={setPassword}
+              type={visible ? 'text' : 'password'}
+            />
+            <button
+              className={styles.eye}
+              type="button"
+              title={visible ? '隐藏密码' : '显示密码'}
+              aria-label={visible ? '隐藏密码' : '显示密码'}
+              onClick={() => setVisible((value) => !value)}
+            >
+              {visible ? <EyeOutline /> : <EyeInvisibleOutline />}
+            </button>
+          </label>
+          <p className={styles.passwordHint}>密码需为 8-32 位，并同时包含字母和数字</p>
+          <Button className={styles.submit} color="primary" block loading={loading} onClick={submit}>
+            {isRegister ? '注册并登录' : '重置密码'}
+          </Button>
+        </div>
+        <button className={styles.loginLink} type="button" onClick={() => history.push('/auth/login')}>
+          {isRegister ? '已有账号，去登录' : '想起密码了，返回登录'}
+        </button>
+        <p className={styles.policy}>{isRegister ? '注册即表示你同意《用户协议》和《隐私政策》' : '验证码仅用于本次密码重置操作'}</p>
+      </main>
     </div>
   );
 };

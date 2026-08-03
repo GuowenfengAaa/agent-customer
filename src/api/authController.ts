@@ -17,6 +17,29 @@ export async function login(
   });
 }
 
+/** 此处后端没有提供注释 POST /api/auth/login/email */
+export async function loginByEmailCode(
+  body: API.EmailLoginDTO,
+  options?: { [key: string]: any }
+) {
+  return request<API.ResultLoginVO>("/api/auth/login/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /api/auth/logout */
+export async function logout(options?: { [key: string]: any }) {
+  return request<API.ResultVoid>("/api/auth/logout", {
+    method: "POST",
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 POST /api/auth/register */
 export async function register(
   body: API.RegisterDTO,

@@ -1,7 +1,8 @@
 .app {
   position: relative;
   width: min(100%, 430px);
-  min-height: 100dvh;
+  height: 100%;
+  min-height: 100%;
   margin: 0 auto;
   overflow: hidden;
   background: var(--customer-bg);
@@ -78,7 +79,7 @@
 }
 
 .content {
-  min-height: calc(100dvh - var(--customer-header-height));
+  min-height: calc(100% - var(--customer-header-height));
   padding-bottom: calc(var(--customer-bottom-height) + 12px);
 }
 
@@ -88,7 +89,7 @@
 
 .bottomNav {
   position: fixed;
-  right: 0;
+  right: auto;
   bottom: 0;
   left: 50%;
   z-index: 46;
@@ -203,23 +204,23 @@
 @media (max-width: 480px) {
   .app {
     width: 100%;
-    min-height: 100dvh;
+    height: 100%;
+    min-height: 100%;
     box-shadow: none;
   }
 }
 
 @media (min-width: 481px) {
   .app {
-    height: min(876px, calc(100dvh - 24px));
-    min-height: 0;
+    height: 100%;
+    min-height: 100%;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: visible;
     border-radius: 45px;
   }
 
   .bottomNav {
-    bottom: max(22px, calc(100dvh - 878px));
-    width: 408px;
+    width: 100%;
     padding-bottom: 21px;
     border-radius: 0 0 44px 44px;
   }

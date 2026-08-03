@@ -1,8 +1,7 @@
-import { Button, Card, ErrorBlock, NavBar, Skeleton } from 'antd-mobile';
+import { Button, ErrorBlock, NavBar, SearchBar, Skeleton, Tag } from 'antd-mobile';
 import { history } from '@umijs/max';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import MobileCard from '@/components/MobileCard';
 import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
 import type { MovieSummary } from '@/types/domain';
@@ -15,50 +14,116 @@ const fallbackMovies: MovieSummary[] = [
 ];
 
 const MoviePoster: React.FC<{ movie: MovieSummary; index: number }> = ({ movie, index }) => (
-  <div className={`${styles.moviePoster} ${styles[`posterTone${index % 4}`]}`}>
-    <strong>{movie.title.slice(0, 2)}</strong>
-    <small>{movie.genre?.split(' / ')[0] || '影片'}</small>
+  <div className={[styles.moviePoster, styles['posterTone' + (index % 4)]].join(' ')}>
+    <div className={styles.posterFallback}>
+      <strong>{movie.title.slice(0, 2)}</strong>
+      <small>{movie.genre?.split(' / ')[0] || '影片'}</small>
+    </div>
+    {movie.posterUrl ? (
+      <img
+        src={movie.posterUrl}
+        alt={movie.title + '海报'}
+        loading="lazy"
+        onError={(event) => {
+          event.currentTarget.style.display = 'none';
+        }}
+      />
+    ) : null}
   </div>
 );
 
 const Movies: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const query = useQuery({
-    queryKey: queryKeys.movies({ keyword }),
-    queryFn: () => customerApi.listMovies({ keyword }),
+    queryKey: queryKeys.movies({ keyword, page: 1, size: 20 }),
+    queryFn: () => customerApi.listMovies({ keyword, page: 1, size: 20 }),
   });
-  const movies = query.data?.records || fallbackMovies;
+  const movies = query.data?.records?.length ? query.data.records : fallbackMovies;
+  const total = Math.max(query.data?.total || 0, movies.length);
+  const openMovie = (movieId: string) => history.push('/movies/' + movieId);
 
   return (
     <div className={styles.page}>
-      <NavBar onBack={() => history.push('/home')}>影片</NavBar>
-      <div className={styles.header}>
-        <div>
-          <div className={styles.kicker}>NOW PLAYING</div>
-          <h1>挑一部想看的</h1>
+      <NavBar className={styles.navBar} onBack={() => history.push('/home')}>热映电影</NavBar>
+
+      <header className={styles.header}>
+        <div className={styles.titleRow}>
+          <div>
+            <div className={styles.kicker}>NOW PLAYING</div>
+            <h1>正在热映</h1>
+          </div>
+          <span className={styles.movieCount}>{total} 部</span>
         </div>
-        <input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="搜索" />
-      </div>
+        <SearchBar
+          className={styles.search}
+          value={keyword}
+          onChange={setKeyword}
+          placeholder="搜索影片名称或类型"
+          clearable
+        />
+      </header>
+
       {query.isLoading ? (
-        <Card className={styles.stateCard}>
+        <div className={styles.loadingList}>
           <Skeleton.Title animated />
-          <Skeleton.Paragraph lineCount={3} animated />
-        </Card>
+          <Skeleton.Paragraph lineCount={5} animated />
+        </div>
       ) : query.isError ? (
-        <ErrorBlock status="default" title="暂时无法连接影片服务" description="先浏览演示内容，接口恢复后会自动刷新。" />
+        <ErrorBlock status="default" title="暂时无法连接影片服务" description="接口恢复后会自动刷新影片列表。" />
       ) : null}
-      <div className={styles.list}>
+
+      <section className={styles.list} aria-label="热映电影列表">
         {movies.map((movie, index) => (
-          <MobileCard key={movie.id} title={movie.title} meta={movie.status || '影片'} media={<MoviePoster movie={movie} index={index} />} onClick={() => history.push(`/movies/${movie.id}`)}>
-            <div className={styles.movieMeta}>
-              <span>{movie.genre || '类型待更新'}</span>
-              <span>{movie.durationMinutes ? `${movie.durationMinutes} 分钟` : '时长待更新'}</span>
-              {movie.score ? <strong>{movie.score.toFixed(1)}</strong> : null}
+          <article
+            className={styles.movieRow}
+            key={movie.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => openMovie(movie.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') openMovie(movie.id);
+            }}
+          >
+            <MoviePoster movie={movie} index={index} />
+
+            <div className={styles.movieInfo}>
+              <div className={styles.movieTitleRow}>
+                <h2>{movie.title}</h2>
+                <Tag className={styles.statusTag} color="success" fill="outline">
+                  {movie.status || '热映中'}
+                </Tag>
+              </div>
+              <p>{movie.genre || '类型待更新'}</p>
+              <p>{movie.durationMinutes ? movie.durationMinutes + ' 分钟' : '时长待更新'}</p>
+              {movie.cast ? <p className={styles.cast}>主演：{movie.cast}</p> : null}
+              <span className={styles.showtimeHint}>
+                {movie.cinemaCount ? movie.cinemaCount + ' 家影院' : '多家影院上映'}
+              </span>
             </div>
-            <Button color="primary" size="small" onClick={(event) => { event.stopPropagation(); history.push(`/movies/${movie.id}`); }}>查看场次</Button>
-          </MobileCard>
+
+            <div className={styles.movieAction}>
+              {movie.score ? (
+                <div className={styles.score}>
+                  <strong>{movie.score.toFixed(1)}</strong>
+                  <small>观众评分</small>
+                </div>
+              ) : (
+                <div className={styles.noScore}>暂无评分</div>
+              )}
+              <Button
+                className={styles.buyButton}
+                size="mini"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openMovie(movie.id);
+                }}
+              >
+                购票
+              </Button>
+            </div>
+          </article>
         ))}
-      </div>
+      </section>
     </div>
   );
 };

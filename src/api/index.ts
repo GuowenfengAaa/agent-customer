@@ -11,6 +11,7 @@ import * as orderController from "./orderController";
 import * as draftController from "./draftController";
 import * as authController from "./authController";
 import * as fileController from "./fileController";
+import * as adminAuthController from "./adminAuthController";
 import * as showtimeUserController from "./showtimeUserController";
 import * as movieUserController from "./movieUserController";
 import * as cinemaUserController from "./cinemaUserController";
@@ -25,6 +26,7 @@ export default {
   draftController,
   authController,
   fileController,
+  adminAuthController,
   showtimeUserController,
   movieUserController,
   cinemaUserController,
