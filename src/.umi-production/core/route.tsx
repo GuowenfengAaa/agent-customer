@@ -4,7 +4,7 @@
 import React from 'react';
 
 export async function getRoutes() {
-  const routes = {"1":{"path":"/","redirect":"/home","id":"1"},"2":{"path":"/auth/login","id":"2"},"3":{"path":"/auth/register","id":"3"},"4":{"path":"/auth/forgot-password","id":"4"},"5":{"path":"/legal/terms","id":"5"},"6":{"path":"/legal/privacy","id":"6"},"7":{"path":"","parentId":"8","id":"7","originPath":"/home"},"8":{"path":"/home","isWrapper":true,"id":"8"},"9":{"path":"","parentId":"10","id":"9","originPath":"/movies"},"10":{"path":"/movies","isWrapper":true,"id":"10"},"11":{"path":"","parentId":"12","id":"11","originPath":"/movies/:movieId"},"12":{"path":"/movies/:movieId","isWrapper":true,"id":"12"},"13":{"path":"","parentId":"14","id":"13","originPath":"/cinemas"},"14":{"path":"/cinemas","isWrapper":true,"id":"14"},"15":{"path":"","parentId":"16","id":"15","originPath":"/cinemas/:cinemaId/showtimes"},"16":{"path":"/cinemas/:cinemaId/showtimes","isWrapper":true,"id":"16"},"17":{"path":"","parentId":"18","id":"17","originPath":"/agent"},"18":{"path":"/agent","isWrapper":true,"id":"18"},"19":{"path":"","parentId":"20","id":"19","originPath":"/showtimes/:showtimeId/seats"},"20":{"path":"/showtimes/:showtimeId/seats","isWrapper":true,"id":"20"},"21":{"path":"","parentId":"22","id":"21","originPath":"/orders/:orderId/confirm"},"22":{"path":"/orders/:orderId/confirm","isWrapper":true,"id":"22"},"23":{"path":"","parentId":"24","id":"23","originPath":"/orders/:orderId/pay"},"24":{"path":"/orders/:orderId/pay","isWrapper":true,"id":"24"},"25":{"path":"","parentId":"26","id":"25","originPath":"/orders/:orderId/tickets"},"26":{"path":"/orders/:orderId/tickets","isWrapper":true,"id":"26"},"27":{"path":"","parentId":"28","id":"27","originPath":"/me"},"28":{"path":"/me","isWrapper":true,"id":"28"},"29":{"path":"","parentId":"30","id":"29","originPath":"/me/orders"},"30":{"path":"/me/orders","isWrapper":true,"id":"30"},"31":{"path":"","parentId":"32","id":"31","originPath":"/me/preferences"},"32":{"path":"/me/preferences","isWrapper":true,"id":"32"},"33":{"path":"","parentId":"34","id":"33","originPath":"/me/security"},"34":{"path":"/me/security","isWrapper":true,"id":"34"}} as const;
+  const routes = {"1":{"path":"/","redirect":"/home","id":"1"},"2":{"path":"/auth/login","id":"2"},"3":{"path":"/auth/register","id":"3"},"4":{"path":"/auth/forgot-password","id":"4"},"5":{"path":"/legal/terms","id":"5"},"6":{"path":"/legal/privacy","id":"6"},"7":{"path":"","parentId":"8","id":"7","originPath":"/home"},"8":{"path":"/home","isWrapper":true,"id":"8"},"9":{"path":"","parentId":"10","id":"9","originPath":"/search"},"10":{"path":"/search","isWrapper":true,"id":"10"},"11":{"path":"","parentId":"12","id":"11","originPath":"/movies"},"12":{"path":"/movies","isWrapper":true,"id":"12"},"13":{"path":"","parentId":"14","id":"13","originPath":"/movies/:movieId"},"14":{"path":"/movies/:movieId","isWrapper":true,"id":"14"},"15":{"path":"","parentId":"16","id":"15","originPath":"/cinemas"},"16":{"path":"/cinemas","isWrapper":true,"id":"16"},"17":{"path":"","parentId":"18","id":"17","originPath":"/cinemas/:cinemaId/showtimes"},"18":{"path":"/cinemas/:cinemaId/showtimes","isWrapper":true,"id":"18"},"19":{"path":"","parentId":"20","id":"19","originPath":"/agent"},"20":{"path":"/agent","isWrapper":true,"id":"20"},"21":{"path":"","parentId":"22","id":"21","originPath":"/showtimes/:showtimeId/seats"},"22":{"path":"/showtimes/:showtimeId/seats","isWrapper":true,"id":"22"},"23":{"path":"","parentId":"24","id":"23","originPath":"/orders/:orderId/confirm"},"24":{"path":"/orders/:orderId/confirm","isWrapper":true,"id":"24"},"25":{"path":"","parentId":"26","id":"25","originPath":"/orders/:orderId/pay"},"26":{"path":"/orders/:orderId/pay","isWrapper":true,"id":"26"},"27":{"path":"","parentId":"28","id":"27","originPath":"/orders/:orderId/tickets"},"28":{"path":"/orders/:orderId/tickets","isWrapper":true,"id":"28"},"29":{"path":"","parentId":"30","id":"29","originPath":"/me"},"30":{"path":"/me","isWrapper":true,"id":"30"},"31":{"path":"","parentId":"32","id":"31","originPath":"/me/orders"},"32":{"path":"/me/orders","isWrapper":true,"id":"32"},"33":{"path":"","parentId":"34","id":"33","originPath":"/me/preferences"},"34":{"path":"/me/preferences","isWrapper":true,"id":"34"},"35":{"path":"","parentId":"36","id":"35","originPath":"/me/security"},"36":{"path":"/me/security","isWrapper":true,"id":"36"}} as const;
   return {
     routes,
     routeComponents: {
@@ -16,32 +16,34 @@ export async function getRoutes() {
 '6': React.lazy(() => import(/* webpackChunkName: "p__Legal__index" */'@/pages/Legal/index.tsx')),
 '7': React.lazy(() => import(/* webpackChunkName: "p__Home__index" */'@/pages/Home/index.tsx')),
 '8': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'9': React.lazy(() => import(/* webpackChunkName: "p__Movies__index" */'@/pages/Movies/index.tsx')),
+'9': React.lazy(() => import(/* webpackChunkName: "p__Search__index" */'@/pages/Search/index.tsx')),
 '10': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'11': React.lazy(() => import(/* webpackChunkName: "p__MovieDetail__index" */'@/pages/MovieDetail/index.tsx')),
+'11': React.lazy(() => import(/* webpackChunkName: "p__Movies__index" */'@/pages/Movies/index.tsx')),
 '12': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'13': React.lazy(() => import(/* webpackChunkName: "p__Cinemas__index" */'@/pages/Cinemas/index.tsx')),
+'13': React.lazy(() => import(/* webpackChunkName: "p__MovieDetail__index" */'@/pages/MovieDetail/index.tsx')),
 '14': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'15': React.lazy(() => import(/* webpackChunkName: "p__CinemaShowtimes__index" */'@/pages/CinemaShowtimes/index.tsx')),
+'15': React.lazy(() => import(/* webpackChunkName: "p__Cinemas__index" */'@/pages/Cinemas/index.tsx')),
 '16': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'17': React.lazy(() => import(/* webpackChunkName: "p__Agent__index" */'@/pages/Agent/index.tsx')),
+'17': React.lazy(() => import(/* webpackChunkName: "p__CinemaShowtimes__index" */'@/pages/CinemaShowtimes/index.tsx')),
 '18': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'19': React.lazy(() => import(/* webpackChunkName: "p__Seats__index" */'@/pages/Seats/index.tsx')),
+'19': React.lazy(() => import(/* webpackChunkName: "p__Agent__index" */'@/pages/Agent/index.tsx')),
 '20': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'21': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
+'21': React.lazy(() => import(/* webpackChunkName: "p__Seats__index" */'@/pages/Seats/index.tsx')),
 '22': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
 '23': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
 '24': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
 '25': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
 '26': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'27': React.lazy(() => import(/* webpackChunkName: "p__Me__index" */'@/pages/Me/index.tsx')),
+'27': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
 '28': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'29': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
+'29': React.lazy(() => import(/* webpackChunkName: "p__Me__index" */'@/pages/Me/index.tsx')),
 '30': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
-'31': React.lazy(() => import(/* webpackChunkName: "p__Me__index" */'@/pages/Me/index.tsx')),
+'31': React.lazy(() => import(/* webpackChunkName: "p__OrderPlaceholder__index" */'@/pages/OrderPlaceholder/index.tsx')),
 '32': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
 '33': React.lazy(() => import(/* webpackChunkName: "p__Me__index" */'@/pages/Me/index.tsx')),
 '34': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
+'35': React.lazy(() => import(/* webpackChunkName: "p__Me__index" */'@/pages/Me/index.tsx')),
+'36': React.lazy(() => import(/* webpackChunkName: "wrappers__customer" */'@/wrappers/customer.tsx')),
 },
   };
 }

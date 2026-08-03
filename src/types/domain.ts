@@ -137,6 +137,7 @@ export interface OrderSummary {
   id: ID;
   orderNo: string;
   movieName?: string;
+  moviePoster?: string;
   cinemaName?: string;
   hallName?: string;
   startAt?: string;
@@ -181,4 +182,11 @@ export interface PageResult<T> {
   total: number;
   page?: number;
   size?: number;
+}
+
+export interface SearchHistorySummary {
+  id: ID;
+  keyword: string;
+  searchCount?: number;
+  lastSearchTime?: string;
 }

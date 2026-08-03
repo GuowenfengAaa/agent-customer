@@ -21,6 +21,11 @@ export default defineConfig({
       wrappers: ['@/wrappers/customer'],
     },
     {
+      path: '/search',
+      component: './Search',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
       path: '/movies',
       component: './Movies',
       wrappers: ['@/wrappers/customer'],
@@ -88,5 +93,6 @@ export default defineConfig({
   ],
   npmClient: 'pnpm',
   hash: true,
+  esbuildMinifyIIFE: true,
   dva: false,
 });

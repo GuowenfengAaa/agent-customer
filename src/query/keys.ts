@@ -8,4 +8,5 @@ export const queryKeys = {
   orders: (filters: object) => ['orders', filters] as const,
   order: (orderId: string) => ['order', orderId] as const,
   profile: ['profile'] as const,
+  searchHistory: (limit = 10) => ['searchHistory', limit] as const,
 };

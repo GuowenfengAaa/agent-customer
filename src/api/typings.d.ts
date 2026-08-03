@@ -241,6 +241,8 @@ declare namespace API {
     status?: string;
     genre?: string;
     keyword?: string;
+    sortBy?: string;
+    sortOrder?: string;
   };
 
   type listParams = {
@@ -652,6 +654,35 @@ declare namespace API {
     code?: number;
     msg?: string;
     data?: UserProfileVO;
+  };
+
+  type SearchHistorySaveDTO = {
+    keyword: string;
+  };
+
+  type SearchHistoryVO = {
+    id?: number;
+    keyword?: string;
+    searchCount?: number;
+    lastSearchTime?: string;
+  };
+
+  type SearchHistoryListVO = SearchHistoryVO[];
+
+  type ResultSearchHistoryListVO = {
+    code?: number;
+    msg?: string;
+    data?: SearchHistoryListVO;
+  };
+
+  type ResultSearchHistoryVO = {
+    code?: number;
+    msg?: string;
+    data?: SearchHistoryVO;
+  };
+
+  type searchHistoryListParams = {
+    limit?: number;
   };
 
   type ResultVoid = {
