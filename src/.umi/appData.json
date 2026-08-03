@@ -37,7 +37,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register",
       "type": "preset",
@@ -50,7 +50,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 47
+        "register": 48
       },
       "enableBy": "register",
       "type": "preset",
@@ -63,7 +63,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 21
+        "register": 24
       },
       "enableBy": "register",
       "type": "preset",
@@ -80,7 +80,7 @@
             0
           ]
         },
-        "register": 9
+        "register": 12
       },
       "enableBy": "register",
       "type": "plugin",
@@ -97,7 +97,7 @@
             3
           ]
         },
-        "register": 4
+        "register": 6
       },
       "enableBy": "register",
       "type": "plugin",
@@ -111,6 +111,9 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -128,10 +131,10 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            18,
-            3,
-            2,
-            7
+            32,
+            4,
+            4,
+            4
           ]
         },
         "register": 3
@@ -148,13 +151,16 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            107
+            132
           ],
           "onGenerateFiles": [
-            3
+            3,
+            39,
+            9,
+            8
           ]
         },
-        "register": 46
+        "register": 39
       },
       "enableBy": "register",
       "type": "plugin",
@@ -168,6 +174,9 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -185,6 +194,7 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
+            0,
             0
           ],
           "onCheck": [
@@ -192,39 +202,11 @@
           ],
           "onPrepareBuildSuccess": [
             0,
-            0,
             0
           ],
           "onCheckCode": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -295,10 +277,11 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            0,
             0
           ]
         },
-        "register": 30
+        "register": 36
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1150,7 +1133,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1184,7 +1167,7 @@
             9
           ]
         },
-        "register": 3
+        "register": 4
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1197,7 +1180,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 95
+        "register": 84
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1210,7 +1193,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 100
+        "register": 111
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1223,7 +1206,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 39
+        "register": 42
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1237,10 +1220,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            0
+            1
           ],
           "addBeforeMiddlewares": [
-            0
+            1
           ],
           "modifyHTMLFavicon": [
             0,
@@ -1264,9 +1247,15 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6
+            5,
+            2,
+            3,
+            2
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1283,7 +1272,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 5
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1303,7 +1292,7 @@
             2
           ]
         },
-        "register": 44
+        "register": 50
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/mock/mock.js",
@@ -1315,7 +1304,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1341,9 +1330,18 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1
+            1,
+            0,
+            0,
+            0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -1375,17 +1373,27 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            3
+            3,
+            0
           ],
           "onGenerateFiles": [
-            93
+            84,
+            21,
+            11,
+            9
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
         },
-        "register": 8
+        "register": 7
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/polyfill/polyfill.js",
@@ -1398,7 +1406,13 @@
       "time": {
         "hooks": {
           "addPolyfillImports": [
-            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1416,7 +1430,10 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            163
+            156,
+            0,
+            0,
+            0
           ]
         },
         "register": 3
@@ -1459,6 +1476,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            1,
+            1,
             1
           ],
           "addBeforeMiddlewares": [
@@ -1479,11 +1499,17 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            32,
-            7
+            33,
+            11,
+            214,
+            4,
+            104,
+            4,
+            99,
+            5
           ]
         },
-        "register": 14
+        "register": 15
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1496,7 +1522,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 5
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1535,10 +1561,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            454
+            444,
+            12,
+            9,
+            7
           ]
         },
-        "register": 13
+        "register": 11
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1568,7 +1597,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 7
+        "register": 6
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1594,7 +1623,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 23
+        "register": 20
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/apiRoute/apiRoute.js",
@@ -1606,7 +1635,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 35
+        "register": 31
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1620,10 +1649,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            4
+            5,
+            1,
+            2,
+            2
           ]
         },
-        "register": 5
+        "register": 3
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/test/test.js",
@@ -1635,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1648,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1349
+        "register": 1406
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1661,7 +1693,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1703,7 +1735,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 12
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/ui/ui.js",
@@ -1728,7 +1760,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config",
       "type": "plugin",
@@ -1753,7 +1785,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 4
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/utoopack/utoopack.js",
@@ -1778,14 +1810,14 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            0,
-            0,
+            27,
+            27,
             0,
             0,
             0
           ]
         },
-        "register": 33
+        "register": 35
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad.js",
@@ -1801,7 +1833,7 @@
             1
           ]
         },
-        "register": 5
+        "register": 6
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1814,7 +1846,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 9
+        "register": 11
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1827,7 +1859,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 53
+        "register": 59
       },
       "enableBy": "register",
       "type": "plugin",
@@ -1841,10 +1873,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            55
+            29
           ]
         },
-        "register": 131
+        "register": 129
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+preset-umi@4.6.84_@t_d75e631d6d3e86b3901c458751a3954d/node_modules/@umijs/preset-umi/dist/commands/dev/dev.js",
@@ -1986,7 +2018,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2012,7 +2044,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2025,7 +2057,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2038,7 +2070,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 1
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2103,7 +2135,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 4
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2116,7 +2148,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 6
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2129,7 +2161,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 16
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2156,7 +2188,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 18
       },
       "type": "plugin",
       "path": "D:/agent-customer/node_modules/.pnpm/@umijs+plugins@4.6.84_@babe_770c40fda4f67efac1642d5b3891f0bb/node_modules/@umijs/plugins/dist/antd.js",
@@ -2168,7 +2200,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 20
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2196,7 +2228,7 @@
       },
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 9
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2209,7 +2241,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 7
+        "register": 8
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2222,7 +2254,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 4
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2235,7 +2267,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2262,6 +2294,9 @@
       "time": {
         "hooks": {
           "addRuntimePluginKey": [
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2302,7 +2337,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2316,10 +2351,16 @@
       "time": {
         "hooks": {
           "addRuntimePluginKey": [
+            0,
+            0,
+            0,
             0
           ],
           "onGenerateFiles": [
-            12
+            12,
+            4,
+            2,
+            2
           ]
         },
         "register": 1
@@ -2361,7 +2402,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 4
       },
       "enableBy": "config",
       "type": "plugin",
@@ -2375,7 +2416,8 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0,
+            0
           ]
         },
         "register": 1
@@ -2395,7 +2437,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register",
       "type": "plugin",
@@ -2462,6 +2504,14 @@
       {
         "path": "/auth/forgot-password",
         "component": "./AuthPlaceholder"
+      },
+      {
+        "path": "/legal/terms",
+        "component": "./Legal"
+      },
+      {
+        "path": "/legal/privacy",
+        "component": "./Legal"
       },
       {
         "path": "/home",
@@ -2618,6 +2668,14 @@
         "component": "./AuthPlaceholder"
       },
       {
+        "path": "/legal/terms",
+        "component": "./Legal"
+      },
+      {
+        "path": "/legal/privacy",
+        "component": "./Legal"
+      },
+      {
         "path": "/home",
         "component": "./Home",
         "wrappers": [
@@ -2735,7 +2793,7 @@
       "file": "@/pages/AuthLogin/index.tsx",
       "id": "2",
       "absPath": "/auth/login",
-      "__content": "import { Button, Card, Input, NavBar, Toast } from 'antd-mobile';\nimport { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons';\nimport { history } from '@umijs/max';\nimport React, { useState } from 'react';\nimport { login } from '@/services/auth';\nimport styles from './index.module.less';\n\nconst AuthLogin: React.FC = () => {\n  const [phone, setPhone] = useState('');\n  const [password, setPassword] = useState('');\n  const [visible, setVisible] = useState(false);\n  const [loading, setLoading] = useState(false);\n\n  const submit = async () => {\n    if (!/^1\\d{10}$/.test(phone.trim())) {\n      Toast.show({ content: '请输入正确的手机号' });\n      return;\n    }\n    if (!password.trim()) {\n      Toast.show({ content: '请输入密码' });\n      return;\n    }\n\n    setLoading(true);\n    try {\n      await login(phone.trim(), password);\n      const redirect = new URLSearchParams(window.location.search).get('redirect');\n      history.replace(redirect ? decodeURIComponent(redirect) : '/home');\n    } catch (error) {\n      Toast.show({ content: error instanceof Error ? error.message : '登录失败，请稍后再试' });\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className={styles.page}>\n      <div className={styles.glow} />\n      <NavBar className={styles.navBar}>登录</NavBar>\n      <div className={styles.hero}>\n        <div className={styles.logo}>M</div>\n        <div>\n          <div className={styles.kicker}>MOVIE TICKET</div>\n          <h1>把好电影，留给好心情</h1>\n          <p>选片、找影院、挑座位，一次完成。</p>\n        </div>\n      </div>\n      <Card className={styles.card}>\n        <div className={styles.cardTitle}>欢迎回来</div>\n        <div className={styles.cardHint}>使用手机号登录你的观影账户</div>\n        <div className={styles.form}>\n          <Input\n            className={styles.input}\n            placeholder=\"手机号\"\n            value={phone}\n            onChange={setPhone}\n            clearable\n            type=\"tel\"\n            maxLength={11}\n          />\n          <div className={styles.passwordRow}>\n            <Input\n              className={styles.input}\n              placeholder=\"密码\"\n              value={password}\n              onChange={setPassword}\n              type={visible ? 'text' : 'password'}\n            />\n            <button className={styles.eye} type=\"button\" onClick={() => setVisible((value) => !value)}>\n              {visible ? <EyeOutline /> : <EyeInvisibleOutline />}\n            </button>\n          </div>\n          <Button color=\"primary\" block loading={loading} onClick={submit}>\n            登录\n          </Button>\n        </div>\n        <div className={styles.links}>\n          <button type=\"button\" onClick={() => history.push('/auth/forgot-password')}>\n            忘记密码\n          </button>\n          <button type=\"button\" onClick={() => history.push('/auth/register')}>\n            注册账号\n          </button>\n        </div>\n      </Card>\n      <div className={styles.footer}>安全登录 · 购票信息仅用于本次服务</div>\n    </div>\n  );\n};\n\nexport default AuthLogin;\n",
+      "__content": "import { Button, Card, Input, NavBar, Toast } from 'antd-mobile';\r\nimport { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons';\r\nimport { history } from '@umijs/max';\r\nimport React, { useState } from 'react';\r\nimport { login } from '@/services/auth';\r\nimport styles from './index.module.less';\r\n\r\nconst AuthLogin: React.FC = () => {\r\n  const [phone, setPhone] = useState('');\r\n  const [password, setPassword] = useState('');\r\n  const [visible, setVisible] = useState(false);\r\n  const [loading, setLoading] = useState(false);\r\n\r\n  const submit = async () => {\r\n    if (!/^1\\d{10}$/.test(phone.trim())) {\r\n      Toast.show({ content: '请输入正确的手机号' });\r\n      return;\r\n    }\r\n    if (!password.trim()) {\r\n      Toast.show({ content: '请输入密码' });\r\n      return;\r\n    }\r\n\r\n    setLoading(true);\r\n    try {\r\n      await login(phone.trim(), password);\r\n      const redirect = new URLSearchParams(window.location.search).get('redirect');\r\n      history.replace(redirect ? decodeURIComponent(redirect) : '/home');\r\n    } catch (error) {\r\n      Toast.show({ content: error instanceof Error ? error.message : '登录失败，请稍后再试' });\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <div className={styles.glow} />\r\n      <NavBar className={styles.navBar}>登录</NavBar>\r\n      <div className={styles.hero}>\r\n        <div className={styles.logo}>M</div>\r\n        <div>\r\n          <div className={styles.kicker}>MOVIE TICKET</div>\r\n          <h1>把好电影，留给好心情</h1>\r\n          <p>选片、找影院、挑座位，一次完成。</p>\r\n        </div>\r\n      </div>\r\n      <Card className={styles.card}>\r\n        <div className={styles.cardTitle}>欢迎回来</div>\r\n        <div className={styles.cardHint}>使用手机号登录你的观影账户</div>\r\n        <div className={styles.form}>\r\n          <Input\r\n            className={styles.input}\r\n            placeholder=\"手机号\"\r\n            value={phone}\r\n            onChange={setPhone}\r\n            clearable\r\n            type=\"tel\"\r\n            maxLength={11}\r\n          />\r\n          <div className={styles.passwordRow}>\r\n            <Input\r\n              className={styles.input}\r\n              placeholder=\"密码\"\r\n              value={password}\r\n              onChange={setPassword}\r\n              type={visible ? 'text' : 'password'}\r\n            />\r\n            <button className={styles.eye} type=\"button\" onClick={() => setVisible((value) => !value)}>\r\n              {visible ? <EyeOutline /> : <EyeInvisibleOutline />}\r\n            </button>\r\n          </div>\r\n          <Button color=\"primary\" block loading={loading} onClick={submit}>\r\n            登录\r\n          </Button>\r\n        </div>\r\n        <div className={styles.links}>\r\n          <button type=\"button\" onClick={() => history.push('/auth/forgot-password')}>\r\n            忘记密码\r\n          </button>\r\n          <button type=\"button\" onClick={() => history.push('/auth/register')}>\r\n            注册账号\r\n          </button>\r\n        </div>\r\n      </Card>\r\n      <div className={styles.footer}>安全登录 · 购票信息仅用于本次服务</div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default AuthLogin;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/AuthLogin/index.tsx"
     },
@@ -2744,7 +2802,7 @@
       "file": "@/pages/AuthPlaceholder/index.tsx",
       "id": "3",
       "absPath": "/auth/register",
-      "__content": "import { Button, Card, Input, NavBar, Space, Toast } from 'antd-mobile';\nimport { history, useLocation } from '@umijs/max';\nimport React, { useState } from 'react';\nimport { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';\nimport styles from './index.module.less';\n\nconst AuthPlaceholder: React.FC = () => {\n  const location = useLocation();\n  const isRegister = location.pathname.endsWith('register');\n  const [phone, setPhone] = useState('');\n  const [email, setEmail] = useState('');\n  const [password, setPassword] = useState('');\n  const [code, setCode] = useState('');\n  const [loading, setLoading] = useState(false);\n\n  const requestCode = async () => {\n    if (!email.trim()) {\n      Toast.show({ content: '请先填写邮箱' });\n      return;\n    }\n    try {\n      await sendEmailCode(email.trim(), isRegister ? 0 : 1);\n      Toast.show({ content: '验证码已发送，请查看邮箱或后端日志' });\n    } catch (error) {\n      Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败' });\n    }\n  };\n\n  const submit = async () => {\n    if (!email.trim() || !code.trim() || !password.trim() || (isRegister && !phone.trim())) {\n      Toast.show({ content: '请完整填写表单' });\n      return;\n    }\n    setLoading(true);\n    try {\n      if (isRegister) {\n        await registerAccount({ phone: phone.trim(), email: email.trim(), password, code: code.trim() });\n        Toast.show({ content: '注册成功，请登录' });\n      } else {\n        await resetPassword({ email: email.trim(), code: code.trim(), newPassword: password });\n        Toast.show({ content: '密码已重置，请登录' });\n      }\n      history.replace('/auth/login');\n    } catch (error) {\n      Toast.show({ content: error instanceof Error ? error.message : '操作失败，请稍后重试' });\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className={styles.page}>\n      <NavBar onBack={() => history.push('/auth/login')}>智能购票</NavBar>\n      <Card className={styles.card}>\n        <div className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</div>\n        <h1>{isRegister ? '注册账号' : '找回密码'}</h1>\n        <p>{isRegister ? '使用手机号和邮箱验证码创建观影账户。' : '通过邮箱验证码设置新的登录密码。'}</p>\n        <Space direction=\"vertical\" block className={styles.form}>\n          {isRegister ? <Input className={styles.input} placeholder=\"手机号\" value={phone} onChange={setPhone} type=\"tel\" maxLength={11} /> : null}\n          <Input className={styles.input} placeholder=\"邮箱\" value={email} onChange={setEmail} type=\"email\" />\n          <div className={styles.codeRow}>\n            <Input className={styles.input} placeholder=\"邮箱验证码\" value={code} onChange={setCode} />\n            <Button fill=\"outline\" onClick={requestCode}>获取验证码</Button>\n          </div>\n          <Input className={styles.input} placeholder={isRegister ? '密码（8-32位，含字母和数字）' : '新密码（8-32位，含字母和数字）'} value={password} onChange={setPassword} type=\"password\" />\n          <Button color=\"primary\" block loading={loading} onClick={submit}>{isRegister ? '注册并登录' : '重置密码'}</Button>\n          <Button fill=\"none\" block onClick={() => history.push('/auth/login')}>返回登录</Button>\n        </Space>\n      </Card>\n    </div>\n  );\n};\n\nexport default AuthPlaceholder;\n",
+      "__content": "import { Button, Card, Input, NavBar, Space, Toast } from 'antd-mobile';\r\nimport { history, useLocation } from '@umijs/max';\r\nimport React, { useState } from 'react';\r\nimport { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';\r\nimport styles from './index.module.less';\r\n\r\nconst AuthPlaceholder: React.FC = () => {\r\n  const location = useLocation();\r\n  const isRegister = location.pathname.endsWith('register');\r\n  const [phone, setPhone] = useState('');\r\n  const [email, setEmail] = useState('');\r\n  const [password, setPassword] = useState('');\r\n  const [code, setCode] = useState('');\r\n  const [loading, setLoading] = useState(false);\r\n\r\n  const requestCode = async () => {\r\n    if (!email.trim()) {\r\n      Toast.show({ content: '请先填写邮箱' });\r\n      return;\r\n    }\r\n    try {\r\n      await sendEmailCode(email.trim(), isRegister ? 0 : 1);\r\n      Toast.show({ content: '验证码已发送，请查收邮件（也请检查垃圾邮件）' });\r\n    } catch (error) {\r\n      Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败' });\r\n    }\r\n  };\r\n\r\n  const submit = async () => {\r\n    if (!email.trim() || !code.trim() || !password.trim() || (isRegister && !phone.trim())) {\r\n      Toast.show({ content: '请完整填写表单' });\r\n      return;\r\n    }\r\n    setLoading(true);\r\n    try {\r\n      if (isRegister) {\r\n        await registerAccount({ phone: phone.trim(), email: email.trim(), password, code: code.trim() });\r\n        Toast.show({ content: '注册成功，请登录' });\r\n      } else {\r\n        await resetPassword({ email: email.trim(), code: code.trim(), newPassword: password });\r\n        Toast.show({ content: '密码已重置，请登录' });\r\n      }\r\n      history.replace('/auth/login');\r\n    } catch (error) {\r\n      Toast.show({ content: error instanceof Error ? error.message : '操作失败，请稍后重试' });\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar onBack={() => history.push('/auth/login')}>智能购票</NavBar>\r\n      <Card className={styles.card}>\r\n        <div className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</div>\r\n        <h1>{isRegister ? '注册账号' : '找回密码'}</h1>\r\n        <p>{isRegister ? '使用手机号和邮箱验证码创建观影账户。' : '通过邮箱验证码设置新的登录密码。'}</p>\r\n        <Space direction=\"vertical\" block className={styles.form}>\r\n          {isRegister ? <Input className={styles.input} placeholder=\"手机号\" value={phone} onChange={setPhone} type=\"tel\" maxLength={11} /> : null}\r\n          <Input className={styles.input} placeholder=\"邮箱\" value={email} onChange={setEmail} type=\"email\" />\r\n          <div className={styles.codeRow}>\r\n            <Input className={styles.input} placeholder=\"邮箱验证码\" value={code} onChange={setCode} />\r\n            <Button fill=\"outline\" onClick={requestCode}>获取验证码</Button>\r\n          </div>\r\n          <Input className={styles.input} placeholder={isRegister ? '密码（8-32位，含字母和数字）' : '新密码（8-32位，含字母和数字）'} value={password} onChange={setPassword} type=\"password\" />\r\n          <Button color=\"primary\" block loading={loading} onClick={submit}>{isRegister ? '注册并登录' : '重置密码'}</Button>\r\n          <Button fill=\"none\" block onClick={() => history.push('/auth/login')}>返回登录</Button>\r\n        </Space>\r\n      </Card>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default AuthPlaceholder;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/AuthPlaceholder/index.tsx"
     },
@@ -2753,7 +2811,7 @@
       "file": "@/pages/AuthPlaceholder/index.tsx",
       "id": "4",
       "absPath": "/auth/forgot-password",
-      "__content": "import { Button, Card, Input, NavBar, Space, Toast } from 'antd-mobile';\nimport { history, useLocation } from '@umijs/max';\nimport React, { useState } from 'react';\nimport { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';\nimport styles from './index.module.less';\n\nconst AuthPlaceholder: React.FC = () => {\n  const location = useLocation();\n  const isRegister = location.pathname.endsWith('register');\n  const [phone, setPhone] = useState('');\n  const [email, setEmail] = useState('');\n  const [password, setPassword] = useState('');\n  const [code, setCode] = useState('');\n  const [loading, setLoading] = useState(false);\n\n  const requestCode = async () => {\n    if (!email.trim()) {\n      Toast.show({ content: '请先填写邮箱' });\n      return;\n    }\n    try {\n      await sendEmailCode(email.trim(), isRegister ? 0 : 1);\n      Toast.show({ content: '验证码已发送，请查看邮箱或后端日志' });\n    } catch (error) {\n      Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败' });\n    }\n  };\n\n  const submit = async () => {\n    if (!email.trim() || !code.trim() || !password.trim() || (isRegister && !phone.trim())) {\n      Toast.show({ content: '请完整填写表单' });\n      return;\n    }\n    setLoading(true);\n    try {\n      if (isRegister) {\n        await registerAccount({ phone: phone.trim(), email: email.trim(), password, code: code.trim() });\n        Toast.show({ content: '注册成功，请登录' });\n      } else {\n        await resetPassword({ email: email.trim(), code: code.trim(), newPassword: password });\n        Toast.show({ content: '密码已重置，请登录' });\n      }\n      history.replace('/auth/login');\n    } catch (error) {\n      Toast.show({ content: error instanceof Error ? error.message : '操作失败，请稍后重试' });\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className={styles.page}>\n      <NavBar onBack={() => history.push('/auth/login')}>智能购票</NavBar>\n      <Card className={styles.card}>\n        <div className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</div>\n        <h1>{isRegister ? '注册账号' : '找回密码'}</h1>\n        <p>{isRegister ? '使用手机号和邮箱验证码创建观影账户。' : '通过邮箱验证码设置新的登录密码。'}</p>\n        <Space direction=\"vertical\" block className={styles.form}>\n          {isRegister ? <Input className={styles.input} placeholder=\"手机号\" value={phone} onChange={setPhone} type=\"tel\" maxLength={11} /> : null}\n          <Input className={styles.input} placeholder=\"邮箱\" value={email} onChange={setEmail} type=\"email\" />\n          <div className={styles.codeRow}>\n            <Input className={styles.input} placeholder=\"邮箱验证码\" value={code} onChange={setCode} />\n            <Button fill=\"outline\" onClick={requestCode}>获取验证码</Button>\n          </div>\n          <Input className={styles.input} placeholder={isRegister ? '密码（8-32位，含字母和数字）' : '新密码（8-32位，含字母和数字）'} value={password} onChange={setPassword} type=\"password\" />\n          <Button color=\"primary\" block loading={loading} onClick={submit}>{isRegister ? '注册并登录' : '重置密码'}</Button>\n          <Button fill=\"none\" block onClick={() => history.push('/auth/login')}>返回登录</Button>\n        </Space>\n      </Card>\n    </div>\n  );\n};\n\nexport default AuthPlaceholder;\n",
+      "__content": "import { Button, Card, Input, NavBar, Space, Toast } from 'antd-mobile';\r\nimport { history, useLocation } from '@umijs/max';\r\nimport React, { useState } from 'react';\r\nimport { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';\r\nimport styles from './index.module.less';\r\n\r\nconst AuthPlaceholder: React.FC = () => {\r\n  const location = useLocation();\r\n  const isRegister = location.pathname.endsWith('register');\r\n  const [phone, setPhone] = useState('');\r\n  const [email, setEmail] = useState('');\r\n  const [password, setPassword] = useState('');\r\n  const [code, setCode] = useState('');\r\n  const [loading, setLoading] = useState(false);\r\n\r\n  const requestCode = async () => {\r\n    if (!email.trim()) {\r\n      Toast.show({ content: '请先填写邮箱' });\r\n      return;\r\n    }\r\n    try {\r\n      await sendEmailCode(email.trim(), isRegister ? 0 : 1);\r\n      Toast.show({ content: '验证码已发送，请查收邮件（也请检查垃圾邮件）' });\r\n    } catch (error) {\r\n      Toast.show({ content: error instanceof Error ? error.message : '验证码发送失败' });\r\n    }\r\n  };\r\n\r\n  const submit = async () => {\r\n    if (!email.trim() || !code.trim() || !password.trim() || (isRegister && !phone.trim())) {\r\n      Toast.show({ content: '请完整填写表单' });\r\n      return;\r\n    }\r\n    setLoading(true);\r\n    try {\r\n      if (isRegister) {\r\n        await registerAccount({ phone: phone.trim(), email: email.trim(), password, code: code.trim() });\r\n        Toast.show({ content: '注册成功，请登录' });\r\n      } else {\r\n        await resetPassword({ email: email.trim(), code: code.trim(), newPassword: password });\r\n        Toast.show({ content: '密码已重置，请登录' });\r\n      }\r\n      history.replace('/auth/login');\r\n    } catch (error) {\r\n      Toast.show({ content: error instanceof Error ? error.message : '操作失败，请稍后重试' });\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar onBack={() => history.push('/auth/login')}>智能购票</NavBar>\r\n      <Card className={styles.card}>\r\n        <div className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</div>\r\n        <h1>{isRegister ? '注册账号' : '找回密码'}</h1>\r\n        <p>{isRegister ? '使用手机号和邮箱验证码创建观影账户。' : '通过邮箱验证码设置新的登录密码。'}</p>\r\n        <Space direction=\"vertical\" block className={styles.form}>\r\n          {isRegister ? <Input className={styles.input} placeholder=\"手机号\" value={phone} onChange={setPhone} type=\"tel\" maxLength={11} /> : null}\r\n          <Input className={styles.input} placeholder=\"邮箱\" value={email} onChange={setEmail} type=\"email\" />\r\n          <div className={styles.codeRow}>\r\n            <Input className={styles.input} placeholder=\"邮箱验证码\" value={code} onChange={setCode} />\r\n            <Button fill=\"outline\" onClick={requestCode}>获取验证码</Button>\r\n          </div>\r\n          <Input className={styles.input} placeholder={isRegister ? '密码（8-32位，含字母和数字）' : '新密码（8-32位，含字母和数字）'} value={password} onChange={setPassword} type=\"password\" />\r\n          <Button color=\"primary\" block loading={loading} onClick={submit}>{isRegister ? '注册并登录' : '重置密码'}</Button>\r\n          <Button fill=\"none\" block onClick={() => history.push('/auth/login')}>返回登录</Button>\r\n        </Space>\r\n      </Card>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default AuthPlaceholder;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/AuthPlaceholder/index.tsx"
     },
@@ -2764,7 +2822,7 @@
       "id": "5",
       "absPath": "/home",
       "originPath": "/home",
-      "__content": "import {\n  CouponOutline,\n  EnvironmentOutline,\n  FilterOutline,\n  FireFill,\n  GiftOutline,\n  MovieOutline,\n  UnorderedListOutline,\n  UserSetOutline,\n} from 'antd-mobile-icons';\nimport { SearchBar } from 'antd-mobile';\nimport { history } from '@umijs/max';\nimport { useQuery } from '@tanstack/react-query';\nimport React from 'react';\nimport { useAppStore } from '@/stores/useAppStore';\nimport { customerApi } from '@/services/customerApi';\nimport { queryKeys } from '@/query/keys';\nimport type { MovieSummary } from '@/types/domain';\nimport styles from './index.module.less';\n\nconst fallbackMovies: MovieSummary[] = [\n  { id: 'demo-1', title: '流浪地球 3', genre: '科幻 / 冒险', durationMinutes: 148, score: 9.2, status: '正在热映' },\n  { id: 'demo-2', title: '夏日放映厅', genre: '剧情 / 爱情', durationMinutes: 112, score: 8.6, status: '正在热映' },\n  { id: 'demo-3', title: '午夜列车', genre: '悬疑 / 惊悚', durationMinutes: 105, score: 8.1, status: '正在热映' },\n  { id: 'demo-4', title: '云上小镇', genre: '动画 / 家庭', durationMinutes: 99, score: 9.0, status: '即将上映' },\n];\n\nconst Poster: React.FC<{ movie: MovieSummary; index: number; compact?: boolean }> = ({ movie, index, compact }) => (\n  <div className={compact ? styles.compactPoster : styles.poster}>\n    {movie.posterUrl ? <img src={movie.posterUrl} alt={`${movie.title}海报`} /> : <div className={`${styles.posterArt} ${styles[`posterTone${index % 4}`]}`}><strong>{movie.title.slice(0, 2)}</strong><small>{movie.genre?.split(' / ')[0]}</small></div>}\n    <span className={styles.posterScore}>{movie.score?.toFixed(1)}</span>\n  </div>\n);\n\nconst Home: React.FC = () => {\n  const { city, setMode } = useAppStore();\n  const movieQuery = useQuery({ queryKey: queryKeys.movies({ page: 1, size: 20 }), queryFn: () => customerApi.listMovies({ page: 1, size: 20 }) });\n  const cinemaQuery = useQuery({ queryKey: queryKeys.cinemas({ city }), queryFn: () => customerApi.listCinemas({ page: 1, size: 20 }) });\n  const movies = movieQuery.data?.records?.length ? movieQuery.data.records : fallbackMovies;\n  const cinemas = cinemaQuery.data?.records?.length ? cinemaQuery.data.records.slice(0, 2) : [];\n  const nearby = cinemas.length ? cinemas : [\n    { id: 'cinema-1', name: '万达影城 · 五角场店', address: 'IMAX · 杜比', distance: 2.1, minPrice: 45 },\n    { id: 'cinema-2', name: '百丽宫影城 · 环贸店', address: '杜比 · 情侣厅', distance: 3.1, minPrice: 39 },\n  ];\n  const goAgent = () => {\n    setMode('AI');\n    history.push('/agent');\n  };\n\n  return (\n    <div className={styles.page}>\n      <div className={styles.homeSearchRow}>\n        <SearchBar placeholder=\"搜索影片、类型或影院\" className={styles.search} onFocus={() => history.push('/movies')} />\n        <button className={styles.filterButton} type=\"button\" aria-label=\"筛选\"><FilterOutline /></button>\n      </div>\n\n      <section className={styles.homePromo} onClick={goAgent}>\n        <div>\n          <strong>今晚低价场 · 双人立减</strong>\n          <small>20:00 后精选场次，两张票立减 6 元</small>\n        </div>\n        <div className={styles.promoPosters} aria-hidden=\"true\">\n          {movies.slice(0, 3).map((movie, index) => <Poster key={movie.id} movie={movie} index={index} compact />)}\n        </div>\n      </section>\n\n      <div className={styles.serviceGrid}>\n        <button type=\"button\" onClick={() => document.getElementById('hotBand')?.scrollIntoView({ behavior: 'smooth' })}><span><FireFill /></span>热映</button>\n        <button type=\"button\" onClick={() => document.getElementById('dealBand')?.scrollIntoView({ behavior: 'smooth' })}><span><CouponOutline /></span>低价榜</button>\n        <button type=\"button\" onClick={() => history.push('/cinemas')}><span><EnvironmentOutline /></span>附近影院</button>\n        <button type=\"button\" onClick={() => history.push('/me/orders')}><span><UnorderedListOutline /></span>我的订单</button>\n        <button type=\"button\" onClick={() => history.push('/me')}><span><UserSetOutline /></span>个人信息</button>\n      </div>\n\n      <section className={styles.homeBand} id=\"hotBand\">\n        <div className={styles.bandHead}><div><h2>热映电影</h2><p>今天 {city} · 按口碑推荐</p></div><button type=\"button\" onClick={() => history.push('/movies')}>全部 {movies.length} 部 ›</button></div>\n        <div className={styles.posterScroller}>{movies.slice(0, 3).map((movie, index) => <button key={movie.id} type=\"button\" className={styles.compactMovie} onClick={() => history.push(`/movies/${movie.id}`)}><Poster movie={movie} index={index} compact /><strong>{movie.title}</strong><span>¥{movie.score ? Math.round(movie.score * 5) : 35} 起</span></button>)}</div>\n      </section>\n\n      <section className={styles.homeBand} id=\"dealBand\">\n        <div className={styles.bandHead}><h2>今日值得看</h2><span>实时更新</span></div>\n        <div className={styles.dealGrid}>\n          {movies.slice(0, 2).map((movie, index) => <button key={movie.id} type=\"button\" className={styles.dealItem} onClick={() => history.push(`/movies/${movie.id}`)}><Poster movie={movie} index={index} compact /><span><strong>{index === 0 ? '口碑榜 · ' : '低价场 · '}{movie.title}</strong><small>{movie.score?.toFixed(1)} 分 · ¥{index === 0 ? 35 : 30} 起</small></span><GiftOutline /></button>)}\n        </div>\n      </section>\n\n      <section className={styles.homeBand}>\n        <div className={styles.bandHead}><div><h2>附近影院</h2><p>按当前位置由近到远</p></div><button type=\"button\" onClick={() => history.push('/cinemas')}>查看全部 ›</button></div>\n        <div className={styles.nearbyList}>\n          {nearby.map((cinema) => <button className={styles.nearbyRow} key={cinema.id} type=\"button\" onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}><div><strong>{cinema.name}</strong><span>{cinema.address || '特色影厅'} · {cinema.distance ? `${cinema.distance} km` : '附近'}</span></div><em>¥{cinema.minPrice || 39} 起</em></button>)}\n        </div>\n      </section>\n\n      <section className={styles.homeBand}>\n        <div className={styles.bandHead}><h2>妙语智能购票</h2><button type=\"button\" onClick={goAgent}>进入对话 ›</button></div>\n        <button className={styles.aiBanner} type=\"button\" onClick={goAgent}><span className={styles.aiBannerIcon}><MovieOutline /></span><span><strong>把观影需求交给妙语</strong><small>告诉我时间、位置和预算，帮你筛选合适场次</small></span><span>›</span></button>\n      </section>\n    </div>\n  );\n};\n\nexport default Home;\n",
+      "__content": "import {\r\n  CouponOutline,\r\n  EnvironmentOutline,\r\n  FilterOutline,\r\n  FireFill,\r\n  GiftOutline,\r\n  MovieOutline,\r\n  UnorderedListOutline,\r\n  UserSetOutline,\r\n} from 'antd-mobile-icons';\r\nimport { SearchBar } from 'antd-mobile';\r\nimport { history } from '@umijs/max';\r\nimport { useQuery } from '@tanstack/react-query';\r\nimport React from 'react';\r\nimport { useAppStore } from '@/stores/useAppStore';\r\nimport { customerApi } from '@/services/customerApi';\r\nimport { queryKeys } from '@/query/keys';\r\nimport type { MovieSummary } from '@/types/domain';\r\nimport styles from './index.module.less';\r\n\r\nconst fallbackMovies: MovieSummary[] = [\r\n  { id: 'demo-1', title: '流浪地球 3', genre: '科幻 / 冒险', durationMinutes: 148, score: 9.2, status: '正在热映' },\r\n  { id: 'demo-2', title: '夏日放映厅', genre: '剧情 / 爱情', durationMinutes: 112, score: 8.6, status: '正在热映' },\r\n  { id: 'demo-3', title: '午夜列车', genre: '悬疑 / 惊悚', durationMinutes: 105, score: 8.1, status: '正在热映' },\r\n  { id: 'demo-4', title: '云上小镇', genre: '动画 / 家庭', durationMinutes: 99, score: 9.0, status: '即将上映' },\r\n];\r\n\r\nconst Poster: React.FC<{ movie: MovieSummary; index: number; compact?: boolean }> = ({ movie, index, compact }) => (\r\n  <div className={compact ? styles.compactPoster : styles.poster}>\r\n    {movie.posterUrl ? <img src={movie.posterUrl} alt={`${movie.title}海报`} /> : <div className={`${styles.posterArt} ${styles[`posterTone${index % 4}`]}`}><strong>{movie.title.slice(0, 2)}</strong><small>{movie.genre?.split(' / ')[0]}</small></div>}\r\n    <span className={styles.posterScore}>{movie.score?.toFixed(1)}</span>\r\n  </div>\r\n);\r\n\r\nconst Home: React.FC = () => {\r\n  const { city, setMode } = useAppStore();\r\n  const movieQuery = useQuery({ queryKey: queryKeys.movies({ page: 1, size: 20 }), queryFn: () => customerApi.listMovies({ page: 1, size: 20 }) });\r\n  const cinemaQuery = useQuery({ queryKey: queryKeys.cinemas({ city }), queryFn: () => customerApi.listCinemas({ page: 1, size: 20 }) });\r\n  const movies = movieQuery.data?.records?.length ? movieQuery.data.records : fallbackMovies;\r\n  const cinemas = cinemaQuery.data?.records?.length ? cinemaQuery.data.records.slice(0, 2) : [];\r\n  const nearby = cinemas.length ? cinemas : [\r\n    { id: 'cinema-1', name: '万达影城 · 五角场店', address: 'IMAX · 杜比', distance: 2.1, minPrice: 45 },\r\n    { id: 'cinema-2', name: '百丽宫影城 · 环贸店', address: '杜比 · 情侣厅', distance: 3.1, minPrice: 39 },\r\n  ];\r\n  const goAgent = () => {\r\n    setMode('AI');\r\n    history.push('/agent');\r\n  };\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <div className={styles.homeSearchRow}>\r\n        <SearchBar placeholder=\"搜索影片、类型或影院\" className={styles.search} onFocus={() => history.push('/movies')} />\r\n        <button className={styles.filterButton} type=\"button\" aria-label=\"筛选\"><FilterOutline /></button>\r\n      </div>\r\n\r\n      <section className={styles.homePromo} onClick={goAgent}>\r\n        <div>\r\n          <strong>今晚低价场 · 双人立减</strong>\r\n          <small>20:00 后精选场次，两张票立减 6 元</small>\r\n        </div>\r\n        <div className={styles.promoPosters} aria-hidden=\"true\">\r\n          {movies.slice(0, 3).map((movie, index) => <Poster key={movie.id} movie={movie} index={index} compact />)}\r\n        </div>\r\n      </section>\r\n\r\n      <div className={styles.serviceGrid}>\r\n        <button type=\"button\" onClick={() => document.getElementById('hotBand')?.scrollIntoView({ behavior: 'smooth' })}><span><FireFill /></span>热映</button>\r\n        <button type=\"button\" onClick={() => document.getElementById('dealBand')?.scrollIntoView({ behavior: 'smooth' })}><span><CouponOutline /></span>低价榜</button>\r\n        <button type=\"button\" onClick={() => history.push('/cinemas')}><span><EnvironmentOutline /></span>附近影院</button>\r\n        <button type=\"button\" onClick={() => history.push('/me/orders')}><span><UnorderedListOutline /></span>我的订单</button>\r\n        <button type=\"button\" onClick={() => history.push('/me')}><span><UserSetOutline /></span>个人信息</button>\r\n      </div>\r\n\r\n      <section className={styles.homeBand} id=\"hotBand\">\r\n        <div className={styles.bandHead}><div><h2>热映电影</h2><p>今天 {city} · 按口碑推荐</p></div><button type=\"button\" onClick={() => history.push('/movies')}>全部 {movies.length} 部 ›</button></div>\r\n        <div className={styles.posterScroller}>{movies.slice(0, 3).map((movie, index) => <button key={movie.id} type=\"button\" className={styles.compactMovie} onClick={() => history.push(`/movies/${movie.id}`)}><Poster movie={movie} index={index} compact /><strong>{movie.title}</strong><span>¥{movie.score ? Math.round(movie.score * 5) : 35} 起</span></button>)}</div>\r\n      </section>\r\n\r\n      <section className={styles.homeBand} id=\"dealBand\">\r\n        <div className={styles.bandHead}><h2>今日值得看</h2><span>实时更新</span></div>\r\n        <div className={styles.dealGrid}>\r\n          {movies.slice(0, 2).map((movie, index) => <button key={movie.id} type=\"button\" className={styles.dealItem} onClick={() => history.push(`/movies/${movie.id}`)}><Poster movie={movie} index={index} compact /><span><strong>{index === 0 ? '口碑榜 · ' : '低价场 · '}{movie.title}</strong><small>{movie.score?.toFixed(1)} 分 · ¥{index === 0 ? 35 : 30} 起</small></span><GiftOutline /></button>)}\r\n        </div>\r\n      </section>\r\n\r\n      <section className={styles.homeBand}>\r\n        <div className={styles.bandHead}><div><h2>附近影院</h2><p>按当前位置由近到远</p></div><button type=\"button\" onClick={() => history.push('/cinemas')}>查看全部 ›</button></div>\r\n        <div className={styles.nearbyList}>\r\n          {nearby.map((cinema) => <button className={styles.nearbyRow} key={cinema.id} type=\"button\" onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}><div><strong>{cinema.name}</strong><span>{cinema.address || '特色影厅'} · {cinema.distance ? `${cinema.distance} km` : '附近'}</span></div><em>¥{cinema.minPrice || 39} 起</em></button>)}\r\n        </div>\r\n      </section>\r\n\r\n      <section className={styles.homeBand}>\r\n        <div className={styles.bandHead}><h2>妙语智能购票</h2><button type=\"button\" onClick={goAgent}>进入对话 ›</button></div>\r\n        <button className={styles.aiBanner} type=\"button\" onClick={goAgent}><span className={styles.aiBannerIcon}><MovieOutline /></span><span><strong>把观影需求交给妙语</strong><small>告诉我时间、位置和预算，帮你筛选合适场次</small></span><span>›</span></button>\r\n      </section>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Home;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/Home/index.tsx"
     },
@@ -2785,7 +2843,7 @@
       "id": "7",
       "absPath": "/movies",
       "originPath": "/movies",
-      "__content": "import { Button, Card, ErrorBlock, NavBar, Skeleton } from 'antd-mobile';\nimport { history } from '@umijs/max';\nimport { useQuery } from '@tanstack/react-query';\nimport React, { useState } from 'react';\nimport MobileCard from '@/components/MobileCard';\nimport { customerApi } from '@/services/customerApi';\nimport { queryKeys } from '@/query/keys';\nimport type { MovieSummary } from '@/types/domain';\nimport styles from './index.module.less';\n\nconst fallbackMovies: MovieSummary[] = [\n  { id: 'demo-1', title: '流浪地球 3', genre: '科幻 / 冒险', durationMinutes: 148, score: 9.2, status: '正在热映' },\n  { id: 'demo-2', title: '夏日放映厅', genre: '剧情 / 爱情', durationMinutes: 112, score: 8.6, status: '正在热映' },\n  { id: 'demo-3', title: '午夜列车', genre: '悬疑 / 惊悚', durationMinutes: 105, score: 8.1, status: '即将上映' },\n];\n\nconst MoviePoster: React.FC<{ movie: MovieSummary; index: number }> = ({ movie, index }) => (\n  <div className={`${styles.moviePoster} ${styles[`posterTone${index % 4}`]}`}>\n    <strong>{movie.title.slice(0, 2)}</strong>\n    <small>{movie.genre?.split(' / ')[0] || '影片'}</small>\n  </div>\n);\n\nconst Movies: React.FC = () => {\n  const [keyword, setKeyword] = useState('');\n  const query = useQuery({\n    queryKey: queryKeys.movies({ keyword }),\n    queryFn: () => customerApi.listMovies({ keyword }),\n  });\n  const movies = query.data?.records || fallbackMovies;\n\n  return (\n    <div className={styles.page}>\n      <NavBar onBack={() => history.push('/home')}>影片</NavBar>\n      <div className={styles.header}>\n        <div>\n          <div className={styles.kicker}>NOW PLAYING</div>\n          <h1>挑一部想看的</h1>\n        </div>\n        <input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder=\"搜索\" />\n      </div>\n      {query.isLoading ? (\n        <Card className={styles.stateCard}>\n          <Skeleton.Title animated />\n          <Skeleton.Paragraph lineCount={3} animated />\n        </Card>\n      ) : query.isError ? (\n        <ErrorBlock status=\"default\" title=\"暂时无法连接影片服务\" description=\"先浏览演示内容，接口恢复后会自动刷新。\" />\n      ) : null}\n      <div className={styles.list}>\n        {movies.map((movie, index) => (\n          <MobileCard key={movie.id} title={movie.title} meta={movie.status || '影片'} media={<MoviePoster movie={movie} index={index} />} onClick={() => history.push(`/movies/${movie.id}`)}>\n            <div className={styles.movieMeta}>\n              <span>{movie.genre || '类型待更新'}</span>\n              <span>{movie.durationMinutes ? `${movie.durationMinutes} 分钟` : '时长待更新'}</span>\n              {movie.score ? <strong>{movie.score.toFixed(1)}</strong> : null}\n            </div>\n            <Button color=\"primary\" size=\"small\" onClick={(event) => { event.stopPropagation(); history.push(`/movies/${movie.id}`); }}>查看场次</Button>\n          </MobileCard>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Movies;\n",
+      "__content": "import { Button, Card, ErrorBlock, NavBar, Skeleton } from 'antd-mobile';\r\nimport { history } from '@umijs/max';\r\nimport { useQuery } from '@tanstack/react-query';\r\nimport React, { useState } from 'react';\r\nimport MobileCard from '@/components/MobileCard';\r\nimport { customerApi } from '@/services/customerApi';\r\nimport { queryKeys } from '@/query/keys';\r\nimport type { MovieSummary } from '@/types/domain';\r\nimport styles from './index.module.less';\r\n\r\nconst fallbackMovies: MovieSummary[] = [\r\n  { id: 'demo-1', title: '流浪地球 3', genre: '科幻 / 冒险', durationMinutes: 148, score: 9.2, status: '正在热映' },\r\n  { id: 'demo-2', title: '夏日放映厅', genre: '剧情 / 爱情', durationMinutes: 112, score: 8.6, status: '正在热映' },\r\n  { id: 'demo-3', title: '午夜列车', genre: '悬疑 / 惊悚', durationMinutes: 105, score: 8.1, status: '即将上映' },\r\n];\r\n\r\nconst MoviePoster: React.FC<{ movie: MovieSummary; index: number }> = ({ movie, index }) => (\r\n  <div className={`${styles.moviePoster} ${styles[`posterTone${index % 4}`]}`}>\r\n    <strong>{movie.title.slice(0, 2)}</strong>\r\n    <small>{movie.genre?.split(' / ')[0] || '影片'}</small>\r\n  </div>\r\n);\r\n\r\nconst Movies: React.FC = () => {\r\n  const [keyword, setKeyword] = useState('');\r\n  const query = useQuery({\r\n    queryKey: queryKeys.movies({ keyword }),\r\n    queryFn: () => customerApi.listMovies({ keyword }),\r\n  });\r\n  const movies = query.data?.records || fallbackMovies;\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar onBack={() => history.push('/home')}>影片</NavBar>\r\n      <div className={styles.header}>\r\n        <div>\r\n          <div className={styles.kicker}>NOW PLAYING</div>\r\n          <h1>挑一部想看的</h1>\r\n        </div>\r\n        <input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder=\"搜索\" />\r\n      </div>\r\n      {query.isLoading ? (\r\n        <Card className={styles.stateCard}>\r\n          <Skeleton.Title animated />\r\n          <Skeleton.Paragraph lineCount={3} animated />\r\n        </Card>\r\n      ) : query.isError ? (\r\n        <ErrorBlock status=\"default\" title=\"暂时无法连接影片服务\" description=\"先浏览演示内容，接口恢复后会自动刷新。\" />\r\n      ) : null}\r\n      <div className={styles.list}>\r\n        {movies.map((movie, index) => (\r\n          <MobileCard key={movie.id} title={movie.title} meta={movie.status || '影片'} media={<MoviePoster movie={movie} index={index} />} onClick={() => history.push(`/movies/${movie.id}`)}>\r\n            <div className={styles.movieMeta}>\r\n              <span>{movie.genre || '类型待更新'}</span>\r\n              <span>{movie.durationMinutes ? `${movie.durationMinutes} 分钟` : '时长待更新'}</span>\r\n              {movie.score ? <strong>{movie.score.toFixed(1)}</strong> : null}\r\n            </div>\r\n            <Button color=\"primary\" size=\"small\" onClick={(event) => { event.stopPropagation(); history.push(`/movies/${movie.id}`); }}>查看场次</Button>\r\n          </MobileCard>\r\n        ))}\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Movies;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/Movies/index.tsx"
     },
@@ -2974,7 +3032,7 @@
       "id": "25",
       "absPath": "/me",
       "originPath": "/me",
-      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\nimport { history, useLocation } from '@umijs/max';\nimport { useQuery } from '@tanstack/react-query';\nimport React from 'react';\nimport { currentSession, logout } from '@/services/auth';\nimport { customerApi } from '@/services/customerApi';\nimport { queryKeys } from '@/query/keys';\nimport PagePlaceholder from '@/components/PagePlaceholder';\nimport styles from './index.module.less';\n\nconst Me: React.FC = () => {\n  const location = useLocation();\n  const session = currentSession();\n  const profileQuery = useQuery({\n    queryKey: queryKeys.profile,\n    queryFn: () => customerApi.getProfile(),\n    enabled: location.pathname === '/me',\n  });\n\n  if (location.pathname !== '/me') {\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\n  }\n\n  return (\n    <div className={styles.page}>\n      <NavBar back={null}>我的</NavBar>\n      <Card className={styles.profile}>\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\n        <div className={styles.profileText}>\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\n        </div>\n        <Tag color=\"primary\">已登录</Tag>\n      </Card>\n      <div className={styles.stats}>\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\n      </div>\n      <List className={styles.list} header=\"购票服务\">\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\n      </List>\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\n    </div>\n  );\n};\n\nexport default Me;\n",
+      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\r\nimport { history, useLocation } from '@umijs/max';\r\nimport { useQuery } from '@tanstack/react-query';\r\nimport React from 'react';\r\nimport { currentSession, logout } from '@/services/auth';\r\nimport { customerApi } from '@/services/customerApi';\r\nimport { queryKeys } from '@/query/keys';\r\nimport PagePlaceholder from '@/components/PagePlaceholder';\r\nimport styles from './index.module.less';\r\n\r\nconst Me: React.FC = () => {\r\n  const location = useLocation();\r\n  const session = currentSession();\r\n  const profileQuery = useQuery({\r\n    queryKey: queryKeys.profile,\r\n    queryFn: () => customerApi.getProfile(),\r\n    enabled: location.pathname === '/me',\r\n  });\r\n\r\n  if (location.pathname !== '/me') {\r\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\r\n  }\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar back={null}>我的</NavBar>\r\n      <Card className={styles.profile}>\r\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\r\n        <div className={styles.profileText}>\r\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\r\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\r\n        </div>\r\n        <Tag color=\"primary\">已登录</Tag>\r\n      </Card>\r\n      <div className={styles.stats}>\r\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\r\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\r\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\r\n      </div>\r\n      <List className={styles.list} header=\"购票服务\">\r\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\r\n      </List>\r\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\r\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Me;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/Me/index.tsx"
     },
@@ -3016,7 +3074,7 @@
       "id": "29",
       "absPath": "/me/preferences",
       "originPath": "/me/preferences",
-      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\nimport { history, useLocation } from '@umijs/max';\nimport { useQuery } from '@tanstack/react-query';\nimport React from 'react';\nimport { currentSession, logout } from '@/services/auth';\nimport { customerApi } from '@/services/customerApi';\nimport { queryKeys } from '@/query/keys';\nimport PagePlaceholder from '@/components/PagePlaceholder';\nimport styles from './index.module.less';\n\nconst Me: React.FC = () => {\n  const location = useLocation();\n  const session = currentSession();\n  const profileQuery = useQuery({\n    queryKey: queryKeys.profile,\n    queryFn: () => customerApi.getProfile(),\n    enabled: location.pathname === '/me',\n  });\n\n  if (location.pathname !== '/me') {\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\n  }\n\n  return (\n    <div className={styles.page}>\n      <NavBar back={null}>我的</NavBar>\n      <Card className={styles.profile}>\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\n        <div className={styles.profileText}>\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\n        </div>\n        <Tag color=\"primary\">已登录</Tag>\n      </Card>\n      <div className={styles.stats}>\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\n      </div>\n      <List className={styles.list} header=\"购票服务\">\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\n      </List>\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\n    </div>\n  );\n};\n\nexport default Me;\n",
+      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\r\nimport { history, useLocation } from '@umijs/max';\r\nimport { useQuery } from '@tanstack/react-query';\r\nimport React from 'react';\r\nimport { currentSession, logout } from '@/services/auth';\r\nimport { customerApi } from '@/services/customerApi';\r\nimport { queryKeys } from '@/query/keys';\r\nimport PagePlaceholder from '@/components/PagePlaceholder';\r\nimport styles from './index.module.less';\r\n\r\nconst Me: React.FC = () => {\r\n  const location = useLocation();\r\n  const session = currentSession();\r\n  const profileQuery = useQuery({\r\n    queryKey: queryKeys.profile,\r\n    queryFn: () => customerApi.getProfile(),\r\n    enabled: location.pathname === '/me',\r\n  });\r\n\r\n  if (location.pathname !== '/me') {\r\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\r\n  }\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar back={null}>我的</NavBar>\r\n      <Card className={styles.profile}>\r\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\r\n        <div className={styles.profileText}>\r\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\r\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\r\n        </div>\r\n        <Tag color=\"primary\">已登录</Tag>\r\n      </Card>\r\n      <div className={styles.stats}>\r\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\r\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\r\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\r\n      </div>\r\n      <List className={styles.list} header=\"购票服务\">\r\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\r\n      </List>\r\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\r\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Me;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/Me/index.tsx"
     },
@@ -3037,7 +3095,7 @@
       "id": "31",
       "absPath": "/me/security",
       "originPath": "/me/security",
-      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\nimport { history, useLocation } from '@umijs/max';\nimport { useQuery } from '@tanstack/react-query';\nimport React from 'react';\nimport { currentSession, logout } from '@/services/auth';\nimport { customerApi } from '@/services/customerApi';\nimport { queryKeys } from '@/query/keys';\nimport PagePlaceholder from '@/components/PagePlaceholder';\nimport styles from './index.module.less';\n\nconst Me: React.FC = () => {\n  const location = useLocation();\n  const session = currentSession();\n  const profileQuery = useQuery({\n    queryKey: queryKeys.profile,\n    queryFn: () => customerApi.getProfile(),\n    enabled: location.pathname === '/me',\n  });\n\n  if (location.pathname !== '/me') {\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\n  }\n\n  return (\n    <div className={styles.page}>\n      <NavBar back={null}>我的</NavBar>\n      <Card className={styles.profile}>\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\n        <div className={styles.profileText}>\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\n        </div>\n        <Tag color=\"primary\">已登录</Tag>\n      </Card>\n      <div className={styles.stats}>\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\n      </div>\n      <List className={styles.list} header=\"购票服务\">\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\n      </List>\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\n    </div>\n  );\n};\n\nexport default Me;\n",
+      "__content": "import { Avatar, Button, Card, List, NavBar, Space, Tag } from 'antd-mobile';\r\nimport { history, useLocation } from '@umijs/max';\r\nimport { useQuery } from '@tanstack/react-query';\r\nimport React from 'react';\r\nimport { currentSession, logout } from '@/services/auth';\r\nimport { customerApi } from '@/services/customerApi';\r\nimport { queryKeys } from '@/query/keys';\r\nimport PagePlaceholder from '@/components/PagePlaceholder';\r\nimport styles from './index.module.less';\r\n\r\nconst Me: React.FC = () => {\r\n  const location = useLocation();\r\n  const session = currentSession();\r\n  const profileQuery = useQuery({\r\n    queryKey: queryKeys.profile,\r\n    queryFn: () => customerApi.getProfile(),\r\n    enabled: location.pathname === '/me',\r\n  });\r\n\r\n  if (location.pathname !== '/me') {\r\n    return <PagePlaceholder eyebrow=\"ACCOUNT\" title=\"账号设置\" description=\"偏好设置和安全管理会在这里逐步接入当前后端的个人中心接口。\" primaryLabel=\"返回我的\" primaryPath=\"/me\" />;\r\n  }\r\n\r\n  return (\r\n    <div className={styles.page}>\r\n      <NavBar back={null}>我的</NavBar>\r\n      <Card className={styles.profile}>\r\n        <Avatar className={styles.avatar} src=\"\" fallback={profileQuery.data?.phone?.slice(-2) || session?.phone?.slice(-2) || '我'} />\r\n        <div className={styles.profileText}>\r\n          <h1>{profileQuery.data?.phone || session?.phone || '观影用户'}</h1>\r\n          <p>{profileQuery.data?.email || session?.email || '登录后同步你的订单和观影偏好'}</p>\r\n        </div>\r\n        <Tag color=\"primary\">已登录</Tag>\r\n      </Card>\r\n      <div className={styles.stats}>\r\n        <div><strong>{profileQuery.data?.stats?.totalOrders ?? '--'}</strong><span>历史订单</span></div>\r\n        <div><strong>{profileQuery.data?.stats ? `¥${profileQuery.data.stats.totalSpent.toFixed(0)}` : '--'}</strong><span>累计消费</span></div>\r\n        <div><strong>{profileQuery.data?.preference?.hallType || '未设置'}</strong><span>偏好影厅</span></div>\r\n      </div>\r\n      <List className={styles.list} header=\"购票服务\">\r\n        <List.Item arrow onClick={() => history.push('/me/orders')}>我的订单</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/preferences')}>{profileQuery.data?.preference?.district || '观影偏好'}</List.Item>\r\n        <List.Item arrow onClick={() => history.push('/me/security')}>账号安全</List.Item>\r\n      </List>\r\n      <Button className={styles.logout} block onClick={() => { logout(); history.replace('/auth/login'); }}>退出登录</Button>\r\n      <Space justify=\"center\" block className={styles.note}>当前会话由后端 Token 管理</Space>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Me;\r\n",
       "__isJSFile": true,
       "__absFile": "D:/agent-customer/src/pages/Me/index.tsx"
     },
@@ -3066,6 +3124,13 @@
       "file": "cinemaUserController.ts",
       "absPath": "/cinemaUserController",
       "__content": "// @ts-ignore\n/* eslint-disable */\nimport request from \"@/services/openapiRequest\";\n\n/** 此处后端没有提供注释 GET /api/user/cinemas */\nexport async function list(\n  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)\n  params: API.listParams,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultCinemaPageVO>(\"/api/user/cinemas\", {\n    method: \"GET\",\n    params: {\n      // page has a default value: 1\n      page: \"1\",\n      // size has a default value: 20\n      size: \"20\",\n\n      ...params,\n    },\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 GET /api/user/cinemas/nearby */\nexport async function nearby(\n  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)\n  params: API.nearbyParams,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultCinemaPageVO>(\"/api/user/cinemas/nearby\", {\n    method: \"GET\",\n    params: {\n      // page has a default value: 1\n      page: \"1\",\n      // size has a default value: 20\n      size: \"20\",\n\n      // radius has a default value: 5\n      radius: \"5\",\n      ...params,\n    },\n    ...(options || {}),\n  });\n}\n"
+    },
+    "adminAuthController": {
+      "path": "adminAuthController",
+      "id": "adminAuthController",
+      "file": "adminAuthController.ts",
+      "absPath": "/adminAuthController",
+      "__content": "// @ts-ignore\n/* eslint-disable */\nimport request from \"@/services/openapiRequest\";\n\n/** 此处后端没有提供注释 POST /api/admin/auth/login */\nexport async function login(\n  body: API.LoginDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultLoginVO>(\"/api/admin/auth/login\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n"
     },
     "dashboardController": {
       "path": "dashboardController",
@@ -3128,7 +3193,7 @@
       "id": "authController",
       "file": "authController.ts",
       "absPath": "/authController",
-      "__content": "// @ts-ignore\n/* eslint-disable */\nimport request from \"@/services/openapiRequest\";\n\n/** 此处后端没有提供注释 POST /api/auth/login */\nexport async function login(\n  body: API.LoginDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultLoginVO>(\"/api/auth/login\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/register */\nexport async function register(\n  body: API.RegisterDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/register\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/reset-password */\nexport async function resetPassword(\n  body: API.ResetPasswordDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/reset-password\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/send-code */\nexport async function sendCode(\n  body: API.SendCodeDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/send-code\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n"
+      "__content": "// @ts-ignore\n/* eslint-disable */\nimport request from \"@/services/openapiRequest\";\n\n/** 此处后端没有提供注释 POST /api/auth/login */\nexport async function login(\n  body: API.LoginDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultLoginVO>(\"/api/auth/login\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/login/email */\nexport async function loginByEmailCode(\n  body: API.EmailLoginDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultLoginVO>(\"/api/auth/login/email\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/logout */\nexport async function logout(options?: { [key: string]: any }) {\n  return request<API.ResultVoid>(\"/api/auth/logout\", {\n    method: \"POST\",\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/register */\nexport async function register(\n  body: API.RegisterDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/register\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/reset-password */\nexport async function resetPassword(\n  body: API.ResetPasswordDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/reset-password\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n\n/** 此处后端没有提供注释 POST /api/auth/send-code */\nexport async function sendCode(\n  body: API.SendCodeDTO,\n  options?: { [key: string]: any }\n) {\n  return request<API.ResultVoid>(\"/api/auth/send-code\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n    data: body,\n    ...(options || {}),\n  });\n}\n"
     },
     "fileController": {
       "path": "fileController",
@@ -3149,14 +3214,14 @@
       "id": "typings.d",
       "file": "typings.d.ts",
       "absPath": "/typings/d",
-      "__content": "declare namespace API {\n  type Brief = {\n    id?: number;\n    name?: string;\n    poster?: string;\n  };\n\n  type Budget = {\n    perTicket?: number;\n    total?: number;\n  };\n\n  type cancelParams = {\n    id: number;\n  };\n\n  type CinemaBrief = {\n    id?: number;\n    name?: string;\n    address?: string;\n    distance?: number;\n    services?: string[];\n  };\n\n  type CinemaBriefVO = {\n    id?: number;\n    name?: string;\n  };\n\n  type CinemaCreateDTO = {\n    name: string;\n    address: string;\n    district: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    services?: string[];\n  };\n\n  type CinemaPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: CinemaVO[];\n  };\n\n  type CinemaStatusDTO = {\n    status: \"INACTIVE\" | \"ACTIVE\";\n  };\n\n  type CinemaUpdateDTO = {\n    name?: string;\n    address?: string;\n    district?: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    services?: string[];\n  };\n\n  type CinemaVO = {\n    id?: number;\n    name?: string;\n    address?: string;\n    district?: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    status?: number;\n    statusDesc?: string;\n    services?: string[];\n    minPrice?: number;\n    distance?: number;\n    hallTypes?: string[];\n    hallCount?: number;\n    showtimeCount?: number;\n    createTime?: string;\n  };\n\n  type createSeatParams = {\n    hallId: number;\n  };\n\n  type DailyOrderVO = {\n    date?: string;\n    count?: number;\n    revenue?: number;\n  };\n\n  type DashboardVO = {\n    todayStats?: TodayStatsVO;\n    seatStats?: SeatStatsVO;\n    topMovies?: TopMovieVO[];\n    last7DaysOrders?: DailyOrderVO[];\n  };\n\n  type DateTimeRange = {\n    start?: string;\n    end?: string;\n  };\n\n  type deleteSeatParams = {\n    hallId: number;\n    seatId: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type DraftSaveDTO = {\n    version: number;\n    movieId?: number;\n    cinemaId?: number;\n    dateTime?: DateTimeRange;\n    showtimeId?: number;\n    ticketCount?: number;\n    budget?: Budget;\n    seats?: number[];\n    sourceMode?: string;\n  };\n\n  type DraftVO = {\n    id?: number;\n    version?: number;\n    status?: string;\n    sourceMode?: string;\n    movie?: Brief;\n    cinema?: Brief;\n    dateTime?: DateTimeRange;\n    showtime?: Brief;\n    ticketCount?: number;\n    budget?: Budget;\n    seats?: SeatItem[];\n    clearedFields?: string[];\n    canProceedToSeat?: boolean;\n    orderId?: number;\n  };\n\n  type HallBriefVO = {\n    id?: number;\n    name?: string;\n    hallType?: string;\n  };\n\n  type HallCreateDTO = {\n    cinemaId: number;\n    name: string;\n    hallType: \"IMAX\" | \"DOLBY\" | \"DIGITAL\" | \"FOUR_DX\" | \"NORMAL\";\n  };\n\n  type HallSeatVO = {\n    hallId?: number;\n    hallName?: string;\n    hallType?: string;\n    cinemaName?: string;\n    summary?: Record<string, any>;\n    rows?: RowVO[];\n  };\n\n  type HallUpdateDTO = {\n    name?: string;\n    hallType?: \"IMAX\" | \"DOLBY\" | \"DIGITAL\" | \"FOUR_DX\" | \"NORMAL\";\n  };\n\n  type HallVO = {\n    id?: number;\n    cinemaId?: number;\n    name?: string;\n    hallType?: string;\n    hallTypeDesc?: string;\n    totalSeats?: number;\n    createTime?: string;\n  };\n\n  type listByCinemaParams = {\n    cinemaId: number;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    movieId?: number;\n    cinemaId?: number;\n    date?: string;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    keyword?: string;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    keyword?: string;\n    district?: string;\n    status?: number;\n  };\n\n  type listParams = {\n    movieId?: number;\n    cinemaId?: number;\n    date?: string;\n    hallType?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    status?: string;\n    genre?: string;\n    keyword?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    district?: string;\n    brand?: string;\n    hallType?: string;\n    keyword?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    orderNo?: string;\n    email?: string;\n    movieId?: number;\n    cinemaId?: number;\n    status?: string;\n    startDate?: string;\n    endDate?: string;\n  };\n\n  type LockLogVO = {\n    action?: string;\n    seatId?: number;\n    createTime?: string;\n  };\n\n  type LockResultVO = {\n    orderId?: number;\n    orderNo?: string;\n    amount?: number;\n    expiresAt?: string;\n    remainingSeconds?: number;\n    movie?: MovieBriefVO;\n    cinema?: CinemaBriefVO;\n    hallName?: string;\n    startAt?: string;\n    seats?: SeatInfo[];\n  };\n\n  type LockSeatsDTO = {\n    showtimeId: number;\n    seatIds: number[];\n    draftVersion: number;\n  };\n\n  type LoginDTO = {\n    phone: string;\n    password: string;\n  };\n\n  type LoginVO = {\n    token?: string;\n    user?: Record<string, any>;\n  };\n\n  type MovieBrief = {\n    id?: number;\n    name?: string;\n    poster?: string;\n  };\n\n  type MovieBriefVO = {\n    id?: number;\n    name?: string;\n  };\n\n  type MovieCreateDTO = {\n    name: string;\n    genre: string;\n    duration: number;\n    rating?: number;\n    poster?: string;\n    status: \"COMING_SOON\" | \"NOW_SHOWING\" | \"OFFLINE\";\n    description?: string;\n    cast?: string;\n    releaseDate: string;\n  };\n\n  type MovieGroup = {\n    id?: number;\n    name?: string;\n    poster?: string;\n    duration?: number;\n    showtimes?: ShowtimeItem[];\n  };\n\n  type MoviePageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: MovieVO[];\n  };\n\n  type MovieStatusDTO = {\n    status: \"COMING_SOON\" | \"NOW_SHOWING\" | \"OFFLINE\";\n  };\n\n  type MovieUpdateDTO = {\n    name?: string;\n    genre?: string;\n    duration?: number;\n    rating?: number;\n    poster?: string;\n    description?: string;\n    cast?: string;\n    releaseDate?: string;\n  };\n\n  type MovieVO = {\n    id?: number;\n    name?: string;\n    genre?: string;\n    duration?: number;\n    rating?: number;\n    poster?: string;\n    status?: number;\n    statusDesc?: string;\n    description?: string;\n    cast?: string;\n    releaseDate?: string;\n    showtimeCount?: number;\n    cinemaCount?: number;\n    createTime?: string;\n  };\n\n  type nearbyParams = {\n    page?: number;\n    size?: number;\n    lat: number;\n    lng: number;\n    radius?: number;\n  };\n\n  type OrderDetailVO = {\n    id?: number;\n    orderNo?: string;\n    userId?: number;\n    userEmail?: string;\n    movieName?: string;\n    moviePoster?: string;\n    cinemaName?: string;\n    cinemaAddress?: string;\n    hallName?: string;\n    hallType?: string;\n    language?: string;\n    startAt?: string;\n    endAt?: string;\n    items?: OrderItemVO[];\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    payment?: PaymentInfoVO;\n    tickets?: TicketInfoVO[];\n    seatLockLogs?: LockLogVO[];\n    expiresAt?: string;\n    createTime?: string;\n    updateTime?: string;\n  };\n\n  type OrderItemInfo = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    unitPrice?: number;\n    ticketCode?: string;\n  };\n\n  type OrderItemVO = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    unitPrice?: number;\n    ticketCode?: string;\n  };\n\n  type OrderPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: OrderVO[];\n  };\n\n  type OrderVO = {\n    id?: number;\n    orderNo?: string;\n    userId?: number;\n    userEmail?: string;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    startAt?: string;\n    seatSummary?: string;\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    createTime?: string;\n  };\n\n  type PasswordChangeDTO = {\n    oldPassword: string;\n    newPassword: string;\n  };\n\n  type PayDTO = {\n    idempotencyKey: string;\n  };\n\n  type PaymentInfo = {\n    status?: string;\n    amount?: number;\n    processedAt?: string;\n  };\n\n  type PaymentInfoVO = {\n    status?: string;\n    amount?: number;\n    idempotencyKey?: string;\n    processedAt?: string;\n  };\n\n  type payParams = {\n    id: number;\n  };\n\n  type PayResultVO = {\n    orderId?: number;\n    status?: string;\n    paidAmount?: number;\n    tickets?: TicketItem[];\n  };\n\n  type PreferenceSaveDTO = {\n    district?: string;\n    hallType?: string;\n    budget?: number;\n    seatZone?: string;\n  };\n\n  type PreferenceVO = {\n    district?: string;\n    hallType?: string;\n    budget?: number;\n    budgetRaw?: number;\n    seatZone?: string;\n  };\n\n  type RegisterDTO = {\n    phone: string;\n    email: string;\n    password: string;\n    code: string;\n    agreeAgreement?: boolean;\n  };\n\n  type ResetPasswordDTO = {\n    email: string;\n    code: string;\n    newPassword: string;\n  };\n\n  type ResultCinemaPageVO = {\n    code?: number;\n    msg?: string;\n    data?: CinemaPageVO;\n  };\n\n  type ResultCinemaVO = {\n    code?: number;\n    msg?: string;\n    data?: CinemaVO;\n  };\n\n  type ResultDashboardVO = {\n    code?: number;\n    msg?: string;\n    data?: DashboardVO;\n  };\n\n  type ResultDraftVO = {\n    code?: number;\n    msg?: string;\n    data?: DraftVO;\n  };\n\n  type ResultHallSeatVO = {\n    code?: number;\n    msg?: string;\n    data?: HallSeatVO;\n  };\n\n  type ResultHallVO = {\n    code?: number;\n    msg?: string;\n    data?: HallVO;\n  };\n\n  type ResultListHallVO = {\n    code?: number;\n    msg?: string;\n    data?: HallVO[];\n  };\n\n  type ResultLockResultVO = {\n    code?: number;\n    msg?: string;\n    data?: LockResultVO;\n  };\n\n  type ResultLoginVO = {\n    code?: number;\n    msg?: string;\n    data?: LoginVO;\n  };\n\n  type ResultMoviePageVO = {\n    code?: number;\n    msg?: string;\n    data?: MoviePageVO;\n  };\n\n  type ResultMovieVO = {\n    code?: number;\n    msg?: string;\n    data?: MovieVO;\n  };\n\n  type ResultOrderDetailVO = {\n    code?: number;\n    msg?: string;\n    data?: OrderDetailVO;\n  };\n\n  type ResultOrderPageVO = {\n    code?: number;\n    msg?: string;\n    data?: OrderPageVO;\n  };\n\n  type ResultPayResultVO = {\n    code?: number;\n    msg?: string;\n    data?: PayResultVO;\n  };\n\n  type ResultPreferenceVO = {\n    code?: number;\n    msg?: string;\n    data?: PreferenceVO;\n  };\n\n  type ResultSeatVO = {\n    code?: number;\n    msg?: string;\n    data?: SeatVO;\n  };\n\n  type ResultShowtimeGroupedVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeGroupedVO;\n  };\n\n  type ResultShowtimePageVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimePageVO;\n  };\n\n  type ResultShowtimeSeatLayoutVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeSeatLayoutVO;\n  };\n\n  type ResultShowtimeSeatStatusVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeSeatStatusVO;\n  };\n\n  type ResultShowtimeVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeVO;\n  };\n\n  type ResultUploadResultDTO = {\n    code?: number;\n    msg?: string;\n    data?: UploadResultDTO;\n  };\n\n  type ResultUserOrderDetailVO = {\n    code?: number;\n    msg?: string;\n    data?: UserOrderDetailVO;\n  };\n\n  type ResultUserOrderPageVO = {\n    code?: number;\n    msg?: string;\n    data?: UserOrderPageVO;\n  };\n\n  type ResultUserProfileVO = {\n    code?: number;\n    msg?: string;\n    data?: UserProfileVO;\n  };\n\n  type ResultVoid = {\n    code?: number;\n    msg?: string;\n    data?: Record<string, any>;\n  };\n\n  type RowVO = {\n    rowNo?: number;\n    seats?: SeatItemVO[];\n  };\n\n  type saveSeatLayoutParams = {\n    hallId: number;\n  };\n\n  type SeatCreateDTO = {\n    rowNo: number;\n    seatNo: number;\n    zone: string;\n    seatType: number;\n    status?: number;\n  };\n\n  type SeatInfo = {\n    rowNo?: number;\n    seatNo?: number;\n    price?: number;\n  };\n\n  type SeatItem = {\n    rowNo?: number;\n    seatNo?: number;\n  };\n\n  type SeatItemVO = {\n    id?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: string;\n    status?: string;\n  };\n\n  type SeatLayoutItemDTO = {\n    id?: number;\n    rowNo: number;\n    seatNo: number;\n    zone: string;\n    seatType: number;\n    status?: number;\n  };\n\n  type SeatLayoutSaveDTO = {\n    seats: SeatLayoutItemDTO[];\n  };\n\n\n\n\n  type SeatStatsVO = {\n    soldRate?: number;\n    totalSold?: number;\n    totalAvailable?: number;\n  };\n\n  type SeatUpdateDTO = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: number;\n    status?: number;\n  };\n\n  type SeatVO = {\n    id?: number;\n    hallId?: number;\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: number;\n    seatTypeDesc?: string;\n    status?: number;\n    statusDesc?: string;\n  };\n\n  type SendCodeDTO = {\n    email: string;\n    purpose: number;\n  };\n\n  type ShowtimeCreateDTO = {\n    movieId: number;\n    hallId: number;\n    startAt: string;\n    basePrice: number;\n    language?: string;\n  };\n\n  type ShowtimeGroupedVO = {\n    cinema?: CinemaBrief;\n    movies?: MovieGroup[];\n  };\n\n  type ShowtimeItem = {\n    id?: number;\n    startAt?: string;\n    endAt?: string;\n    language?: string;\n    hallType?: string;\n    hallName?: string;\n    basePrice?: number;\n    remainingSeats?: number;\n    totalSeats?: number;\n    status?: string;\n  };\n\n  type ShowtimePageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: ShowtimeVO[];\n  };\n\n  type ShowtimeSeatLayoutVO = {\n    showtimeId?: number;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    hallType?: string;\n    startAt?: string;\n    basePrice?: number;\n    totalSeats?: number;\n    availableSeats?: number;\n    lockedSeats?: number;\n    soldSeats?: number;\n    unavailableSeats?: number;\n    rows?: RowVO[];\n  };\n\n  type ShowtimeSeatStatusDTO = {\n    seatIds: number[];\n    status: string;\n  };\n\n  type ShowtimeSeatStatusVO = {\n    updatedSeatIds?: number[];\n    skippedSeatIds?: number[];\n    skippedReason?: string;\n  };\n\n  type ShowtimeStatusDTO = {\n    status: \"ON_SALE\" | \"SOLD_OUT\" | \"CANCELLED\";\n  };\n\n  type ShowtimeUpdateDTO = {\n    startAt?: string;\n    basePrice?: number;\n    language?: string;\n  };\n\n  type ShowtimeVO = {\n    id?: number;\n    movie?: MovieBriefVO;\n    cinema?: CinemaBriefVO;\n    hall?: HallBriefVO;\n    startAt?: string;\n    endAt?: string;\n    basePrice?: number;\n    language?: string;\n    status?: number;\n    statusDesc?: string;\n    soldSeats?: number;\n    totalSeats?: number;\n    lockedCount?: number;\n    createTime?: string;\n  };\n\n  type TicketInfo = {\n    ticketCode?: string;\n    rowNo?: number;\n    seatNo?: number;\n    qrContent?: string;\n  };\n\n  type TicketInfoVO = {\n    ticketCode?: string;\n    rowNo?: number;\n    seatNo?: number;\n    qrContent?: string;\n  };\n\n  type TicketItem = {\n    ticketCode?: string;\n    seat?: string;\n    qrContent?: string;\n  };\n\n  type TodayStatsVO = {\n    newUsers?: number;\n    orderCount?: number;\n    paidOrderCount?: number;\n    revenue?: number;\n    conversionRate?: number;\n  };\n\n  type TopMovieVO = {\n    id?: number;\n    name?: string;\n    orderCount?: number;\n    revenue?: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateSeatParams = {\n    hallId: number;\n    seatId: number;\n  };\n\n  type updateSeatStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type UploadResultDTO = {\n    url?: string;\n    fileName?: string;\n    size?: number;\n  };\n\n  type UserOrderDetailVO = {\n    id?: number;\n    orderNo?: string;\n    movie?: MovieBrief;\n    cinema?: CinemaBrief;\n    hallName?: string;\n    hallType?: string;\n    language?: string;\n    startAt?: string;\n    endAt?: string;\n    items?: OrderItemInfo[];\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    payment?: PaymentInfo;\n    tickets?: TicketInfo[];\n    expiresAt?: string;\n    createTime?: string;\n  };\n\n  type UserOrderPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: UserOrderVO[];\n  };\n\n  type UserOrderVO = {\n    id?: number;\n    orderNo?: string;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    startAt?: string;\n    seatSummary?: string;\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    expiresAt?: string;\n    createTime?: string;\n  };\n\n  type UserProfileVO = {\n    phone?: string;\n    email?: string;\n    stats?: UserStats;\n    preference?: PreferenceVO;\n  };\n\n  type UserStats = {\n    totalOrders?: number;\n    totalSpent?: number;\n  };\n}\n"
+      "__content": "declare namespace API {\n  type Brief = {\n    id?: number;\n    name?: string;\n    poster?: string;\n  };\n\n  type Budget = {\n    perTicket?: number;\n    total?: number;\n  };\n\n  type cancelParams = {\n    id: number;\n  };\n\n  type CinemaBrief = {\n    id?: number;\n    name?: string;\n    address?: string;\n    distance?: number;\n    services?: string[];\n  };\n\n  type CinemaBriefVO = {\n    id?: number;\n    name?: string;\n  };\n\n  type CinemaCreateDTO = {\n    name: string;\n    address: string;\n    district: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    services?: string[];\n  };\n\n  type CinemaPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: CinemaVO[];\n  };\n\n  type CinemaStatusDTO = {\n    status: \"INACTIVE\" | \"ACTIVE\";\n  };\n\n  type CinemaUpdateDTO = {\n    name?: string;\n    address?: string;\n    district?: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    services?: string[];\n  };\n\n  type CinemaVO = {\n    id?: number;\n    name?: string;\n    address?: string;\n    district?: string;\n    brand?: string;\n    latitude?: number;\n    longitude?: number;\n    status?: number;\n    statusDesc?: string;\n    services?: string[];\n    minPrice?: number;\n    distance?: number;\n    hallTypes?: string[];\n    hallCount?: number;\n    showtimeCount?: number;\n    createTime?: string;\n  };\n\n  type createSeatParams = {\n    hallId: number;\n  };\n\n  type DailyOrderVO = {\n    date?: string;\n    count?: number;\n    revenue?: number;\n  };\n\n  type DashboardVO = {\n    todayStats?: TodayStatsVO;\n    seatStats?: SeatStatsVO;\n    topMovies?: TopMovieVO[];\n    last7DaysOrders?: DailyOrderVO[];\n  };\n\n  type DateTimeRange = {\n    start?: string;\n    end?: string;\n  };\n\n  type deleteSeatParams = {\n    hallId: number;\n    seatId: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type detailParams = {\n    id: number;\n  };\n\n  type DraftSaveDTO = {\n    version: number;\n    movieId?: number;\n    cinemaId?: number;\n    dateTime?: DateTimeRange;\n    showtimeId?: number;\n    ticketCount?: number;\n    budget?: Budget;\n    seats?: number[];\n    sourceMode?: string;\n  };\n\n  type DraftVO = {\n    id?: number;\n    version?: number;\n    status?: string;\n    sourceMode?: string;\n    movie?: Brief;\n    cinema?: Brief;\n    dateTime?: DateTimeRange;\n    showtime?: Brief;\n    ticketCount?: number;\n    budget?: Budget;\n    seats?: SeatItem[];\n    clearedFields?: string[];\n    canProceedToSeat?: boolean;\n    orderId?: number;\n  };\n\n  type EmailLoginDTO = {\n    email: string;\n    code: string;\n  };\n\n  type HallBriefVO = {\n    id?: number;\n    name?: string;\n    hallType?: string;\n  };\n\n  type HallCreateDTO = {\n    cinemaId: number;\n    name: string;\n    hallType: \"IMAX\" | \"DOLBY\" | \"DIGITAL\" | \"FOUR_DX\" | \"NORMAL\";\n  };\n\n  type HallSeatVO = {\n    hallId?: number;\n    hallName?: string;\n    hallType?: string;\n    cinemaName?: string;\n    summary?: Record<string, any>;\n    rows?: RowVO[];\n  };\n\n  type HallUpdateDTO = {\n    name?: string;\n    hallType?: \"IMAX\" | \"DOLBY\" | \"DIGITAL\" | \"FOUR_DX\" | \"NORMAL\";\n  };\n\n  type HallVO = {\n    id?: number;\n    cinemaId?: number;\n    name?: string;\n    hallType?: string;\n    hallTypeDesc?: string;\n    totalSeats?: number;\n    createTime?: string;\n  };\n\n  type listByCinemaParams = {\n    cinemaId: number;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    movieId?: number;\n    cinemaId?: number;\n    date?: string;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    keyword?: string;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    keyword?: string;\n    district?: string;\n    status?: number;\n  };\n\n  type listParams = {\n    movieId?: number;\n    cinemaId?: number;\n    date?: string;\n    hallType?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    status?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    status?: string;\n    genre?: string;\n    keyword?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    district?: string;\n    brand?: string;\n    hallType?: string;\n    keyword?: string;\n  };\n\n  type listParams = {\n    page?: number;\n    size?: number;\n    orderNo?: string;\n    email?: string;\n    movieId?: number;\n    cinemaId?: number;\n    status?: string;\n    startDate?: string;\n    endDate?: string;\n  };\n\n  type LockLogVO = {\n    action?: string;\n    seatId?: number;\n    createTime?: string;\n  };\n\n  type LockResultVO = {\n    orderId?: number;\n    orderNo?: string;\n    amount?: number;\n    expiresAt?: string;\n    remainingSeconds?: number;\n    movie?: MovieBriefVO;\n    cinema?: CinemaBriefVO;\n    hallName?: string;\n    startAt?: string;\n    seats?: SeatInfo[];\n  };\n\n  type LockSeatsDTO = {\n    showtimeId: number;\n    seatIds: number[];\n    draftVersion: number;\n  };\n\n  type LoginDTO = {\n    phone: string;\n    password: string;\n  };\n\n  type LoginVO = {\n    token?: string;\n    user?: Record<string, any>;\n  };\n\n  type MovieBrief = {\n    id?: number;\n    name?: string;\n    poster?: string;\n  };\n\n  type MovieBriefVO = {\n    id?: number;\n    name?: string;\n  };\n\n  type MovieCreateDTO = {\n    name: string;\n    genre: string;\n    duration: number;\n    rating?: number;\n    poster?: string;\n    status: \"COMING_SOON\" | \"NOW_SHOWING\" | \"OFFLINE\";\n    description?: string;\n    cast?: string;\n    releaseDate: string;\n  };\n\n  type MovieGroup = {\n    id?: number;\n    name?: string;\n    poster?: string;\n    duration?: number;\n    showtimes?: ShowtimeItem[];\n  };\n\n  type MoviePageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: MovieVO[];\n  };\n\n  type MovieStatusDTO = {\n    status: \"COMING_SOON\" | \"NOW_SHOWING\" | \"OFFLINE\";\n  };\n\n  type MovieUpdateDTO = {\n    name?: string;\n    genre?: string;\n    duration?: number;\n    rating?: number;\n    poster?: string;\n    description?: string;\n    cast?: string;\n    releaseDate?: string;\n    status?: \"COMING_SOON\" | \"NOW_SHOWING\" | \"OFFLINE\";\n  };\n\n  type MovieVO = {\n    id?: number;\n    name?: string;\n    genre?: string;\n    duration?: number;\n    rating?: number;\n    poster?: string;\n    status?: number;\n    statusDesc?: string;\n    description?: string;\n    cast?: string;\n    releaseDate?: string;\n    showtimeCount?: number;\n    cinemaCount?: number;\n    createTime?: string;\n  };\n\n  type nearbyParams = {\n    page?: number;\n    size?: number;\n    lat: number;\n    lng: number;\n    radius?: number;\n  };\n\n  type OrderDetailVO = {\n    id?: number;\n    orderNo?: string;\n    userId?: number;\n    userEmail?: string;\n    movieName?: string;\n    moviePoster?: string;\n    cinemaName?: string;\n    cinemaAddress?: string;\n    hallName?: string;\n    hallType?: string;\n    language?: string;\n    startAt?: string;\n    endAt?: string;\n    items?: OrderItemVO[];\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    payment?: PaymentInfoVO;\n    tickets?: TicketInfoVO[];\n    seatLockLogs?: LockLogVO[];\n    expiresAt?: string;\n    createTime?: string;\n    updateTime?: string;\n  };\n\n  type OrderItemInfo = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    unitPrice?: number;\n    ticketCode?: string;\n  };\n\n  type OrderItemVO = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    unitPrice?: number;\n    ticketCode?: string;\n  };\n\n  type OrderPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: OrderVO[];\n  };\n\n  type OrderVO = {\n    id?: number;\n    orderNo?: string;\n    userId?: number;\n    userEmail?: string;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    startAt?: string;\n    seatSummary?: string;\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    createTime?: string;\n  };\n\n  type PasswordChangeDTO = {\n    oldPassword: string;\n    newPassword: string;\n  };\n\n  type PayDTO = {\n    idempotencyKey: string;\n  };\n\n  type PaymentInfo = {\n    status?: string;\n    amount?: number;\n    processedAt?: string;\n  };\n\n  type PaymentInfoVO = {\n    status?: string;\n    amount?: number;\n    idempotencyKey?: string;\n    processedAt?: string;\n  };\n\n  type payParams = {\n    id: number;\n  };\n\n  type PayResultVO = {\n    orderId?: number;\n    status?: string;\n    paidAmount?: number;\n    tickets?: TicketItem[];\n  };\n\n  type PreferenceSaveDTO = {\n    district?: string;\n    hallType?: string;\n    budget?: number;\n    seatZone?: string;\n  };\n\n  type PreferenceVO = {\n    district?: string;\n    hallType?: string;\n    budget?: number;\n    budgetRaw?: number;\n    seatZone?: string;\n  };\n\n  type RegisterDTO = {\n    phone: string;\n    email: string;\n    password: string;\n    code: string;\n  };\n\n  type ResetPasswordDTO = {\n    email: string;\n    code: string;\n    newPassword: string;\n  };\n\n  type ResultCinemaPageVO = {\n    code?: number;\n    msg?: string;\n    data?: CinemaPageVO;\n  };\n\n  type ResultCinemaVO = {\n    code?: number;\n    msg?: string;\n    data?: CinemaVO;\n  };\n\n  type ResultDashboardVO = {\n    code?: number;\n    msg?: string;\n    data?: DashboardVO;\n  };\n\n  type ResultDraftVO = {\n    code?: number;\n    msg?: string;\n    data?: DraftVO;\n  };\n\n  type ResultHallSeatVO = {\n    code?: number;\n    msg?: string;\n    data?: HallSeatVO;\n  };\n\n  type ResultHallVO = {\n    code?: number;\n    msg?: string;\n    data?: HallVO;\n  };\n\n  type ResultListHallVO = {\n    code?: number;\n    msg?: string;\n    data?: HallVO[];\n  };\n\n  type ResultLockResultVO = {\n    code?: number;\n    msg?: string;\n    data?: LockResultVO;\n  };\n\n  type ResultLoginVO = {\n    code?: number;\n    msg?: string;\n    data?: LoginVO;\n  };\n\n  type ResultMoviePageVO = {\n    code?: number;\n    msg?: string;\n    data?: MoviePageVO;\n  };\n\n  type ResultMovieVO = {\n    code?: number;\n    msg?: string;\n    data?: MovieVO;\n  };\n\n  type ResultOrderDetailVO = {\n    code?: number;\n    msg?: string;\n    data?: OrderDetailVO;\n  };\n\n  type ResultOrderPageVO = {\n    code?: number;\n    msg?: string;\n    data?: OrderPageVO;\n  };\n\n  type ResultPayResultVO = {\n    code?: number;\n    msg?: string;\n    data?: PayResultVO;\n  };\n\n  type ResultPreferenceVO = {\n    code?: number;\n    msg?: string;\n    data?: PreferenceVO;\n  };\n\n  type ResultSeatVO = {\n    code?: number;\n    msg?: string;\n    data?: SeatVO;\n  };\n\n  type ResultShowtimeGroupedVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeGroupedVO;\n  };\n\n  type ResultShowtimePageVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimePageVO;\n  };\n\n  type ResultShowtimeSeatLayoutVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeSeatLayoutVO;\n  };\n\n  type ResultShowtimeSeatStatusVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeSeatStatusVO;\n  };\n\n  type ResultShowtimeVO = {\n    code?: number;\n    msg?: string;\n    data?: ShowtimeVO;\n  };\n\n  type ResultUploadResultDTO = {\n    code?: number;\n    msg?: string;\n    data?: UploadResultDTO;\n  };\n\n  type ResultUserOrderDetailVO = {\n    code?: number;\n    msg?: string;\n    data?: UserOrderDetailVO;\n  };\n\n  type ResultUserOrderPageVO = {\n    code?: number;\n    msg?: string;\n    data?: UserOrderPageVO;\n  };\n\n  type ResultUserProfileVO = {\n    code?: number;\n    msg?: string;\n    data?: UserProfileVO;\n  };\n\n  type ResultVoid = {\n    code?: number;\n    msg?: string;\n    data?: Record<string, any>;\n  };\n\n  type RowVO = {\n    rowNo?: number;\n    seats?: SeatItemVO[];\n  };\n\n  type saveSeatLayoutParams = {\n    hallId: number;\n  };\n\n  type SeatCreateDTO = {\n    rowNo: number;\n    seatNo: number;\n    zone: string;\n    seatType: number;\n    status?: number;\n  };\n\n  type SeatInfo = {\n    rowNo?: number;\n    seatNo?: number;\n    price?: number;\n  };\n\n  type SeatItem = {\n    rowNo?: number;\n    seatNo?: number;\n  };\n\n  type SeatItemVO = {\n    id?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: string;\n    status?: string;\n  };\n\n  type SeatLayoutItemDTO = {\n    id?: number;\n    rowNo: number;\n    seatNo: number;\n    zone: string;\n    seatType: number;\n    status?: number;\n  };\n\n  type SeatLayoutSaveDTO = {\n    seats: SeatLayoutItemDTO[];\n  };\n\n\n\n\n  type SeatStatsVO = {\n    soldRate?: number;\n    totalSold?: number;\n    totalAvailable?: number;\n  };\n\n  type SeatUpdateDTO = {\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: number;\n    status?: number;\n  };\n\n  type SeatVO = {\n    id?: number;\n    hallId?: number;\n    rowNo?: number;\n    seatNo?: number;\n    zone?: string;\n    seatType?: number;\n    seatTypeDesc?: string;\n    status?: number;\n    statusDesc?: string;\n  };\n\n  type SendCodeDTO = {\n    email: string;\n    purpose: number;\n  };\n\n  type ShowtimeCreateDTO = {\n    movieId: number;\n    hallId: number;\n    startAt: string;\n    basePrice: number;\n    language?: string;\n  };\n\n  type ShowtimeGroupedVO = {\n    cinema?: CinemaBrief;\n    movies?: MovieGroup[];\n  };\n\n  type ShowtimeItem = {\n    id?: number;\n    startAt?: string;\n    endAt?: string;\n    language?: string;\n    hallType?: string;\n    hallName?: string;\n    basePrice?: number;\n    remainingSeats?: number;\n    totalSeats?: number;\n    status?: string;\n  };\n\n  type ShowtimePageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: ShowtimeVO[];\n  };\n\n  type ShowtimeSeatLayoutVO = {\n    showtimeId?: number;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    hallType?: string;\n    startAt?: string;\n    basePrice?: number;\n    totalSeats?: number;\n    availableSeats?: number;\n    lockedSeats?: number;\n    soldSeats?: number;\n    unavailableSeats?: number;\n    rows?: RowVO[];\n  };\n\n  type ShowtimeSeatStatusDTO = {\n    seatIds: number[];\n    status: string;\n  };\n\n  type ShowtimeSeatStatusVO = {\n    updatedSeatIds?: number[];\n    skippedSeatIds?: number[];\n    skippedReason?: string;\n  };\n\n  type ShowtimeStatusDTO = {\n    status: \"ON_SALE\" | \"SOLD_OUT\" | \"CANCELLED\";\n  };\n\n  type ShowtimeUpdateDTO = {\n    startAt?: string;\n    basePrice?: number;\n    language?: string;\n  };\n\n  type ShowtimeVO = {\n    id?: number;\n    movie?: MovieBriefVO;\n    cinema?: CinemaBriefVO;\n    hall?: HallBriefVO;\n    startAt?: string;\n    endAt?: string;\n    basePrice?: number;\n    language?: string;\n    status?: number;\n    statusDesc?: string;\n    soldSeats?: number;\n    totalSeats?: number;\n    lockedCount?: number;\n    createTime?: string;\n  };\n\n  type TicketInfo = {\n    ticketCode?: string;\n    rowNo?: number;\n    seatNo?: number;\n    qrContent?: string;\n  };\n\n  type TicketInfoVO = {\n    ticketCode?: string;\n    rowNo?: number;\n    seatNo?: number;\n    qrContent?: string;\n  };\n\n  type TicketItem = {\n    ticketCode?: string;\n    seat?: string;\n    qrContent?: string;\n  };\n\n  type TodayStatsVO = {\n    newUsers?: number;\n    orderCount?: number;\n    paidOrderCount?: number;\n    revenue?: number;\n    conversionRate?: number;\n  };\n\n  type TopMovieVO = {\n    id?: number;\n    name?: string;\n    orderCount?: number;\n    revenue?: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateParams = {\n    id: number;\n  };\n\n  type updateSeatParams = {\n    hallId: number;\n    seatId: number;\n  };\n\n  type updateSeatStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type updateStatusParams = {\n    id: number;\n  };\n\n  type UploadResultDTO = {\n    url?: string;\n    fileName?: string;\n    size?: number;\n  };\n\n  type UserOrderDetailVO = {\n    id?: number;\n    orderNo?: string;\n    movie?: MovieBrief;\n    cinema?: CinemaBrief;\n    hallName?: string;\n    hallType?: string;\n    language?: string;\n    startAt?: string;\n    endAt?: string;\n    items?: OrderItemInfo[];\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    payment?: PaymentInfo;\n    tickets?: TicketInfo[];\n    expiresAt?: string;\n    createTime?: string;\n  };\n\n  type UserOrderPageVO = {\n    total?: number;\n    page?: number;\n    size?: number;\n    records?: UserOrderVO[];\n  };\n\n  type UserOrderVO = {\n    id?: number;\n    orderNo?: string;\n    movieName?: string;\n    cinemaName?: string;\n    hallName?: string;\n    startAt?: string;\n    seatSummary?: string;\n    amount?: number;\n    status?: string;\n    statusDesc?: string;\n    expiresAt?: string;\n    createTime?: string;\n  };\n\n  type UserProfileVO = {\n    phone?: string;\n    email?: string;\n    stats?: UserStats;\n    preference?: PreferenceVO;\n  };\n\n  type UserStats = {\n    totalOrders?: number;\n    totalSpent?: number;\n  };\n}\n"
     },
     "index": {
       "path": "/",
       "id": "index",
       "file": "index.ts",
       "absPath": "/",
-      "__content": "// @ts-ignore\n/* eslint-disable */\n// API 更新时间：\n// API 唯一标识：\nimport * as profileController from \"./profileController\";\nimport * as showtimeController from \"./showtimeController\";\nimport * as movieController from \"./movieController\";\nimport * as hallController from \"./hallController\";\nimport * as cinemaController from \"./cinemaController\";\nimport * as orderController from \"./orderController\";\nimport * as draftController from \"./draftController\";\nimport * as authController from \"./authController\";\nimport * as fileController from \"./fileController\";\nimport * as showtimeUserController from \"./showtimeUserController\";\nimport * as movieUserController from \"./movieUserController\";\nimport * as cinemaUserController from \"./cinemaUserController\";\nimport * as dashboardController from \"./dashboardController\";\nexport default {\n  profileController,\n  showtimeController,\n  movieController,\n  hallController,\n  cinemaController,\n  orderController,\n  draftController,\n  authController,\n  fileController,\n  showtimeUserController,\n  movieUserController,\n  cinemaUserController,\n  dashboardController,\n};\n"
+      "__content": "// @ts-ignore\n/* eslint-disable */\n// API 更新时间：\n// API 唯一标识：\nimport * as profileController from \"./profileController\";\nimport * as showtimeController from \"./showtimeController\";\nimport * as movieController from \"./movieController\";\nimport * as hallController from \"./hallController\";\nimport * as cinemaController from \"./cinemaController\";\nimport * as orderController from \"./orderController\";\nimport * as draftController from \"./draftController\";\nimport * as authController from \"./authController\";\nimport * as fileController from \"./fileController\";\nimport * as adminAuthController from \"./adminAuthController\";\nimport * as showtimeUserController from \"./showtimeUserController\";\nimport * as movieUserController from \"./movieUserController\";\nimport * as cinemaUserController from \"./cinemaUserController\";\nimport * as dashboardController from \"./dashboardController\";\nexport default {\n  profileController,\n  showtimeController,\n  movieController,\n  hallController,\n  cinemaController,\n  orderController,\n  draftController,\n  authController,\n  fileController,\n  adminAuthController,\n  showtimeUserController,\n  movieUserController,\n  cinemaUserController,\n  dashboardController,\n};\n"
     }
   },
   "hasSrcDir": true,
@@ -3171,9 +3236,11 @@
     "done": true,
     "progresses": [
       {
-        "percent": 1,
-        "status": "",
-        "details": []
+        "percent": 0.575851851851852,
+        "status": "building",
+        "details": [
+          "1/2 entries 584/600 dependencies 344/286 modules"
+        ]
       }
     ]
   },
@@ -3201,15 +3268,18 @@
   "globalJS": [],
   "overridesCSS": [],
   "bundler": "webpack",
+  "git": {
+    "originUrl": "https://github.com/GuowenfengAaa/agent-customer.git"
+  },
   "framework": "react",
   "typescript": {
     "tsVersion": "5.9.3",
     "tslibVersion": "2.8.1"
   },
   "faviconFiles": [],
-  "port": 8002,
+  "port": 8000,
   "host": "0.0.0.0",
-  "ip": "10.110.37.129",
+  "ip": "10.9.87.224",
   "prepare": {
     "buildResult": {
       "errors": [],
@@ -4307,8 +4377,29 @@
             "imports": [],
             "format": "esm"
           },
+          "src/components/PhoneShell/index.tsx": {
+            "bytes": 1833,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
           "src/app.tsx": {
-            "bytes": 541,
+            "bytes": 632,
             "imports": [
               {
                 "path": "@tanstack/react-query",
@@ -4324,6 +4415,11 @@
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/components/PhoneShell/index.tsx",
+                "kind": "import-statement",
+                "original": "@/components/PhoneShell"
               },
               {
                 "path": "./global.less",
@@ -4655,7 +4751,7 @@
             "format": "esm"
           },
           "src/api/authController.ts": {
-            "bytes": 1491,
+            "bytes": 2091,
             "imports": [
               {
                 "path": "src/services/openapiRequest.ts",
@@ -4667,6 +4763,17 @@
           },
           "src/api/fileController.ts": {
             "bytes": 420,
+            "imports": [
+              {
+                "path": "src/services/openapiRequest.ts",
+                "kind": "import-statement",
+                "original": "@/services/openapiRequest"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/api/adminAuthController.ts": {
+            "bytes": 435,
             "imports": [
               {
                 "path": "src/services/openapiRequest.ts",
@@ -4721,7 +4828,7 @@
             "format": "esm"
           },
           "src/api/index.ts": {
-            "bytes": 1119,
+            "bytes": 1204,
             "imports": [
               {
                 "path": "src/api/profileController.ts",
@@ -4769,6 +4876,11 @@
                 "original": "./fileController"
               },
               {
+                "path": "src/api/adminAuthController.ts",
+                "kind": "import-statement",
+                "original": "./adminAuthController"
+              },
+              {
                 "path": "src/api/showtimeUserController.ts",
                 "kind": "import-statement",
                 "original": "./showtimeUserController"
@@ -4792,7 +4904,7 @@
             "format": "esm"
           },
           "src/services/auth.ts": {
-            "bytes": 1455,
+            "bytes": 1945,
             "imports": [
               {
                 "path": "src/api/index.ts",
@@ -4808,7 +4920,7 @@
             "format": "esm"
           },
           "src/pages/AuthLogin/index.tsx": {
-            "bytes": 3164,
+            "bytes": 9071,
             "imports": [
               {
                 "path": "antd-mobile",
@@ -4849,10 +4961,15 @@
             "format": "esm"
           },
           "src/pages/AuthPlaceholder/index.tsx": {
-            "bytes": 3492,
+            "bytes": 6858,
             "imports": [
               {
                 "path": "antd-mobile",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "antd-mobile-icons",
                 "kind": "import-statement",
                 "external": true
               },
@@ -4870,6 +4987,37 @@
                 "path": "src/services/auth.ts",
                 "kind": "import-statement",
                 "original": "@/services/auth"
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/Legal/index.tsx": {
+            "bytes": 2707,
+            "imports": [
+              {
+                "path": "antd-mobile-icons",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/.umi/exports.ts",
+                "kind": "import-statement",
+                "original": "@umijs/max"
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
               },
               {
                 "path": "./index.module.less",
@@ -4912,7 +5060,7 @@
             "format": "esm"
           },
           "src/pages/Home/index.tsx": {
-            "bytes": 6660,
+            "bytes": 7398,
             "imports": [
               {
                 "path": "antd-mobile-icons",
@@ -5034,34 +5182,8 @@
             ],
             "format": "esm"
           },
-          "src/components/MobileCard/index.tsx": {
-            "bytes": 794,
-            "imports": [
-              {
-                "path": "antd-mobile",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "./index.module.less",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "react/jsx-runtime",
-                "kind": "import-statement",
-                "external": true
-              }
-            ],
-            "format": "esm"
-          },
           "src/pages/Movies/index.tsx": {
-            "bytes": 3048,
+            "bytes": 4950,
             "imports": [
               {
                 "path": "antd-mobile",
@@ -5082,11 +5204,6 @@
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/components/MobileCard/index.tsx",
-                "kind": "import-statement",
-                "original": "@/components/MobileCard"
               },
               {
                 "path": "src/services/customerApi.ts",
@@ -5143,6 +5260,32 @@
                 "path": "src/query/keys.ts",
                 "kind": "import-statement",
                 "original": "@/query/keys"
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/components/MobileCard/index.tsx": {
+            "bytes": 794,
+            "imports": [
+              {
+                "path": "antd-mobile",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
               },
               {
                 "path": "./index.module.less",
@@ -5434,7 +5577,7 @@
             "format": "esm"
           },
           "src/pages/Me/index.tsx": {
-            "bytes": 2664,
+            "bytes": 2760,
             "imports": [
               {
                 "path": "antd-mobile",
@@ -5490,7 +5633,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 5584,
+            "bytes": 5865,
             "imports": [
               {
                 "path": "react",
@@ -5516,6 +5659,16 @@
                 "path": "src/pages/AuthPlaceholder/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/AuthPlaceholder/index.tsx"
+              },
+              {
+                "path": "src/pages/Legal/index.tsx",
+                "kind": "dynamic-import",
+                "original": "@/pages/Legal/index.tsx"
+              },
+              {
+                "path": "src/pages/Legal/index.tsx",
+                "kind": "dynamic-import",
+                "original": "@/pages/Legal/index.tsx"
               },
               {
                 "path": "src/pages/Home/index.tsx",
@@ -5706,6 +5859,21 @@
           "src/.umi/out/umi.js": {
             "imports": [
               {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "@tanstack/react-query",
                 "kind": "import-statement",
                 "external": true
@@ -5821,7 +5989,27 @@
                 "external": true
               },
               {
+                "path": "antd-mobile-icons",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "antd-mobile-icons",
                 "kind": "import-statement",
                 "external": true
               },
@@ -5891,21 +6079,6 @@
                 "external": true
               },
               {
-                "path": "./index.module.less",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "react/jsx-runtime",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "antd-mobile",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
                 "path": "@tanstack/react-query",
                 "kind": "import-statement",
                 "external": true
@@ -5932,6 +6105,21 @@
               },
               {
                 "path": "@tanstack/react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.less",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react/jsx-runtime",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "antd-mobile",
                 "kind": "import-statement",
                 "external": true
               },
@@ -7217,14 +7405,17 @@
               "src/.umi/core/defineApp.ts": {
                 "bytesInOutput": 140
               },
+              "src/components/PhoneShell/index.tsx": {
+                "bytesInOutput": 2579
+              },
               "src/app.tsx": {
-                "bytesInOutput": 733
+                "bytesInOutput": 822
               },
               "src/.umi/core/helmetContext.ts": {
                 "bytesInOutput": 129
               },
               "src/.umi/core/helmet.ts": {
-                "bytesInOutput": 534
+                "bytesInOutput": 536
               },
               "src/.umi/core/plugin.ts": {
                 "bytesInOutput": 1106
@@ -7242,7 +7433,7 @@
                 "bytesInOutput": 1527
               },
               "src/.umi/testBrowser.tsx": {
-                "bytesInOutput": 2376
+                "bytesInOutput": 2405
               },
               "src/.umi/exports.ts": {
                 "bytesInOutput": 3056
@@ -7278,10 +7469,13 @@
                 "bytesInOutput": 587
               },
               "src/api/authController.ts": {
-                "bytesInOutput": 1182
+                "bytesInOutput": 1606
               },
               "src/api/fileController.ts": {
                 "bytesInOutput": 430
+              },
+              "src/api/adminAuthController.ts": {
+                "bytesInOutput": 453
               },
               "src/api/showtimeUserController.ts": {
                 "bytesInOutput": 697
@@ -7296,16 +7490,19 @@
                 "bytesInOutput": 376
               },
               "src/api/index.ts": {
-                "bytesInOutput": 1174
+                "bytesInOutput": 1262
               },
               "src/services/auth.ts": {
-                "bytesInOutput": 1106
+                "bytesInOutput": 1461
               },
               "src/pages/AuthLogin/index.tsx": {
-                "bytesInOutput": 4667
+                "bytesInOutput": 12836
               },
               "src/pages/AuthPlaceholder/index.tsx": {
-                "bytesInOutput": 4976
+                "bytesInOutput": 10053
+              },
+              "src/pages/Legal/index.tsx": {
+                "bytesInOutput": 5285
               },
               "src/stores/useAppStore.ts": {
                 "bytesInOutput": 462
@@ -7317,28 +7514,28 @@
                 "bytesInOutput": 529
               },
               "src/pages/Home/index.tsx": {
-                "bytesInOutput": 11106
+                "bytesInOutput": 12124
               },
               "src/components/CustomerLayout/index.tsx": {
-                "bytesInOutput": 4518
+                "bytesInOutput": 4535
               },
               "src/wrappers/customer.tsx": {
-                "bytesInOutput": 763
-              },
-              "src/components/MobileCard/index.tsx": {
-                "bytesInOutput": 1025
+                "bytesInOutput": 766
               },
               "src/pages/Movies/index.tsx": {
-                "bytesInOutput": 4149
+                "bytesInOutput": 6799
               },
               "src/pages/MovieDetail/index.tsx": {
-                "bytesInOutput": 2848
+                "bytesInOutput": 2836
+              },
+              "src/components/MobileCard/index.tsx": {
+                "bytesInOutput": 1030
               },
               "src/pages/Cinemas/index.tsx": {
-                "bytesInOutput": 3336
+                "bytesInOutput": 3349
               },
               "src/pages/CinemaShowtimes/index.tsx": {
-                "bytesInOutput": 4185
+                "bytesInOutput": 4203
               },
               "src/pages/Agent/index.tsx": {
                 "bytesInOutput": 4008
@@ -7347,16 +7544,16 @@
                 "bytesInOutput": 7050
               },
               "src/pages/OrderPlaceholder/index.tsx": {
-                "bytesInOutput": 10887
+                "bytesInOutput": 10882
               },
               "src/components/PagePlaceholder/index.tsx": {
-                "bytesInOutput": 1317
+                "bytesInOutput": 1315
               },
               "src/pages/Me/index.tsx": {
-                "bytesInOutput": 4190
+                "bytesInOutput": 4282
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 5753
+                "bytesInOutput": 6034
               },
               "src/.umi/core/polyfill.ts": {
                 "bytesInOutput": 25486
@@ -7365,7 +7562,7 @@
                 "bytesInOutput": 2007
               }
             },
-            "bytes": 154715
+            "bytes": 181448
           }
         }
       }
