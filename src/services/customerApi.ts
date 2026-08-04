@@ -8,6 +8,7 @@ import type {
   PageResult,
   PayResult,
   PurchaseDraftSummary,
+  SearchHistorySummary,
   SeatSummary,
   ShowtimeListResult,
   ShowtimeSeatLayout,
@@ -25,6 +26,8 @@ interface ListParams {
   district?: string;
   brand?: string;
   hallType?: string;
+  sortBy?: 'createTime' | 'releaseDate' | 'rating';
+  sortOrder?: 'asc' | 'desc';
 }
 
 type RawRecord = Record<string, any>;
@@ -123,6 +126,7 @@ function normalizeOrder(raw: RawRecord): OrderSummary {
     id: asId(raw.id),
     orderNo: raw.orderNo ?? '',
     movieName: raw.movieName ?? undefined,
+    moviePoster: raw.moviePoster ?? raw.poster ?? undefined,
     cinemaName: raw.cinemaName ?? undefined,
     hallName: raw.hallName ?? undefined,
     startAt: raw.startAt ?? undefined,
@@ -137,9 +141,14 @@ function normalizeOrder(raw: RawRecord): OrderSummary {
 
 function normalizeOrderDetail(raw: RawRecord): OrderDetail {
   const base = normalizeOrder(raw);
+  const movie = raw.movie as RawRecord | undefined;
   return {
     ...base,
-    movie: raw.movie ? { id: asId(raw.movie.id), name: raw.movie.name ?? '', posterUrl: raw.movie.poster ?? undefined } : undefined,
+    movie: movie || raw.movieName || raw.moviePoster ? {
+      id: asId(movie?.id),
+      name: movie?.name ?? raw.movieName ?? '',
+      posterUrl: movie?.poster ?? movie?.posterUrl ?? raw.moviePoster ?? raw.poster ?? undefined,
+    } : undefined,
     cinema: raw.cinema ? { id: asId(raw.cinema.id), name: raw.cinema.name ?? '', address: raw.cinema.address ?? undefined } : undefined,
     hallType: raw.hallType ?? undefined,
     language: raw.language ?? undefined,
@@ -161,6 +170,15 @@ function normalizeOrderDetail(raw: RawRecord): OrderDetail {
   };
 }
 
+function normalizeSearchHistory(raw: RawRecord): SearchHistorySummary {
+  return {
+    id: asId(raw.id),
+    keyword: raw.keyword ?? '',
+    searchCount: asOptionalNumber(raw.searchCount),
+    lastSearchTime: raw.lastSearchTime ?? undefined,
+  };
+}
+
 export const customerApi = {
   async listMovies(params: ListParams = {}): Promise<PageResult<MovieSummary>> {
     const raw = unwrap(await generatedApi.movieUserController.list({ page: 1, size: 20, ...params }));
@@ -170,6 +188,20 @@ export const customerApi = {
       page: raw?.page,
       size: raw?.size,
     };
+  },
+
+  async listSearchHistory(limit = 10): Promise<SearchHistorySummary[]> {
+    const raw = unwrap(await generatedApi.searchHistoryController.list({ limit }));
+    return Array.isArray(raw) ? raw.map(normalizeSearchHistory) : [];
+  },
+
+  async recordSearchHistory(keyword: string): Promise<SearchHistorySummary> {
+    const raw = unwrap(await generatedApi.searchHistoryController.record({ keyword })) as RawRecord;
+    return normalizeSearchHistory(raw);
+  },
+
+  async clearSearchHistory(): Promise<void> {
+    await generatedApi.searchHistoryController.clear();
   },
 
   async getMovie(movieId: string): Promise<MovieSummary> {
@@ -217,7 +249,7 @@ export const customerApi = {
       movie: groups.length && groups[0] ? {
         id: asId(groups[0].id),
         name: groups[0].name ?? '',
-        posterUrl: groups[0].poster ?? undefined,
+        posterUrl: groups[0].poster ?? groups[0].posterUrl ?? undefined,
         durationMinutes: asOptionalNumber(groups[0].duration),
       } : undefined,
     };

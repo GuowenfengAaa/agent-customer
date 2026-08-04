@@ -64,14 +64,30 @@
 }
 
 .orderPoster {
+  position: relative;
   width: 54px;
   height: 76px;
+  overflow: hidden;
   display: grid;
   place-items: center;
   color: #fff;
   border-radius: 4px;
   font-size: 17px;
   font-weight: 800;
+}
+
+.orderPoster strong {
+  position: relative;
+  z-index: 1;
+}
+
+.orderPoster img {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .posterWarm { background: #8d4d3e; }
@@ -155,6 +171,72 @@
   border: 1px solid var(--customer-line);
   border-radius: 8px;
   box-shadow: none;
+}
+
+.flowMovie {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin: 14px 0 16px;
+  padding: 10px;
+  background: #f4f7f5;
+  border: 1px solid #e2ebe7;
+  border-radius: 12px;
+}
+
+.flowMovieCompact {
+  margin-bottom: 18px;
+}
+
+.flowMoviePoster {
+  position: relative;
+  width: 64px;
+  height: 90px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #49695e;
+  border-radius: 7px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.flowMoviePoster strong {
+  position: relative;
+  z-index: 1;
+}
+
+.flowMoviePoster img {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flowMovieInfo {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.flowMovieInfo strong {
+  overflow: hidden;
+  color: var(--customer-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+.flowMovieInfo span {
+  overflow: hidden;
+  color: var(--customer-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
 }
 
 h1 {

@@ -16,6 +16,7 @@ import * as showtimeUserController from "./showtimeUserController";
 import * as movieUserController from "./movieUserController";
 import * as cinemaUserController from "./cinemaUserController";
 import * as dashboardController from "./dashboardController";
+import * as searchHistoryController from "./searchHistoryController";
 export default {
   profileController,
   showtimeController,
@@ -31,4 +32,5 @@ export default {
   movieUserController,
   cinemaUserController,
   dashboardController,
+  searchHistoryController,
 };

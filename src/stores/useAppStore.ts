@@ -3,6 +3,15 @@ import { persist } from 'zustand/middleware';
 import type { AgentCardPayload } from '@/services/agentSse';
 import type { BrowserLocation } from '@/services/location';
 import type { PurchaseMode } from '@/types/domain';
+import { resolveCurrentCity } from '@/utils/location';
+
+export type LocationStatus =
+  | 'idle'
+  | 'locating'
+  | 'located'
+  | 'denied'
+  | 'error'
+  | 'unsupported';
 
 export interface AgentChatMessage {
   id: string;
@@ -19,6 +28,9 @@ const defaultAgentMessages = (): AgentChatMessage[] => [];
 interface AppState {
   mode: PurchaseMode;
   city: string;
+  latitude?: number;
+  longitude?: number;
+  locationStatus: LocationStatus;
   sessionId?: string;
   draftId?: string;
   agentInput: string;
@@ -29,6 +41,7 @@ interface AppState {
   agentLocationError: string;
   setMode: (mode: PurchaseMode) => void;
   setCity: (city: string) => void;
+  locateCurrentPosition: () => void;
   setAgentContext: (context: { sessionId?: string; draftId?: string }) => void;
   resetAgentContext: () => void;
   setAgentInput: (input: string) => void;
@@ -45,9 +58,10 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       mode: 'TRADITIONAL',
       city: '北京',
+      locationStatus: 'idle',
       agentInput: '',
       agentMessages: defaultAgentMessages(),
       agentProgress: [],
@@ -55,6 +69,37 @@ export const useAppStore = create<AppState>()(
       agentLocationError: '',
       setMode: (mode) => set({ mode }),
       setCity: (city) => set({ city }),
+      locateCurrentPosition: () => {
+        if (get().locationStatus === 'locating') return;
+
+        if (typeof navigator === 'undefined' || !navigator.geolocation) {
+          set({ locationStatus: 'unsupported' });
+          return;
+        }
+
+        set({ locationStatus: 'locating' });
+        navigator.geolocation.getCurrentPosition(
+          ({ coords }) => {
+            set({
+              city: resolveCurrentCity(coords.latitude, coords.longitude),
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              locationStatus: 'located',
+            });
+          },
+          (error) => {
+            set({
+              locationStatus:
+                error.code === error.PERMISSION_DENIED ? 'denied' : 'error',
+            });
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 5 * 60 * 1000,
+          },
+        );
+      },
       setAgentContext: (context) => set(context),
       resetAgentContext: () => set({ sessionId: undefined, draftId: undefined }),
       setAgentInput: (agentInput) => set({ agentInput }),

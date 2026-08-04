@@ -13,8 +13,8 @@ export async function list(
     params: {
       // page has a default value: 1
       page: "1",
-      // size has a default value: 20
-      size: "20",
+      // size has a default value: 10
+      size: "10",
 
       ...params,
     },
