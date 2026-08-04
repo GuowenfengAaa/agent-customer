@@ -26,6 +26,25 @@
   padding: 3px 14px 1px;
 }
 
+.topRowWithTitle {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.pageTitle {
+  grid-column: 2;
+  justify-self: center;
+  color: var(--customer-ink);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.topRowSpacer {
+  grid-column: 3;
+}
+
 .cityButton {
   min-height: 36px;
   padding: 0 4px;
@@ -39,10 +58,18 @@
   display: flex;
   align-items: center;
   justify-self: start;
+  min-width: 0;
+  max-width: 100%;
   gap: 4px;
   padding-left: 6px;
   font-size: 14px;
   font-weight: 650;
+}
+
+.cityButton > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chevron {

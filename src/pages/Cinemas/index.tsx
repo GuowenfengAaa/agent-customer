@@ -1,5 +1,5 @@
-import { Button, Card, ErrorBlock, NavBar, Skeleton } from "antd-mobile";
-import { HeartOutline, RightOutline } from "antd-mobile-icons";
+import { Button, Card, ErrorBlock, Skeleton } from "antd-mobile";
+import { HeartOutline, LeftOutline, RightOutline } from "antd-mobile-icons";
 import { history, useLocation } from "@umijs/max";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -11,12 +11,21 @@ import { queryKeys } from "@/query/keys";
 import { useAppStore } from "@/stores/useAppStore";
 import type { CinemaSummary, ShowtimeSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
+import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 import styles from "./index.module.less";
 
 interface CinemaWithShowtimes {
   cinema: CinemaSummary;
   showtimes: ShowtimeSummary[];
 }
+
+const movieCarouselFilters = {
+  page: 1,
+  size: 100,
+  status: "NOW_SHOWING",
+  sortBy: "releaseDate" as const,
+  sortOrder: "desc" as const,
+};
 
 const getPriceFen = (showtimes: ShowtimeSummary[], fallback?: number) => {
   const prices = showtimes
@@ -36,6 +45,11 @@ const Cinemas: React.FC = () => {
   const movieQuery = useQuery({
     queryKey: queryKeys.movie(movieId),
     queryFn: () => customerApi.getMovie(movieId),
+    enabled: Boolean(movieId),
+  });
+  const moviesQuery = useQuery({
+    queryKey: queryKeys.movies(movieCarouselFilters),
+    queryFn: () => customerApi.listMovies(movieCarouselFilters),
     enabled: Boolean(movieId),
   });
   const query = useQuery<CinemaWithShowtimes[]>({
@@ -69,8 +83,11 @@ const Cinemas: React.FC = () => {
               cinemaId: cinema.id,
               date: dateValue,
             });
-            return showtimeResult.showtimes.length
-              ? { cinema, showtimes: showtimeResult.showtimes }
+            const futureShowtimes = showtimeResult.showtimes.filter(
+              (showtime) => dayjs(showtime.startAt).isAfter(dayjs())
+            );
+            return futureShowtimes.length
+              ? { cinema, showtimes: futureShowtimes }
               : null;
           } catch {
             return null;
@@ -84,7 +101,38 @@ const Cinemas: React.FC = () => {
     },
   });
   const cinemas = query.data || [];
-  const movie = movieQuery.data;
+  const carouselMovies = React.useMemo(() => {
+    const records = moviesQuery.data?.records || [];
+    const currentMovie = movieQuery.data;
+    if (currentMovie && !records.some((item) => item.id === currentMovie.id)) {
+      return [currentMovie, ...records];
+    }
+    return records;
+  }, [movieQuery.data, moviesQuery.data?.records]);
+  const matchedMovieIndex = carouselMovies.findIndex(
+    (item) => item.id === movieId
+  );
+  const currentMovieIndex = matchedMovieIndex >= 0 ? matchedMovieIndex : 0;
+  const movie =
+    matchedMovieIndex >= 0
+      ? carouselMovies[matchedMovieIndex]
+      : movieQuery.data;
+  const canSwitchMovie = carouselMovies.length > 1;
+  const wishlistMutation = useWishlistToggle(movie?.id || movieId, Boolean(movie?.wanted));
+
+  const switchMovie = (direction: -1 | 1) => {
+    if (!canSwitchMovie) return;
+    const nextIndex =
+      (currentMovieIndex + direction + carouselMovies.length) %
+      carouselMovies.length;
+    const nextMovie = carouselMovies[nextIndex];
+    if (!nextMovie || nextMovie.id === movieId) return;
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("movieId", nextMovie.id);
+    history.replace(`/cinemas?${searchParams.toString()}`);
+  };
+
   const movieGenreTags = (movie?.genre || "类型待更新")
     .split(/\s*[\/·,，]\s*/)
     .filter(Boolean)
@@ -99,58 +147,83 @@ const Cinemas: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <NavBar
-        onBack={() => history.push(movieId ? `/movies/${movieId}` : "/home")}
-      >
-        影院
-      </NavBar>
       {movieId ? (
-        <section className={styles.movieSummary} aria-label="影片信息">
-          <div className={styles.moviePoster}>
-            <div className={styles.moviePosterFallback}>
-              {movie?.title?.slice(0, 1) || "影"}
+        <section className={styles.movieSummary} aria-label="影片轮播">
+          <button
+            className={styles.carouselArrow}
+            type="button"
+            aria-label="上一部影片"
+            title="上一部影片"
+            disabled={!canSwitchMovie}
+            onClick={() => switchMovie(-1)}
+          >
+            <LeftOutline />
+          </button>
+          <React.Fragment key={movie?.id || movieId}>
+            <div className={styles.moviePoster}>
+              <div className={styles.moviePosterFallback}>
+                {movie?.title?.slice(0, 1) || "影"}
+              </div>
+              {movie?.posterUrl ? (
+                <img
+                  src={getPosterThumbnailUrl(movie.posterUrl)}
+                  alt={`${movie.title}海报`}
+                  loading="eager"
+                  decoding="async"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              ) : null}
             </div>
-            {movie?.posterUrl ? (
-              <img
-                src={getPosterThumbnailUrl(movie.posterUrl)}
-                alt={`${movie.title}海报`}
-                loading="eager"
-                decoding="async"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
+            <div className={styles.movieSummaryInfo}>
+              <div className={styles.movieKickerRow}>
+                <div className={styles.movieKicker}>MOVIE INTRO</div>
+                {carouselMovies.length ? (
+                  <span>{currentMovieIndex + 1}/{carouselMovies.length}</span>
+                ) : null}
+              </div>
+              <strong>{movie?.title || "正在加载影片"}</strong>
+              <span className={styles.movieSubtitle}>{movieIntroSubtitle}</span>
+              <div className={styles.movieGenreTags}>
+                {movieGenreTags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+              <p>
+                {movieReleaseDate} · {movie?.durationMinutes || 120} 分钟
+              </p>
+              <div className={styles.movieRating}>
+                <em>
+                  {movie?.score?.toFixed(1) || "—"}
+                  <small>分</small>
+                </em>
+                <span>观众评分</span>
+              </div>
+              <Button
+                className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
+                fill="none"
+                loading={wishlistMutation.isPending}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  wishlistMutation.mutate();
                 }}
-              />
-            ) : null}
-          </div>
-          <div className={styles.movieSummaryInfo}>
-            <div className={styles.movieKicker}>MOVIE INTRO</div>
-            <strong>{movie?.title || "正在加载影片"}</strong>
-            <span className={styles.movieSubtitle}>{movieIntroSubtitle}</span>
-            <div className={styles.movieGenreTags}>
-              {movieGenreTags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
+              >
+                <HeartOutline />
+                {movie?.wanted ? "已想看" : "想看"}
+              </Button>
             </div>
-            <p>
-              {movieReleaseDate} · {movie?.durationMinutes || 120} 分钟
-            </p>
-            <div className={styles.movieRating}>
-              <em>
-                {movie?.score?.toFixed(1) || "—"}
-                <small>分</small>
-              </em>
-              <span>观众评分</span>
-            </div>
-            <Button
-              className={styles.wantButton}
-              fill="none"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <HeartOutline />
-              想看
-            </Button>
-          </div>
-          <RightOutline className={styles.movieArrow} />
+          </React.Fragment>
+          <button
+            className={styles.carouselArrow}
+            type="button"
+            aria-label="下一部影片"
+            title="下一部影片"
+            disabled={!canSwitchMovie}
+            onClick={() => switchMovie(1)}
+          >
+            <RightOutline />
+          </button>
         </section>
       ) : null}
       {movieId ? <BookingDateTabs value={date} onChange={setDate} /> : null}
@@ -163,7 +236,7 @@ const Cinemas: React.FC = () => {
           </p>
         </div>
       </div>
-      {query.isLoading || movieQuery.isLoading ? (
+      {query.isLoading || movieQuery.isLoading || moviesQuery.isLoading ? (
         <Card className={styles.stateCard}>
           <Skeleton.Title animated />
           <Skeleton.Paragraph lineCount={3} animated />

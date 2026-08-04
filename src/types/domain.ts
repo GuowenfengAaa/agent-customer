@@ -39,6 +39,7 @@ export interface MovieSummary {
   cast?: string;
   showtimeCount?: number;
   cinemaCount?: number;
+  wanted?: boolean;
 }
 
 export interface CinemaSummary {
@@ -126,11 +127,11 @@ export interface LockResult {
   seats?: Array<{ rowNo: number; seatNo: number; price: number }>;
 }
 
-export interface PayResult {
+export interface PaymentInit {
   orderId: ID;
-  status: string;
-  paidAmount?: number;
-  tickets?: Array<{ ticketCode: string; seat?: string; qrContent?: string }>;
+  outTradeNo: string;
+  paymentStatus: string;
+  payForm?: string;
 }
 
 export interface OrderSummary {
@@ -163,6 +164,7 @@ export interface OrderDetail extends OrderSummary {
 export interface UserProfile {
   phone?: string;
   email?: string;
+  avatarUrl?: string;
   stats?: { totalOrders: number; totalSpent: number };
   preference?: { district?: string; hallType?: string; budget?: number; budgetRaw?: number; seatZone?: string };
 }

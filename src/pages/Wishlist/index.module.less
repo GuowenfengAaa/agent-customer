@@ -1,0 +1,246 @@
+.page {
+  min-height: 100%;
+  padding: 14px 14px 28px;
+  background: #f4f7f6;
+}
+
+.intro {
+  display: flex;
+  min-height: 78px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  color: #fff;
+  background: linear-gradient(135deg, #183b34, #246a57);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(20, 67, 54, 0.16);
+}
+
+.intro span {
+  color: #aee0d0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.intro h1 {
+  margin: 5px 0 0;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.intro > strong {
+  flex: none;
+  color: #ffd083;
+  font-size: 25px;
+}
+
+.intro small {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+}
+
+.loading,
+.empty {
+  margin-top: 12px;
+  padding: 22px 18px;
+  background: #fff;
+  border: 1px solid #e2e9e6;
+  border-radius: 8px;
+}
+
+.empty {
+  display: flex;
+  min-height: 230px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty > svg {
+  color: #d36a74;
+  font-size: 35px;
+}
+
+.empty strong {
+  margin-top: 12px;
+  color: #20302b;
+  font-size: 15px;
+}
+
+.empty p {
+  margin: 7px 0 16px;
+  color: #89948f;
+  font-size: 11px;
+}
+
+.list {
+  overflow: hidden;
+  margin-top: 12px;
+  padding: 0 13px;
+  background: #fff;
+  border: 1px solid #e2e9e6;
+  border-radius: 8px;
+}
+
+.movieRow {
+  padding: 13px 0;
+}
+
+.movieRow + .movieRow {
+  border-top: 1px solid #edf1ef;
+}
+
+.movieMain {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+}
+
+.poster {
+  position: relative;
+  width: 82px;
+  height: 116px;
+  overflow: hidden;
+  color: #fff;
+  background: #315b50;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(23, 47, 40, 0.13);
+}
+
+.poster img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.posterFallback {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.movieInfo {
+  position: relative;
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.titleRow {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.titleRow h2 {
+  overflow: hidden;
+  margin: 0;
+  color: #1d2925;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+.titleRow :global(.adm-tag) {
+  flex: none;
+  font-size: 9px;
+}
+
+.movieInfo p {
+  overflow: hidden;
+  margin: 7px 0 0;
+  color: #7f8b86;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.movieInfo > span {
+  display: block;
+  margin-top: 8px;
+  color: #39735f;
+  font-size: 10px;
+}
+
+.score {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  color: #d99828;
+  font-size: 19px;
+}
+
+.score small {
+  font-size: 9px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.removeButton,
+.primaryButton,
+.offlineButton {
+  height: 27px;
+  padding: 0 12px;
+  border-radius: 14px;
+  font-size: 10px;
+}
+
+.removeButton {
+  color: #c34855;
+  background: #fff4f5;
+  border-color: #efc3c8;
+}
+
+.removeButton :global(.adm-button-content) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.primaryButton {
+  color: #fff;
+  background: #ed554e;
+  border-color: #ed554e;
+}
+
+.offlineButton {
+  color: #99a19e;
+  background: #eef1f0;
+  border-color: #e0e5e3;
+}
+
+.loadMore {
+  margin-top: 12px;
+  border-radius: 8px;
+}
+
+.endHint {
+  margin: 14px 0 0;
+  color: #a0a9a5;
+  text-align: center;
+  font-size: 10px;
+}
+
+@media (max-width: 350px) {
+  .page { padding-right: 10px; padding-left: 10px; }
+  .movieMain { grid-template-columns: 76px minmax(0, 1fr); gap: 9px; }
+  .poster { width: 76px; height: 108px; }
+}
