@@ -27,7 +27,7 @@ const PagePlaceholder: React.FC<PagePlaceholderProps> = ({
         <Button color="primary" block onClick={() => history.push(primaryPath)}>
           {primaryLabel}
         </Button>
-        <Button fill="none" block onClick={() => history.back()}>
+        <Button fill="none" block onClick={() => window.history.back()}>
           返回上一页
         </Button>
       </Space>
