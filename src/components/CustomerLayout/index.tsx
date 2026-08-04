@@ -33,7 +33,19 @@ const CustomerLayout: React.FC = () => {
     path.startsWith("/movies/") ||
     path.startsWith("/cinemas/") ||
     path.startsWith("/showtimes/") ||
-    path.startsWith("/orders/");
+    path.startsWith("/orders/") ||
+    path === "/me/preferences" ||
+    path.startsWith("/me/security");
+  const hideGlobalHeader = path === "/me/preferences" || path.startsWith("/me/security");
+  const headerTitle = path === "/me/orders"
+    ? "我的订单"
+    : path === "/me/wishlist"
+    ? "想看的电影"
+    : path === "/cinemas"
+    ? "影院"
+    : path === "/me"
+    ? "我的"
+    : "";
 
   useEffect(() => {
     if (locationStatus === "idle") locateCurrentPosition();
@@ -50,9 +62,9 @@ const CustomerLayout: React.FC = () => {
 
   return (
     <div className={styles.app}>
-      {path !== "/home" && !path.startsWith("/search") ? (
+      {path !== "/home" && !path.startsWith("/search") && !hideGlobalHeader ? (
         <header className={styles.header}>
-          <div className={styles.topRow}>
+          <div className={`${styles.topRow} ${headerTitle ? styles.topRowWithTitle : ""}`}>
             <button
               className={styles.cityButton}
               type="button"
@@ -64,6 +76,8 @@ const CustomerLayout: React.FC = () => {
               <span>{locationStatus === "locating" ? "定位中" : city}</span>
               <span className={styles.chevron}>⌄</span>
             </button>
+            {headerTitle ? <strong className={styles.pageTitle}>{headerTitle}</strong> : null}
+            {headerTitle ? <span className={styles.topRowSpacer} aria-hidden="true" /> : null}
           </div>
         </header>
       ) : null}

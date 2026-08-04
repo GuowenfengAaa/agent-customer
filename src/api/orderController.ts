@@ -91,7 +91,7 @@ export async function pay(
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.ResultPayResultVO>(`/api/user/orders/${param0}/pay`, {
+  return request<API.ResultPaymentInitVO>(`/api/user/orders/${param0}/pay`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

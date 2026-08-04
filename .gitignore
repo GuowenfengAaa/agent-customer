@@ -3,3 +3,5 @@ dist
 .DS_Store
 *.local
 .env
+.codex-dev.stdout.log
+.codex-dev.stderr.log

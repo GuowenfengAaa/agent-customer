@@ -7,6 +7,7 @@ import React from "react";
 import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import { getPosterThumbnailUrl } from "@/utils/poster";
+import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 import styles from "./index.module.less";
 
 const MovieDetail: React.FC = () => {
@@ -25,6 +26,7 @@ const MovieDetail: React.FC = () => {
     description: undefined,
     releaseDate: undefined,
     status: undefined,
+    wanted: false,
   };
   const genreTags = (movie.genre || "类型待更新")
     .split(/\s*[\/·,，]\s*/)
@@ -38,6 +40,7 @@ const MovieDetail: React.FC = () => {
     movie.status === "即将上映" || movie.status === "COMING_SOON"
       ? "COMING SOON"
       : "NOW SHOWING";
+  const wishlistMutation = useWishlistToggle(movieId, Boolean(movie.wanted));
 
   return (
     <div className={styles.page}>
@@ -81,12 +84,16 @@ const MovieDetail: React.FC = () => {
             <span>观众评分</span>
           </div>
           <Button
-            className={styles.wantButton}
+            className={`${styles.wantButton} ${movie.wanted ? styles.wantButtonActive : ""}`}
             fill="none"
-            onClick={(event) => event.stopPropagation()}
+            loading={wishlistMutation.isPending}
+            onClick={(event) => {
+              event.stopPropagation();
+              wishlistMutation.mutate();
+            }}
           >
             <HeartOutline />
-            想看
+            {movie.wanted ? "已想看" : "想看"}
           </Button>
         </div>
 
