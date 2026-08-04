@@ -72,7 +72,7 @@ const OrderPlaceholder: React.FC = () => {
     const seats = order?.items?.map((item) => `${item.rowNo}排${item.seatNo}座`).join('、') || '座位信息待更新';
     return (
       <div className={styles.page}>
-        <NavBar onBack={() => history.back()}>订单确认</NavBar>
+        <NavBar onBack={() => window.history.back()}>订单确认</NavBar>
         <Card className={styles.orderCard}>
           <Tag color="warning">{order?.statusDesc || '待确认'}</Tag>
           <h1>确认你的观影计划</h1>

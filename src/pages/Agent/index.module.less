@@ -43,6 +43,38 @@ h1 {
   font-size: 12px;
 }
 
+.locationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.locationStatus {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  color: var(--customer-primary-dark);
+  font-size: 11px;
+}
+
+.locationStatus svg {
+  flex: 0 0 auto;
+  font-size: 16px;
+}
+
+.locationStatus span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .progress {
   display: flex;
   align-items: center;
@@ -73,6 +105,16 @@ h1 {
   padding: 20px 0;
 }
 
+.agentBlock,
+.userBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.userBlock {
+  justify-items: end;
+}
+
 .agentMessage,
 .userMessage {
   max-width: 88%;
@@ -90,6 +132,113 @@ h1 {
   justify-self: end;
   color: #fff;
   background: var(--customer-primary);
+}
+
+.statusText {
+  color: var(--customer-muted);
+}
+
+.cards {
+  display: grid;
+  gap: 10px;
+}
+
+.expiredCards {
+  opacity: 0.58;
+}
+
+.expiredHint {
+  justify-self: start;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #7b8b86;
+  background: #eef2f0;
+  font-size: 10px;
+}
+
+.agentCard {
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cardHeader strong {
+  font-size: 14px;
+}
+
+.cardSubtitle {
+  margin: 8px 0 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.metaList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.metaList span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #53665f;
+  background: #eef5f2;
+  font-size: 11px;
+}
+
+.seatPreview {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.seatButton {
+  display: grid;
+  min-width: 0;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d7e3df;
+  border-radius: 5px;
+  color: #31584c;
+  background: #f2faf7;
+  font-size: 10px;
+}
+
+.seatButton:disabled {
+  cursor: not-allowed;
+}
+
+.seatSelected {
+  border-color: var(--customer-primary);
+  color: #fff;
+  background: var(--customer-primary);
+}
+
+.seatUnavailable {
+  color: #a4aaa7;
+  background: #edf0ef;
+}
+
+.cardActions {
+  margin-top: 10px;
+}
+
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .composer {

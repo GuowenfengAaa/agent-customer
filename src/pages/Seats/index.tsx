@@ -82,7 +82,7 @@ const Seats: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <NavBar onBack={() => history.back()}>选择座位</NavBar>
+      <NavBar onBack={() => window.history.back()}>选择座位</NavBar>
       <div className={styles.info}>
         <div>
           <div className={styles.kicker}>SEAT MAP</div>
