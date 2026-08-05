@@ -1,8 +1,11 @@
 .page {
+  position: relative;
   display: flex;
-  min-height: calc(100vh - var(--customer-header-height));
+  height: 100% !important;
+  min-height: 0 !important;
   flex-direction: column;
-  padding: 0 16px 18px;
+  overflow: hidden;
+  padding: 0 16px calc(var(--customer-bottom-height) + 102px);
   background: #eef5f2;
 }
 
@@ -10,7 +13,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 24px 0 18px;
+  flex: 0 0 auto;
+  padding: 16px 0 12px;
 }
 
 .avatar {
@@ -101,8 +105,15 @@ h1 {
   display: grid;
   gap: 12px;
   flex: 1;
+  min-height: 0;
   align-content: start;
-  padding: 20px 0;
+  overflow-y: auto;
+  padding: 14px 0 128px;
+  scrollbar-width: none;
+}
+
+.messages::-webkit-scrollbar {
+  display: none;
 }
 
 .agentBlock,
@@ -242,15 +253,50 @@ h1 {
 }
 
 .composer {
+  position: fixed;
+  right: auto;
+  bottom: calc(var(--customer-bottom-height) - 1px);
+  left: 50%;
+  z-index: 45;
+  width: min(calc(100% - 32px), 398px);
+  transform: translateX(-50%);
   padding: 10px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.98);
   border-radius: 8px;
   border: 1px solid var(--customer-line);
-  box-shadow: 0 5px 18px rgba(24, 62, 51, 0.07);
+  box-shadow: 0 5px 18px rgba(24, 62, 51, 0.14);
+  backdrop-filter: blur(14px);
 }
 
 .tip {
   max-width: 72%;
   color: #999;
   font-size: 10px;
+}
+
+@media (max-height: 700px) {
+  .hero {
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .progress {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .messages {
+    gap: 8px;
+    padding-top: 10px;
+  }
 }

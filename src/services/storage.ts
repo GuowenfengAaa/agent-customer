@@ -26,3 +26,9 @@ export function clearSession() {
   window.localStorage.removeItem(TOKEN_KEY);
   window.localStorage.removeItem(SESSION_KEY);
 }
+
+export function updateSessionEmail(email: string) {
+  const session = getSession();
+  if (!session) return;
+  saveSession({ ...session, email });
+}

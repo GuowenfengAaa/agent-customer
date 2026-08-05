@@ -16,6 +16,7 @@ async function patchGeneratedService() {
     'hallController.ts': [['params: API.seatsParams', 'params: { hallId: number }']],
     'showtimeController.ts': [['params: API.seatsParams', 'params: { id: number }']],
     'showtimeUserController.ts': [['params: API.seatsParams', 'params: { id: number }']],
+    'searchHistoryController.ts': [['params: API.listParams', 'params: API.searchHistoryListParams']],
   };
 
   await Promise.all(
@@ -33,7 +34,9 @@ async function patchGeneratedService() {
   const typings = await readFile(typingsPath, 'utf8');
   await writeFile(
     typingsPath,
-    typings.replace(/\n  type seatsParams = \{\n(?:    [^\n]+\n)+  \};\n/g, '\n'),
+    typings
+      .replace(/\n  type seatsParams = \{\n(?:    [^\n]+\n)+  \};\n/g, '\n')
+      .replace(/\n  type listParams = \{\n    limit\?: number;\n  \};\n/g, '\n  type searchHistoryListParams = {\n    limit?: number;\n  };\n'),
     'utf8',
   );
 }

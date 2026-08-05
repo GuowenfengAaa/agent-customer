@@ -6,7 +6,7 @@ import type {
   OrderDetail,
   OrderSummary,
   PageResult,
-  PayResult,
+  PaymentInit,
   PurchaseDraftSummary,
   SearchHistorySummary,
   SeatSummary,
@@ -68,6 +68,7 @@ function normalizeMovie(raw: RawRecord): MovieSummary {
     cast: raw.cast ?? undefined,
     showtimeCount: asOptionalNumber(raw.showtimeCount),
     cinemaCount: asOptionalNumber(raw.cinemaCount),
+    wanted: Boolean(raw.wanted),
   };
 }
 
@@ -206,6 +207,24 @@ export const customerApi = {
 
   async getMovie(movieId: string): Promise<MovieSummary> {
     return normalizeMovie(unwrap(await generatedApi.movieUserController.detail({ id: asLong(movieId) })));
+  },
+
+  async listWishlist(params: { page?: number; size?: number } = {}): Promise<PageResult<MovieSummary>> {
+    const raw = unwrap(await generatedApi.wishlistController.list({ page: 1, size: 20, ...params }));
+    return {
+      records: (raw?.records ?? []).map(normalizeMovie),
+      total: asNumber(raw?.total),
+      page: raw?.page,
+      size: raw?.size,
+    };
+  },
+
+  addToWishlist(movieId: string) {
+    return generatedApi.wishlistController.add({ movieId: asLong(movieId) }).then(() => undefined);
+  },
+
+  removeFromWishlist(movieId: string) {
+    return generatedApi.wishlistController.remove({ movieId: asLong(movieId) }).then(() => undefined);
   },
 
   async listCinemas(params: ListParams = {}): Promise<PageResult<CinemaSummary>> {
@@ -354,13 +373,13 @@ export const customerApi = {
     return normalizeOrderDetail(unwrap(await generatedApi.orderController.detail({ id: asLong(orderId) })));
   },
 
-  payOrder(orderId: string, idempotencyKey: string) {
+  payOrder(orderId: string, idempotencyKey: string): Promise<PaymentInit> {
     return generatedApi.orderController.pay({ id: asLong(orderId) }, { idempotencyKey }).then((result) => unwrap(result) as RawRecord).then((raw) => ({
       orderId: asId(raw.orderId),
-      status: raw.status ?? '',
-      paidAmount: asOptionalNumber(raw.paidAmount),
-      tickets: Array.isArray(raw.tickets) ? raw.tickets.map((ticket: RawRecord) => ({ ticketCode: ticket.ticketCode ?? '', seat: ticket.seat, qrContent: ticket.qrContent })) : [],
-    } satisfies PayResult));
+      outTradeNo: raw.outTradeNo ?? '',
+      paymentStatus: raw.paymentStatus ?? raw.status ?? 'PENDING',
+      payForm: raw.payForm ?? undefined,
+    } satisfies PaymentInit));
   },
 
   cancelOrder(orderId: string) {
@@ -369,5 +388,31 @@ export const customerApi = {
 
   getProfile() {
     return generatedApi.profileController.profile().then((result) => unwrap(result) as UserProfile);
+  },
+
+  updateAvatar(file: File) {
+    return generatedApi.profileController.updateAvatar({}, file)
+      .then((result) => unwrap(result)?.url ?? '');
+  },
+
+  savePreference(payload: { district: string; hallType: string; budget: number; seatZone: string }) {
+    return generatedApi.profileController.savePreference(payload)
+      .then((result) => unwrap(result) as UserProfile['preference']);
+  },
+
+  sendSecurityCode() {
+    return generatedApi.profileController.sendSecurityCode().then(() => undefined);
+  },
+
+  sendNewEmailCode(newEmail: string) {
+    return generatedApi.profileController.sendNewEmailCode({ newEmail }).then(() => undefined);
+  },
+
+  changePassword(payload: { oldPassword: string; emailCode: string; newPassword: string }) {
+    return generatedApi.profileController.changePassword(payload).then(() => undefined);
+  },
+
+  changeEmail(payload: { currentEmailCode: string; newEmail: string; newEmailCode: string }) {
+    return generatedApi.profileController.changeEmail(payload).then(() => undefined);
   },
 };

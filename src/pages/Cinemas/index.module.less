@@ -5,9 +5,9 @@
 
 .movieSummary {
   display: grid;
-  grid-template-columns: 82px minmax(0, 1fr) 16px;
+  grid-template-columns: 20px 82px minmax(0, 1fr) 20px;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin: 9px 0 10px;
   padding: 9px;
   overflow: hidden;
@@ -26,6 +26,7 @@
   background: #263e3a;
   border-radius: 7px;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.22);
+  animation: movieSlideIn 220ms ease-out;
 }
 
 .moviePosterFallback,
@@ -50,6 +51,20 @@
 
 .movieSummaryInfo {
   min-width: 0;
+  animation: movieSlideIn 220ms ease-out;
+}
+
+.movieKickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.movieKickerRow > span {
+  color: #c8d1ce;
+  font-size: 9px;
+  font-weight: 700;
 }
 
 .movieKicker {
@@ -151,10 +166,46 @@
   font-size: 13px;
 }
 
-.movieArrow {
-  align-self: center;
+.wantButtonActive {
+  color: #fff;
+  background: #d84f5b;
+}
+
+.carouselArrow {
+  width: 24px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  padding: 0;
   color: #d6d6d6;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
   font-size: 19px;
+}
+
+.carouselArrow:active:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.carouselArrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+@keyframes movieSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .header {
@@ -269,13 +320,13 @@ h1 {
 
 @media (max-width: 360px) {
   .movieSummary {
-    grid-template-columns: 82px minmax(0, 1fr) 16px;
-    gap: 10px;
+    grid-template-columns: 18px 72px minmax(0, 1fr) 18px;
+    gap: 7px;
   }
 
   .moviePoster {
-    width: 82px;
-    height: 118px;
+    width: 72px;
+    height: 102px;
   }
 
   .movieSummaryInfo strong {

@@ -9,4 +9,5 @@ export const queryKeys = {
   order: (orderId: string) => ['order', orderId] as const,
   profile: ['profile'] as const,
   searchHistory: (limit = 10) => ['searchHistory', limit] as const,
+  wishlist: ['wishlist'] as const,
 };

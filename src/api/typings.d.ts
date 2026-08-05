@@ -1,4 +1,8 @@
 declare namespace API {
+  type addParams = {
+    movieId: number;
+  };
+
   type Brief = {
     id?: number;
     name?: string;
@@ -153,6 +157,12 @@ declare namespace API {
     orderId?: number;
   };
 
+  type EmailChangeDTO = {
+    currentEmailCode: string;
+    newEmail: string;
+    newEmailCode: string;
+  };
+
   type EmailLoginDTO = {
     email: string;
     code: string;
@@ -198,6 +208,10 @@ declare namespace API {
     cinemaId: number;
   };
 
+  type searchHistoryListParams = {
+    limit?: number;
+  };
+
   type listParams = {
     page?: number;
     size?: number;
@@ -220,6 +234,11 @@ declare namespace API {
     keyword?: string;
     district?: string;
     status?: number;
+  };
+
+  type listParams = {
+    page?: number;
+    size?: number;
   };
 
   type listParams = {
@@ -369,6 +388,7 @@ declare namespace API {
     releaseDate?: string;
     showtimeCount?: number;
     cinemaCount?: number;
+    wanted?: boolean;
     createTime?: string;
   };
 
@@ -378,6 +398,14 @@ declare namespace API {
     lat: number;
     lng: number;
     radius?: number;
+  };
+
+  type NewEmailCodeDTO = {
+    newEmail: string;
+  };
+
+  type notifyParams = {
+    params: Record<string, any>;
   };
 
   type OrderDetailVO = {
@@ -447,6 +475,7 @@ declare namespace API {
 
   type PasswordChangeDTO = {
     oldPassword: string;
+    emailCode: string;
     newPassword: string;
   };
 
@@ -467,15 +496,15 @@ declare namespace API {
     processedAt?: string;
   };
 
-  type payParams = {
-    id: number;
+  type PaymentInitVO = {
+    orderId?: number;
+    outTradeNo?: string;
+    paymentStatus?: string;
+    payForm?: string;
   };
 
-  type PayResultVO = {
-    orderId?: number;
-    status?: string;
-    paidAmount?: number;
-    tickets?: TicketItem[];
+  type payParams = {
+    id: number;
   };
 
   type PreferenceSaveDTO = {
@@ -498,6 +527,10 @@ declare namespace API {
     email: string;
     password: string;
     code: string;
+  };
+
+  type removeParams = {
+    movieId: number;
   };
 
   type ResetPasswordDTO = {
@@ -548,6 +581,12 @@ declare namespace API {
     data?: HallVO[];
   };
 
+  type ResultListSearchHistoryVO = {
+    code?: number;
+    msg?: string;
+    data?: SearchHistoryVO[];
+  };
+
   type ResultLockResultVO = {
     code?: number;
     msg?: string;
@@ -584,16 +623,22 @@ declare namespace API {
     data?: OrderPageVO;
   };
 
-  type ResultPayResultVO = {
+  type ResultPaymentInitVO = {
     code?: number;
     msg?: string;
-    data?: PayResultVO;
+    data?: PaymentInitVO;
   };
 
   type ResultPreferenceVO = {
     code?: number;
     msg?: string;
     data?: PreferenceVO;
+  };
+
+  type ResultSearchHistoryVO = {
+    code?: number;
+    msg?: string;
+    data?: SearchHistoryVO;
   };
 
   type ResultSeatVO = {
@@ -656,39 +701,14 @@ declare namespace API {
     data?: UserProfileVO;
   };
 
-  type SearchHistorySaveDTO = {
-    keyword: string;
-  };
-
-  type SearchHistoryVO = {
-    id?: number;
-    keyword?: string;
-    searchCount?: number;
-    lastSearchTime?: string;
-  };
-
-  type SearchHistoryListVO = SearchHistoryVO[];
-
-  type ResultSearchHistoryListVO = {
-    code?: number;
-    msg?: string;
-    data?: SearchHistoryListVO;
-  };
-
-  type ResultSearchHistoryVO = {
-    code?: number;
-    msg?: string;
-    data?: SearchHistoryVO;
-  };
-
-  type searchHistoryListParams = {
-    limit?: number;
-  };
-
   type ResultVoid = {
     code?: number;
     msg?: string;
     data?: Record<string, any>;
+  };
+
+  type returnFromAlipayParams = {
+    out_trade_no?: string;
   };
 
   type RowVO = {
@@ -698,6 +718,17 @@ declare namespace API {
 
   type saveSeatLayoutParams = {
     hallId: number;
+  };
+
+  type SearchHistorySaveDTO = {
+    keyword: string;
+  };
+
+  type SearchHistoryVO = {
+    id?: number;
+    keyword?: string;
+    searchCount?: number;
+    lastSearchTime?: string;
   };
 
   type SeatCreateDTO = {
@@ -875,12 +906,6 @@ declare namespace API {
     qrContent?: string;
   };
 
-  type TicketItem = {
-    ticketCode?: string;
-    seat?: string;
-    qrContent?: string;
-  };
-
   type TodayStatsVO = {
     newUsers?: number;
     orderCount?: number;
@@ -984,6 +1009,7 @@ declare namespace API {
   type UserProfileVO = {
     phone?: string;
     email?: string;
+    avatarUrl?: string;
     stats?: UserStats;
     preference?: PreferenceVO;
   };

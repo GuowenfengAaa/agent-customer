@@ -68,7 +68,17 @@ export default defineConfig({
       wrappers: ['@/wrappers/customer'],
     },
     {
+      path: '/orders/:orderId/pay/result',
+      component: './OrderPlaceholder',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
       path: '/orders/:orderId/tickets',
+      component: './OrderPlaceholder',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
+      path: '/orders/:orderId/detail',
       component: './OrderPlaceholder',
       wrappers: ['@/wrappers/customer'],
     },
@@ -83,12 +93,27 @@ export default defineConfig({
       wrappers: ['@/wrappers/customer'],
     },
     {
+      path: '/me/wishlist',
+      component: './Wishlist',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
       path: '/me/preferences',
       component: './Me',
       wrappers: ['@/wrappers/customer'],
     },
     {
       path: '/me/security',
+      component: './Me',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
+      path: '/me/security/password',
+      component: './Me',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
+      path: '/me/security/email',
       component: './Me',
       wrappers: ['@/wrappers/customer'],
     },
