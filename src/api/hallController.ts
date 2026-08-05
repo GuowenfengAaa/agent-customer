@@ -9,9 +9,15 @@ export async function listByCinema(
   options?: { [key: string]: any }
 ) {
   const { cinemaId: param0, ...queryParams } = params;
-  return request<API.ResultListHallVO>(`/api/admin/cinemas/${param0}/halls`, {
+  return request<API.ResultHallPageVO>(`/api/admin/cinemas/${param0}/halls`, {
     method: "GET",
-    params: { ...queryParams },
+    params: {
+      // page has a default value: 1
+      page: "1",
+      // size has a default value: 10
+      size: "10",
+      ...queryParams,
+    },
     ...(options || {}),
   });
 }
@@ -21,7 +27,7 @@ export async function create(
   body: API.HallCreateDTO,
   options?: { [key: string]: any }
 ) {
-  return request<API.ResultHallVO>("/api/admin/halls", {
+  return request<API.ResultVoid>("/api/admin/halls", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,7 +45,7 @@ export async function update(
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.ResultHallVO>(`/api/admin/halls/${param0}`, {
+  return request<API.ResultVoid>(`/api/admin/halls/${param0}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -139,4 +145,23 @@ export async function saveSeatLayout(
       ...(options || {}),
     }
   );
+}
+
+/** 此处后端没有提供注释 PUT /api/admin/halls/${param0}/status */
+export async function updateStatus(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.updateStatusParams,
+  body: API.HallStatusDTO,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.ResultVoid>(`/api/admin/halls/${param0}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
 }

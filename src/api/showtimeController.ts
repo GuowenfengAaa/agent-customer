@@ -27,7 +27,7 @@ export async function create(
   body: API.ShowtimeCreateDTO,
   options?: { [key: string]: any }
 ) {
-  return request<API.ResultShowtimeVO>("/api/admin/showtimes", {
+  return request<API.ResultVoid>("/api/admin/showtimes", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export async function update(
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.ResultShowtimeVO>(`/api/admin/showtimes/${param0}`, {
+  return request<API.ResultVoid>(`/api/admin/showtimes/${param0}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -103,16 +103,13 @@ export async function updateStatus(
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.ResultShowtimeVO>(
-    `/api/admin/showtimes/${param0}/status`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      params: { ...queryParams },
-      data: body,
-      ...(options || {}),
-    }
-  );
+  return request<API.ResultVoid>(`/api/admin/showtimes/${param0}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
 }
