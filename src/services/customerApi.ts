@@ -1,5 +1,6 @@
 import type {
   CinemaSummary,
+  AgentMemorySummary,
   ID,
   LockResult,
   MovieSummary,
@@ -16,6 +17,7 @@ import type {
   UserProfile,
 } from '@/types/domain';
 import generatedApi from '@/api';
+import openapiRequest from './openapiRequest';
 
 interface ListParams {
   page?: number;
@@ -180,6 +182,33 @@ function normalizeSearchHistory(raw: RawRecord): SearchHistorySummary {
   };
 }
 
+function normalizeAgentMemory(raw: RawRecord): AgentMemorySummary {
+  return {
+    memoryId: String(raw.memoryId ?? ''),
+    sessionId: String(raw.sessionId ?? ''),
+    title: raw.title ?? undefined,
+    previewMessage: raw.previewMessage ?? undefined,
+    messageCount: asOptionalNumber(raw.messageCount),
+    stateJson: raw.stateJson ?? undefined,
+    lastMessageTime: raw.lastMessageTime ?? undefined,
+    createTime: raw.createTime ?? undefined,
+    updateTime: raw.updateTime ?? undefined,
+    messages: Array.isArray(raw.messages)
+      ? raw.messages.map((message: RawRecord) => ({
+        id: asId(message.id),
+        memoryId: String(message.memoryId ?? raw.memoryId ?? ''),
+        role: message.role ?? 'assistant',
+        content: message.content ?? '',
+        event: message.event ?? undefined,
+        intent: message.intent ?? undefined,
+        action: message.action ?? undefined,
+        state: message.state ?? undefined,
+        createTime: message.createTime ?? undefined,
+      }))
+      : [],
+  };
+}
+
 export const customerApi = {
   async listMovies(params: ListParams = {}): Promise<PageResult<MovieSummary>> {
     const raw = unwrap(await generatedApi.movieUserController.list({ page: 1, size: 20, ...params }));
@@ -203,6 +232,49 @@ export const customerApi = {
 
   async clearSearchHistory(): Promise<void> {
     await generatedApi.searchHistoryController.clear();
+  },
+
+  async getAgentMemory(sessionId: string, memoryId?: string): Promise<AgentMemorySummary | null> {
+    const params = new URLSearchParams({ sessionId });
+    if (memoryId) params.set('memoryId', memoryId);
+    params.set('limit', '100');
+    const result = await openapiRequest<OpenApiResult<RawRecord | null>>(
+      `/api/user/agent/memory/current?${params.toString()}`,
+      { method: 'GET' },
+    );
+    const raw = unwrap(result);
+    return raw ? normalizeAgentMemory(raw) : null;
+  },
+
+  async listAgentMemories(limit = 20): Promise<AgentMemorySummary[]> {
+    const params = new URLSearchParams({ limit: String(limit) });
+    const result = await openapiRequest<OpenApiResult<RawRecord[]>>(
+      `/api/user/agent/memory/list?${params.toString()}`,
+      { method: 'GET' },
+    );
+    const raw = unwrap(result);
+    return Array.isArray(raw) ? raw.map(normalizeAgentMemory) : [];
+  },
+
+  async syncAgentMemory(payload: {
+    sessionId: string;
+    memoryId?: string;
+    stateJson?: string;
+    messages: Array<{
+      role: 'user' | 'assistant';
+      content: string;
+      cardsJson?: string;
+    }>;
+  }): Promise<AgentMemorySummary | null> {
+    const result = await openapiRequest<OpenApiResult<RawRecord | null>>(
+      '/api/user/agent/memory/sync',
+      {
+        method: 'POST',
+        data: payload,
+      },
+    );
+    const raw = unwrap(result);
+    return raw ? normalizeAgentMemory(raw) : null;
   },
 
   async getMovie(movieId: string): Promise<MovieSummary> {

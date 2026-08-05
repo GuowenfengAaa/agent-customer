@@ -22,7 +22,7 @@ export type AgentSseEvent =
   | { event: 'card'; data: { traceId: string; type: AgentCardType; data: AgentCardPayload } }
   | { event: 'progress'; data: { traceId: string; step: string; completed: string[] } }
   | { event: 'error'; data: { code?: number; message: string; traceId?: string; detail?: string } }
-  | { event: 'done'; data: { traceId: string; state: string } };
+  | { event: 'done'; data: { traceId: string; state: string; memoryId?: string } };
 
 export interface AgentCardPayload {
   type?: AgentCardType | string;
@@ -42,6 +42,7 @@ export interface AgentCardPayload {
 export interface AgentStreamOptions {
   url: string;
   sessionId: string;
+  memoryId?: string;
   draftId?: string | number;
   message: string;
   event?: string;
@@ -99,6 +100,7 @@ export function connectAgentStream(options: AgentStreamOptions) {
         },
         body: JSON.stringify({
           sessionId: options.sessionId,
+          memoryId: options.memoryId,
           draftId,
           message: options.message,
           event: options.event,

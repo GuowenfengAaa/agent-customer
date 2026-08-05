@@ -192,3 +192,28 @@ export interface SearchHistorySummary {
   searchCount?: number;
   lastSearchTime?: string;
 }
+
+export interface AgentMessageSummary {
+  id: ID;
+  memoryId: string;
+  role: 'user' | 'assistant' | 'system' | 'tool';
+  content: string;
+  event?: string;
+  intent?: string;
+  action?: string;
+  state?: string;
+  createTime?: string;
+}
+
+export interface AgentMemorySummary {
+  memoryId: string;
+  sessionId: string;
+  title?: string;
+  previewMessage?: string;
+  messageCount?: number;
+  stateJson?: string;
+  lastMessageTime?: string;
+  createTime?: string;
+  updateTime?: string;
+  messages: AgentMessageSummary[];
+}

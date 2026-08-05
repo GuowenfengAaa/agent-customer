@@ -1,10 +1,12 @@
 import type { LoginResponse, UserSession } from '@/types/domain';
 import generatedApi from '@/api';
+import { useAppStore } from '@/stores/useAppStore';
 import { clearSession, getSession, saveSession } from './storage';
 
 const unwrap = <T,>(result: { data?: T }) => result.data as T;
 
 function saveLoginResponse(response: LoginResponse): UserSession {
+  useAppStore.getState().resetAgentSessionState();
   const roleCode = Number(response.user.role);
   const session: UserSession = {
     token: response.token,
@@ -53,6 +55,7 @@ export async function logout() {
   try {
     await generatedApi.authController.logout();
   } finally {
+    useAppStore.getState().resetAgentSessionState();
     clearSession();
   }
 }
