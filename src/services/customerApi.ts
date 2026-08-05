@@ -14,6 +14,8 @@ import type {
   ShowtimeSeatLayout,
   ShowtimeSummary,
   UserProfile,
+  SnackSelection,
+  SnackOrderItem,
 } from '@/types/domain';
 import generatedApi from '@/api';
 
@@ -161,6 +163,16 @@ function normalizeOrderDetail(raw: RawRecord): OrderDetail {
       unitPrice: asNumber(item.unitPrice),
       ticketCode: item.ticketCode ?? undefined,
     })) : [],
+    snacks: Array.isArray(raw.snacks) ? raw.snacks.map((item: RawRecord): SnackOrderItem => ({
+      snackId: asId(item.snackId),
+      name: item.name ?? item.snackName ?? '零食',
+      image: item.image ?? undefined,
+      unitPrice: asNumber(item.unitPrice),
+      quantity: asNumber(item.quantity),
+      amount: asNumber(item.amount),
+      inventoryStatus: item.inventoryStatus ?? undefined,
+    })) : [],
+    snackAmount: asOptionalNumber(raw.snackAmount) ?? 0,
     payment: raw.payment ? { status: raw.payment.status, amount: asOptionalNumber(raw.payment.amount), processedAt: raw.payment.processedAt } : undefined,
     tickets: Array.isArray(raw.tickets) ? raw.tickets.map((ticket: RawRecord) => ({
       ticketCode: ticket.ticketCode ?? '',
@@ -168,6 +180,36 @@ function normalizeOrderDetail(raw: RawRecord): OrderDetail {
       seatNo: asOptionalNumber(ticket.seatNo),
       qrContent: ticket.qrContent ?? undefined,
     })) : [],
+  };
+}
+
+function normalizeSnackSelection(raw: RawRecord): SnackSelection {
+  return {
+    orderId: asId(raw?.orderId),
+    cinemaId: raw?.cinemaId === undefined ? undefined : asId(raw.cinemaId),
+    cinemaName: raw?.cinemaName ?? undefined,
+    options: Array.isArray(raw?.options) ? raw.options.map((option: RawRecord) => ({
+      id: asId(option.id),
+      name: option.name ?? '零食',
+      description: option.description ?? undefined,
+      image: option.image ?? undefined,
+      priceFen: asNumber(option.priceFen),
+      availableStock: asNumber(option.availableStock),
+      selectedQuantity: asNumber(option.selectedQuantity),
+      status: option.status === undefined ? undefined : asNumber(option.status),
+    })) : [],
+    selected: Array.isArray(raw?.selected) ? raw.selected.map((item: RawRecord): SnackOrderItem => ({
+      snackId: asId(item.snackId),
+      name: item.name ?? item.snackName ?? '零食',
+      image: item.image ?? undefined,
+      unitPrice: asNumber(item.unitPrice),
+      quantity: asNumber(item.quantity),
+      amount: asNumber(item.amount),
+      inventoryStatus: item.inventoryStatus ?? undefined,
+    })) : [],
+    ticketAmount: asNumber(raw?.ticketAmount),
+    snackAmount: asNumber(raw?.snackAmount),
+    totalAmount: asNumber(raw?.totalAmount),
   };
 }
 
@@ -182,7 +224,7 @@ function normalizeSearchHistory(raw: RawRecord): SearchHistorySummary {
 
 export const customerApi = {
   async listMovies(params: ListParams = {}): Promise<PageResult<MovieSummary>> {
-    const raw = unwrap(await generatedApi.movieUserController.list({ page: 1, size: 20, ...params }));
+    const raw = unwrap(await generatedApi.movieUserController.list({ page: 1, size: 20, ...params } as any));
     return {
       records: (raw?.records ?? []).map(normalizeMovie),
       total: asNumber(raw?.total),
@@ -228,7 +270,7 @@ export const customerApi = {
   },
 
   async listCinemas(params: ListParams = {}): Promise<PageResult<CinemaSummary>> {
-    const raw = unwrap(await generatedApi.cinemaUserController.list({ page: 1, size: 20, ...params }));
+    const raw = unwrap(await generatedApi.cinemaUserController.list({ page: 1, size: 20, ...params } as any));
     return {
       records: (raw?.records ?? []).map(normalizeCinema),
       total: asNumber(raw?.total),
@@ -252,7 +294,7 @@ export const customerApi = {
       ...params,
       movieId: params.movieId ? asLong(params.movieId) : undefined,
       cinemaId: params.cinemaId ? asLong(params.cinemaId) : undefined,
-    })) as unknown as RawRecord;
+    } as any)) as unknown as RawRecord;
     const cinema = raw?.cinema ? {
       id: asId(raw.cinema.id),
       name: raw.cinema.name ?? '',
@@ -360,7 +402,7 @@ export const customerApi = {
   },
 
   async listOrders(params: { page?: number; size?: number; status?: string } = {}): Promise<PageResult<OrderSummary>> {
-    const raw = unwrap(await generatedApi.orderController.list({ page: 1, size: 20, ...params }));
+    const raw = unwrap(await generatedApi.orderController.list({ page: 1, size: 20, ...params } as any));
     return {
       records: (raw?.records ?? []).map(normalizeOrder),
       total: asNumber(raw?.total),
@@ -371,6 +413,19 @@ export const customerApi = {
 
   async getOrder(orderId: string): Promise<OrderDetail> {
     return normalizeOrderDetail(unwrap(await generatedApi.orderController.detail({ id: asLong(orderId) })));
+  },
+
+  async getOrderSnacks(orderId: string): Promise<SnackSelection> {
+    const raw = unwrap(await generatedApi.orderSnackController.get({ orderId: asLong(orderId) })) as RawRecord;
+    return normalizeSnackSelection(raw);
+  },
+
+  async replaceOrderSnacks(orderId: string, items: Array<{ snackId: string; quantity: number }>): Promise<SnackSelection> {
+    const raw = unwrap(await generatedApi.orderSnackController.replace(
+      { orderId: asLong(orderId) },
+      { items: items.map((item) => ({ snackId: asLong(item.snackId), quantity: item.quantity })) },
+    )) as RawRecord;
+    return normalizeSnackSelection(raw);
   },
 
   payOrder(orderId: string, idempotencyKey: string): Promise<PaymentInit> {

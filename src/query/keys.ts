@@ -7,6 +7,7 @@ export const queryKeys = {
   draft: ['purchaseDraft', 'active'] as const,
   orders: (filters: object) => ['orders', filters] as const,
   order: (orderId: string) => ['order', orderId] as const,
+  orderSnacks: (orderId: string) => ['orderSnacks', orderId] as const,
   profile: ['profile'] as const,
   searchHistory: (limit = 10) => ['searchHistory', limit] as const,
   wishlist: ['wishlist'] as const,
