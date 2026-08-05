@@ -9,6 +9,16 @@
   background: #eef5f2;
 }
 
+.navActions {
+  --gap: 4px;
+}
+
+.moreButton {
+  min-width: 28px;
+  padding: 0;
+  font-size: 18px;
+}
+
 .hero {
   display: flex;
   align-items: center;
@@ -206,6 +216,52 @@ h1 {
   font-size: 11px;
 }
 
+.metaList b {
+  font-weight: 600;
+}
+
+.metaList em {
+  font-style: normal;
+}
+
+.detailList {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  margin-top: 10px;
+  border: 1px solid #e1ebe7;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.detailList span {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-top: 1px solid #edf3f1;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.detailList span:first-child {
+  border-top: 0;
+}
+
+.detailList b {
+  color: #7b8b86;
+  font-weight: 600;
+}
+
+.detailList em {
+  overflow-wrap: anywhere;
+  color: #1d2c28;
+  font-style: normal;
+  font-weight: 650;
+  text-align: right;
+}
+
 .seatPreview {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -299,4 +355,102 @@ h1 {
     gap: 8px;
     padding-top: 10px;
   }
+}
+
+.sessionMenu {
+  position: absolute;
+  top: 54px;
+  right: 16px;
+  left: 16px;
+  z-index: 20;
+  overflow: hidden;
+  border: 1px solid rgba(25, 70, 58, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 18px 40px rgba(20, 48, 40, 0.16),
+    0 3px 10px rgba(20, 48, 40, 0.08);
+}
+
+.sessionPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 9px;
+  border-bottom: 1px solid #eef3f1;
+}
+
+.sessionPanelHeader > div {
+  display: grid;
+  gap: 2px;
+}
+
+.sessionPanelHeader strong {
+  color: #14231f;
+  font-size: 14px;
+}
+
+.sessionPanelHeader span {
+  color: #8b9994;
+  font-size: 11px;
+}
+
+.sessionList {
+  display: grid;
+  overflow: auto;
+  max-height: 312px;
+  padding: 6px;
+}
+
+.sessionItem {
+  display: grid;
+  width: 100%;
+  gap: 4px;
+  padding: 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #172622;
+  background: transparent;
+  text-align: left;
+}
+
+.sessionItem + .sessionItem {
+  margin-top: 2px;
+}
+
+.sessionItem:active {
+  background: #eef6f3;
+}
+
+.sessionItemActive {
+  background: #edf8f4;
+}
+
+.sessionTitle {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionPreview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #6f7f79;
+  font-size: 12px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sessionMeta,
+.sessionEmpty {
+  color: #94a19c;
+  font-size: 11px;
+}
+
+.sessionEmpty {
+  padding: 22px 0;
+  text-align: center;
 }

@@ -1,5 +1,5 @@
 import { Button, Card, NavBar, Space, Tag, TextArea, Toast } from 'antd-mobile';
-import { EnvironmentOutline } from 'antd-mobile-icons';
+import { EnvironmentOutline, MoreOutline } from 'antd-mobile-icons';
 import { history, useSearchParams } from '@umijs/max';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -11,6 +11,7 @@ import { customerApi } from '@/services/customerApi';
 import { requestBrowserLocation, type BrowserLocation } from '@/services/location';
 import { getSession, getToken } from '@/services/storage';
 import { type AgentChatMessage, useAppStore } from '@/stores/useAppStore';
+import type { AgentMemorySummary } from '@/types/domain';
 import styles from './index.module.less';
 
 const agentBaseUrl = process.env.AGENT_BASE_URL || 'http://127.0.0.1:8001';
@@ -30,7 +31,7 @@ function cardTypeText(type?: string) {
     SEAT_MAP: '座位图',
     ALTERNATIVE: '替代方案',
     ORDER_CONFIRM: '订单确认',
-    PAYMENT: '模拟支付',
+    PAYMENT: '支付确认',
     TICKET: '电子票',
     LOCATION_PICKER: '位置选择',
     SNACK_LIST: '零食推荐',
@@ -64,6 +65,28 @@ function getSeatLabel(seat: Record<string, unknown>, index: number) {
   return getSeatId(seat, index);
 }
 
+function toAgentMessages(memory: AgentMemorySummary): AgentChatMessage[] {
+  return memory.messages
+    .filter((message) => message.role === 'user' || message.role === 'assistant')
+    .map((message) => ({
+      id: message.id,
+      role: message.role as 'user' | 'assistant',
+      content: message.content,
+      cards: [],
+    }));
+}
+
+function formatSessionTime(value?: string) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value.replace('T', ' ').slice(0, 16);
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  const hour = `${date.getHours()}`.padStart(2, '0');
+  const minute = `${date.getMinutes()}`.padStart(2, '0');
+  return `${month}-${day} ${hour}:${minute}`;
+}
+
 function AgentCard({
   card,
   disabled,
@@ -74,7 +97,9 @@ function AgentCard({
   onAction: (event: string, label: string, payload?: Record<string, unknown>) => void;
 }) {
   const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
-  const isSeatMap = String(card.type || '').toUpperCase() === 'SEAT_MAP';
+  const cardType = String(card.type || '').toUpperCase();
+  const isSeatMap = cardType === 'SEAT_MAP';
+  const isOrderDetailCard = cardType === 'PAYMENT' || cardType === 'ORDER_CONFIRM';
   const metaEntries = Object.entries(card.meta || {})
     .map(([key, value]) => [key, displayValue(value)] as const)
     .filter(([, value]) => value);
@@ -105,9 +130,12 @@ function AgentCard({
       </div>
       {card.subtitle ? <p className={styles.cardSubtitle}>{card.subtitle}</p> : null}
       {metaEntries.length ? (
-        <div className={styles.metaList}>
+        <div className={isOrderDetailCard ? styles.detailList : styles.metaList}>
           {metaEntries.map(([key, value]) => (
-            <span key={key}>{key}: {value}</span>
+            <span key={key}>
+              <b>{key}</b>
+              <em>{value}</em>
+            </span>
           ))}
         </div>
       ) : null}
@@ -168,11 +196,13 @@ const Agent: React.FC = () => {
   const {
     setMode,
     setAgentContext,
+    memoryId,
     sessionId,
     draftId,
     agentInput,
     setAgentInput,
     agentMessages,
+    setAgentMessages,
     appendAgentMessages,
     appendAgentMessageContent,
     patchAgentMessage,
@@ -188,11 +218,16 @@ const Agent: React.FC = () => {
   } = useAppStore();
   const [running, setRunning] = useState(false);
   const [resolvedDraftId, setResolvedDraftId] = useState<string>();
+  const [historyReady, setHistoryReady] = useState(false);
+  const [sessionListVisible, setSessionListVisible] = useState(false);
+  const [sessionListLoading, setSessionListLoading] = useState(false);
+  const [sessionList, setSessionList] = useState<AgentMemorySummary[]>([]);
+  const [newConversationSaving, setNewConversationSaving] = useState(false);
   const streamRef = useRef<{ close: () => void } | null>(null);
   const greetingRequestedRef = useRef(false);
   const locationRequestRef = useRef<Promise<BrowserLocation> | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const generatedSessionIdRef = useRef(sessionId || `h5-${createId()}`);
+  const generatedSessionIdRef = useRef(sessionId || createId());
 
   const activeSessionId = sessionId || generatedSessionIdRef.current;
   const queryDraftId = searchParams.get('draftId') || undefined;
@@ -223,6 +258,49 @@ const Agent: React.FC = () => {
     setMode('AI');
     setAgentContext({ sessionId: activeSessionId, draftId: activeDraftId });
   }, [activeDraftId, activeSessionId, setAgentContext, setMode]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (agentMessages.length) {
+      setHistoryReady(true);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const token = getToken();
+    if (!token) {
+      setHistoryReady(true);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setHistoryReady(false);
+    void customerApi
+      .getAgentMemory(activeSessionId, memoryId)
+      .then((memory) => {
+        if (cancelled || !memory) return;
+        if (memory.memoryId) {
+          setAgentContext({
+            sessionId: memory.sessionId || memory.memoryId,
+            memoryId: memory.memoryId,
+          });
+        }
+        const restoredMessages = toAgentMessages(memory);
+        if (restoredMessages.length && !cancelled) {
+          setAgentMessages(restoredMessages);
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setHistoryReady(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSessionId, agentMessages.length, memoryId, setAgentContext, setAgentMessages]);
 
   useEffect(() => {
     return () => {
@@ -259,9 +337,9 @@ const Agent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (agentMessages.length || greetingRequestedRef.current) return;
+    if (!historyReady || agentMessages.length || greetingRequestedRef.current) return;
     loadGreeting();
-  }, [activeSessionId, agentMessages.length]);
+  }, [activeSessionId, agentMessages.length, historyReady]);
 
   function patchAssistant(id: string, patch: Partial<AgentChatMessage>) {
     patchAgentMessage(id, patch);
@@ -298,7 +376,14 @@ const Agent: React.FC = () => {
       return;
     }
     if (event.event === 'done') {
+      if (event.data.memoryId) {
+        setAgentContext({
+          sessionId: event.data.memoryId,
+          memoryId: event.data.memoryId,
+        });
+      }
       setRunning(false);
+      void syncCurrentConversation(event.data.memoryId).catch(() => undefined);
     }
   }
 
@@ -328,6 +413,7 @@ const Agent: React.FC = () => {
     streamRef.current = connectAgentStream({
       url: `${agentBaseUrl.replace(/\/$/, '')}/api/agent/chat/stream`,
       sessionId: activeSessionId,
+      memoryId,
       message: '你好',
       jwt: token || undefined,
       userId: session?.userId,
@@ -384,6 +470,7 @@ const Agent: React.FC = () => {
     streamRef.current = connectAgentStream({
       url: `${agentBaseUrl.replace(/\/$/, '')}/api/agent/chat/stream`,
       sessionId: activeSessionId,
+      memoryId,
       draftId: activeDraftId,
       message: content,
       event,
@@ -402,15 +489,131 @@ const Agent: React.FC = () => {
     });
   }
 
-  function startNewConversation() {
-    const newSessionId = `h5-${createId()}`;
+  async function syncCurrentConversation(nextMemoryId?: string) {
+    const token = getToken();
+    const currentStore = useAppStore.getState();
+    const currentSessionId = currentStore.sessionId || activeSessionId;
+    const currentMemoryId = nextMemoryId || currentStore.memoryId || memoryId;
+    const finishedMessages = currentStore.agentMessages
+      .filter((message) => message.content.trim())
+      .map((message) => ({
+        role: message.role,
+        content: message.content,
+        cardsJson: message.cards?.length ? JSON.stringify(message.cards) : undefined,
+      }));
+
+    if (!token || finishedMessages.length === 0) {
+      return;
+    }
+
+    const session = getSession();
+    const saved = await customerApi.syncAgentMemory({
+      sessionId: currentSessionId,
+      memoryId: currentMemoryId,
+      stateJson: JSON.stringify({
+        session_id: currentSessionId,
+        memory_id: currentMemoryId,
+        user_id: session?.userId,
+        state: 'archived',
+        slots: {},
+        selected: {},
+      }),
+      messages: finishedMessages,
+    });
+    if (saved?.memoryId) {
+      setAgentContext({
+        sessionId: saved.sessionId || saved.memoryId,
+        memoryId: saved.memoryId,
+        draftId: activeDraftId,
+      });
+    }
+  }
+
+  async function startNewConversation() {
+    if (running || newConversationSaving) {
+      Toast.show({ content: '当前会话还在处理，请稍后再新建' });
+      return;
+    }
+
+    setNewConversationSaving(true);
+    try {
+      await syncCurrentConversation();
+    } catch (error) {
+      Toast.show({
+        content: error instanceof Error ? error.message : '旧会话保存失败，未开始新会话',
+      });
+      setNewConversationSaving(false);
+      return;
+    }
+
+    const newSessionId = createId();
     streamRef.current?.close();
     generatedSessionIdRef.current = newSessionId;
     greetingRequestedRef.current = false;
+    setHistoryReady(true);
     setRunning(false);
     clearAgentConversation();
-    setAgentContext({ sessionId: newSessionId, draftId: activeDraftId });
+    setAgentContext({
+      sessionId: newSessionId,
+      memoryId: undefined,
+      draftId: activeDraftId,
+    });
+    setNewConversationSaving(false);
     Toast.show({ content: '已开始新会话' });
+  }
+
+  async function openSessionList() {
+    const token = getToken();
+    if (!token) {
+      Toast.show({ content: '登录后才会保存和查看历史会话' });
+      return;
+    }
+    setSessionListVisible(true);
+    setSessionListLoading(true);
+    try {
+      const list = await customerApi.listAgentMemories(30);
+      setSessionList(list);
+    } catch (error) {
+      Toast.show({
+        content: error instanceof Error ? error.message : '加载会话列表失败',
+      });
+    } finally {
+      setSessionListLoading(false);
+    }
+  }
+
+  async function restoreConversation(item: AgentMemorySummary) {
+    const memoryIdToLoad = item.memoryId || item.sessionId;
+    if (!memoryIdToLoad) return;
+    setSessionListLoading(true);
+    try {
+      const memory = await customerApi.getAgentMemory(memoryIdToLoad, memoryIdToLoad);
+      if (!memory) {
+        Toast.show({ content: '这个会话没有可恢复的消息' });
+        return;
+      }
+      const restoredMessages = toAgentMessages(memory);
+      streamRef.current?.close();
+      generatedSessionIdRef.current = memory.sessionId || memory.memoryId;
+      greetingRequestedRef.current = true;
+      setRunning(false);
+      setHistoryReady(true);
+      setAgentMessages(restoredMessages);
+      setAgentProgress([]);
+      setAgentContext({
+        sessionId: memory.sessionId || memory.memoryId,
+        memoryId: memory.memoryId,
+        draftId: activeDraftId,
+      });
+      setSessionListVisible(false);
+      Toast.show({ content: '已恢复历史会话' });
+    } catch (error) {
+      Toast.show({
+        content: error instanceof Error ? error.message : '恢复会话失败',
+      });
+    } finally {
+      setSessionListLoading(false);
+    }
   }
 
   const locationLabel = agentLocationState === 'locating'
@@ -438,13 +641,74 @@ const Agent: React.FC = () => {
       <NavBar
         onBack={() => history.push('/home')}
         right={
-          <Button fill="none" size="mini" onClick={startNewConversation}>
-            新会话
-          </Button>
+          <Space align="center" className={styles.navActions}>
+            <Button
+              fill="none"
+              size="mini"
+              loading={newConversationSaving}
+              onClick={startNewConversation}
+            >
+              新会话
+            </Button>
+            <Button
+              fill="none"
+              size="mini"
+              className={styles.moreButton}
+              onClick={openSessionList}
+            >
+              <MoreOutline />
+            </Button>
+          </Space>
         }
       >
         AI 智能购票
       </NavBar>
+      {sessionListVisible ? (
+        <div className={styles.sessionMenu}>
+          <div className={styles.sessionPanelHeader}>
+            <div>
+              <strong>历史会话</strong>
+              <span>继续之前的购票对话</span>
+            </div>
+            <Button fill="none" size="mini" onClick={() => setSessionListVisible(false)}>
+              关闭
+            </Button>
+          </div>
+          <div className={styles.sessionList}>
+            {sessionListLoading ? (
+              <div className={styles.sessionEmpty}>正在加载会话...</div>
+            ) : sessionList.length ? (
+              sessionList.map((item) => {
+                const active = item.memoryId && item.memoryId === memoryId;
+                return (
+                  <button
+                    key={item.memoryId || item.sessionId}
+                    type="button"
+                    className={[
+                      styles.sessionItem,
+                      active ? styles.sessionItemActive : '',
+                    ].filter(Boolean).join(' ')}
+                    onClick={() => restoreConversation(item)}
+                  >
+                    <span className={styles.sessionTitle}>
+                      {item.title || item.previewMessage || '新会话'}
+                    </span>
+                    <span className={styles.sessionPreview}>
+                      {item.previewMessage || '暂无消息'}
+                    </span>
+                    <span className={styles.sessionMeta}>
+                      {formatSessionTime(item.lastMessageTime || item.updateTime)}
+                      {item.messageCount ? ` · ${item.messageCount} 条` : ''}
+                    </span>
+                  </button>
+                );
+              })
+            ) : (
+              <div className={styles.sessionEmpty}>暂无历史会话</div>
+            )}
+          </div>
+        </div>
+      ) : null}
       <div className={styles.hero}>
         <div className={styles.avatar}>✦</div>
         <div>

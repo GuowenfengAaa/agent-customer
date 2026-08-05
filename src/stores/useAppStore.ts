@@ -32,6 +32,7 @@ interface AppState {
   longitude?: number;
   locationStatus: LocationStatus;
   sessionId?: string;
+  memoryId?: string;
   draftId?: string;
   agentInput: string;
   agentMessages: AgentChatMessage[];
@@ -42,7 +43,7 @@ interface AppState {
   setMode: (mode: PurchaseMode) => void;
   setCity: (city: string) => void;
   locateCurrentPosition: () => void;
-  setAgentContext: (context: { sessionId?: string; draftId?: string }) => void;
+  setAgentContext: (context: { sessionId?: string; memoryId?: string; draftId?: string }) => void;
   resetAgentContext: () => void;
   setAgentInput: (input: string) => void;
   setAgentMessages: (messages: AgentChatMessage[]) => void;
@@ -54,6 +55,7 @@ interface AppState {
   setAgentLocationState: (state: AgentLocationState) => void;
   setAgentLocationError: (error: string) => void;
   clearAgentConversation: () => void;
+  resetAgentSessionState: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -101,7 +103,7 @@ export const useAppStore = create<AppState>()(
         );
       },
       setAgentContext: (context) => set(context),
-      resetAgentContext: () => set({ sessionId: undefined, draftId: undefined }),
+  resetAgentContext: () => set({ sessionId: undefined, memoryId: undefined, draftId: undefined }),
       setAgentInput: (agentInput) => set({ agentInput }),
       setAgentMessages: (agentMessages) => set({ agentMessages }),
       appendAgentMessages: (messages) =>
@@ -130,6 +132,18 @@ export const useAppStore = create<AppState>()(
           agentMessages: defaultAgentMessages(),
           agentProgress: [],
         }),
+      resetAgentSessionState: () =>
+        set({
+          sessionId: undefined,
+          memoryId: undefined,
+          draftId: undefined,
+          agentInput: '',
+          agentMessages: defaultAgentMessages(),
+          agentProgress: [],
+          agentBrowserLocation: undefined,
+          agentLocationState: 'idle',
+          agentLocationError: '',
+        }),
     }),
     {
       name: 'movie-agent-app',
@@ -146,9 +160,10 @@ export const useAppStore = create<AppState>()(
       },
       partialize: (state) => ({
         mode: state.mode,
-        city: state.city,
-        sessionId: state.sessionId,
-        draftId: state.draftId,
+          city: state.city,
+          sessionId: state.sessionId,
+          memoryId: state.memoryId,
+          draftId: state.draftId,
         agentInput: state.agentInput,
         agentMessages: state.agentMessages,
         agentProgress: state.agentProgress,
