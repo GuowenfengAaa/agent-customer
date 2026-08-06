@@ -85,6 +85,14 @@ const formatReleaseDate = (releaseDate?: string) => {
   return `${Number(month)}月${Number(day)}日上映`;
 };
 
+const getWelcomeGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 11) return "早上好";
+  if (hour < 14) return "中午好";
+  if (hour < 18) return "下午好";
+  return "晚上好";
+};
+
 const Home: React.FC = () => {
   const { city, setMode, locationStatus, locateCurrentPosition } = useAppStore();
   const hotQuery = useQuery({
@@ -207,10 +215,15 @@ const Home: React.FC = () => {
         </button>
       </div>
 
-      <section className={styles.homePromo} onClick={goAgent}>
-        <div>
-          <strong>今晚低价场 · 双人立减</strong>
-          <small>20:00 后精选场次，两张票立减 6 元</small>
+      <section className={styles.homePromo} aria-label="首页欢迎">
+        <div className={styles.welcomeCopy}>
+          <span>WELCOME</span>
+          <strong>{getWelcomeGreeting()}，今天想看什么？</strong>
+          <small>
+            {hotTotal > 0
+              ? `${city}正在热映 ${hotTotal} 部好片`
+              : "热门影片与附近影院已经为你准备好"}
+          </small>
         </div>
         <div className={styles.promoPosters} aria-hidden="true">
           {promoMovies.slice(0, 3).map((movie, index) => (
