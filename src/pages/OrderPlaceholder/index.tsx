@@ -7,8 +7,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import React, { useEffect, useRef, useState } from 'react';
 import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
-import type { OrderDetail, OrderSummary } from '@/types/domain';
-import type { SnackOption } from '@/types/domain';
+import type { OrderDetail, OrderSummary, SnackOption } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
 import styles from './index.module.less';
 
@@ -75,7 +74,6 @@ function submitAlipayForm(markup: string, paymentWindow: Window | null) {
   HTMLFormElement.prototype.submit.call(form);
   form.remove();
 }
-
 const OrderMovieSummary: React.FC<{ order?: OrderDetail; compact?: boolean }> = ({ order, compact = false }) => {
   const title = order?.movie?.name || order?.movieName || '影片信息待更新';
   const posterUrl = order?.movie?.posterUrl || order?.moviePoster;
@@ -281,11 +279,18 @@ const OrderPlaceholder: React.FC = () => {
   const [paying, setPaying] = useState(false);
   const [snackQuantities, setSnackQuantities] = useState<Record<string, number>>({});
   const [savingSnackId, setSavingSnackId] = useState<string | null>(null);
-  const paymentIdempotencyKeyRef = useRef('');
+  const paymentIdempotencyKeyRef = useRef(`customer-${orderId}-${Date.now()}`);
   const [cancellingOrderIds, setCancellingOrderIds] = useState<Set<string>>(() => new Set());
   const cancellingOrderIdsRef = useRef<Set<string>>(new Set());
   const order = orderQuery.data;
   const paymentFailed = order?.payment?.status === 'FAIL' || order?.payment?.status === 'CLOSED';
+
+  useEffect(() => {
+    if (!snackQuery.data) return;
+    setSnackQuantities(Object.fromEntries(
+      snackQuery.data.options.map((option) => [option.id, option.selectedQuantity]),
+    ));
+  }, [snackQuery.data]);
 
   useEffect(() => {
     const cancelled = new URLSearchParams(location.search).get('alipayCancelled') === '1';
@@ -302,13 +307,6 @@ const OrderPlaceholder: React.FC = () => {
     || order?.status === 'CANCELLED'
     || order?.status === 'EXPIRED'
     || paymentFailed;
-
-  useEffect(() => {
-    if (!snackQuery.data) return;
-    setSnackQuantities(Object.fromEntries(
-      snackQuery.data.options.map((option) => [option.id, option.selectedQuantity]),
-    ));
-  }, [snackQuery.data]);
 
   useEffect(() => {
     if ((!isPaymentResult && !isTicketPage) || paymentTerminal || paymentTimedOut) return undefined;
@@ -401,10 +399,11 @@ const OrderPlaceholder: React.FC = () => {
   const updateSnackQuantity = async (snackId: string, quantity: number) => {
     if (!snackQuery.data || savingSnackId !== null) return;
     const previous = snackQuantities[snackId] ?? 0;
-    setSnackQuantities((current) => ({ ...current, [snackId]: quantity }));
+    const nextQuantities = { ...snackQuantities, [snackId]: quantity };
+    setSnackQuantities(nextQuantities);
     setSavingSnackId(snackId);
     try {
-      const items = Object.entries({ ...snackQuantities, [snackId]: quantity })
+      const items = Object.entries(nextQuantities)
         .filter(([, value]) => value > 0)
         .map(([id, value]) => ({ snackId: id, quantity: value }));
       const result = await customerApi.replaceOrderSnacks(orderId, items);
@@ -422,7 +421,7 @@ const OrderPlaceholder: React.FC = () => {
     const seats = order?.items?.map((item) => `${item.rowNo}排${item.seatNo}座`).join('、') || '座位信息待更新';
     return (
       <div className={styles.page}>
-        <NavBar onBack={() => history.back()}>订单确认</NavBar>
+        <NavBar onBack={() => window.history.back()}>订单确认</NavBar>
         <Card className={styles.orderCard}>
           <Tag color="warning">{order?.statusDesc || '待确认'}</Tag>
           <OrderMovieSummary order={order} />
@@ -456,7 +455,7 @@ const OrderPlaceholder: React.FC = () => {
           <Tag color="primary">支付宝沙箱</Tag>
           <OrderMovieSummary order={order} compact />
           <h1>确认支付</h1>
-          <p>点击确认后将跳转支付宝沙箱收银台，支付完成后请等待订单状态同步。</p>
+          <p>点击确认后将跳转支付宝沙箱收银台，完成支付后等待订单状态同步。</p>
           <div className={styles.summary}><span>电影票</span><strong>¥{((order?.amount ?? 0) - (order?.snackAmount ?? 0)).toFixed(2)}</strong></div>
           <div className={styles.summary}><span>零食</span><strong>¥{(order?.snackAmount ?? 0).toFixed(2)}</strong></div>
           <div className={styles.paymentAmount}>¥{(order?.amount ?? 0).toFixed(2)}</div>
