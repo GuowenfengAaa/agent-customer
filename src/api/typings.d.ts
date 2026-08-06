@@ -3,6 +3,60 @@ declare namespace API {
     movieId: number;
   };
 
+  type AgentMemorySyncDTO = {
+    memoryId?: string;
+    sessionId: string;
+    stateJson?: string;
+    messages: Message[];
+  };
+
+  type AgentMemoryTurnDTO = {
+    memoryId?: string;
+    sessionId: string;
+    userMessage: string;
+    assistantMessage: string;
+    event?: string;
+    intent?: string;
+    action?: string;
+    state?: string;
+    stateJson?: string;
+    requestJson?: string;
+    responseJson?: string;
+  };
+
+  type AgentMemoryVO = {
+    memoryId?: string;
+    sessionId?: string;
+    stateJson?: string;
+    lastMessageTime?: string;
+    createTime?: string;
+    updateTime?: string;
+    messages?: AgentMessageVO[];
+  };
+
+  type AgentMessageVO = {
+    id?: number;
+    memoryId?: string;
+    role?: string;
+    content?: string;
+    event?: string;
+    intent?: string;
+    action?: string;
+    state?: string;
+    createTime?: string;
+  };
+
+  type AgentSessionSummaryVO = {
+    memoryId?: string;
+    sessionId?: string;
+    title?: string;
+    previewMessage?: string;
+    messageCount?: number;
+    lastMessageTime?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
   type Brief = {
     id?: number;
     name?: string;
@@ -39,6 +93,12 @@ declare namespace API {
     latitude?: number;
     longitude?: number;
     services?: string[];
+  };
+
+  type CinemaOptionVO = {
+    id?: number;
+    name?: string;
+    halls?: HallBrief[];
   };
 
   type CinemaPageVO = {
@@ -85,6 +145,12 @@ declare namespace API {
     hallId: number;
   };
 
+  type currentParams = {
+    sessionId: string;
+    memoryId?: string;
+    limit?: number;
+  };
+
   type DailyOrderVO = {
     date?: string;
     count?: number;
@@ -103,9 +169,17 @@ declare namespace API {
     end?: string;
   };
 
+  type deleteMovieParams = {
+    id: number;
+  };
+
   type deleteSeatParams = {
     hallId: number;
     seatId: number;
+  };
+
+  type detailParams = {
+    id: number;
   };
 
   type detailParams = {
@@ -168,6 +242,15 @@ declare namespace API {
     code: string;
   };
 
+  type getParams = {
+    orderId: number;
+  };
+
+  type HallBrief = {
+    id?: number;
+    name?: string;
+  };
+
   type HallBriefVO = {
     id?: number;
     name?: string;
@@ -180,6 +263,13 @@ declare namespace API {
     hallType: "IMAX" | "DOLBY" | "DIGITAL" | "FOUR_DX" | "NORMAL";
   };
 
+  type HallPageVO = {
+    total?: number;
+    page?: number;
+    size?: number;
+    records?: HallVO[];
+  };
+
   type HallSeatVO = {
     hallId?: number;
     hallName?: string;
@@ -187,6 +277,10 @@ declare namespace API {
     cinemaName?: string;
     summary?: Record<string, any>;
     rows?: RowVO[];
+  };
+
+  type HallStatusDTO = {
+    status: "INACTIVE" | "ACTIVE";
   };
 
   type HallUpdateDTO = {
@@ -200,16 +294,29 @@ declare namespace API {
     name?: string;
     hallType?: string;
     hallTypeDesc?: string;
+    status?: number;
+    statusDesc?: string;
     totalSeats?: number;
     createTime?: string;
   };
 
   type listByCinemaParams = {
     cinemaId: number;
+    page?: number;
+    size?: number;
+    keyword?: string;
   };
 
   type searchHistoryListParams = {
     limit?: number;
+  };
+
+  type listParams = {
+    page?: number;
+    size?: number;
+    cinemaId?: number;
+    keyword?: string;
+    status?: number;
   };
 
   type listParams = {
@@ -273,6 +380,10 @@ declare namespace API {
     keyword?: string;
   };
 
+  type searchHistoryListParams = {
+    limit?: number;
+  };
+
   type listParams = {
     page?: number;
     size?: number;
@@ -320,6 +431,12 @@ declare namespace API {
     user?: Record<string, any>;
   };
 
+  type Message = {
+    role: string;
+    content: string;
+    cardsJson?: string;
+  };
+
   type MovieBrief = {
     id?: number;
     name?: string;
@@ -349,6 +466,11 @@ declare namespace API {
     poster?: string;
     duration?: number;
     showtimes?: ShowtimeItem[];
+  };
+
+  type MovieOptionVO = {
+    id?: number;
+    name?: string;
   };
 
   type MoviePageVO = {
@@ -408,6 +530,17 @@ declare namespace API {
     params: Record<string, any>;
   };
 
+  type Option = {
+    id?: number;
+    name?: string;
+    description?: string;
+    image?: string;
+    priceFen?: number;
+    availableStock?: number;
+    selectedQuantity?: number;
+    status?: number;
+  };
+
   type OrderDetailVO = {
     id?: number;
     orderNo?: string;
@@ -423,6 +556,8 @@ declare namespace API {
     startAt?: string;
     endAt?: string;
     items?: OrderItemVO[];
+    snacks?: SnackOrderItemVO[];
+    snackAmount?: number;
     amount?: number;
     status?: string;
     statusDesc?: string;
@@ -455,6 +590,15 @@ declare namespace API {
     page?: number;
     size?: number;
     records?: OrderVO[];
+  };
+
+  type OrderSnackItemDTO = {
+    snackId: number;
+    quantity: number;
+  };
+
+  type OrderSnackSelectionDTO = {
+    items: OrderSnackItemDTO[];
   };
 
   type OrderVO = {
@@ -533,10 +677,20 @@ declare namespace API {
     movieId: number;
   };
 
+  type replaceParams = {
+    orderId: number;
+  };
+
   type ResetPasswordDTO = {
     email: string;
     code: string;
     newPassword: string;
+  };
+
+  type ResultAgentMemoryVO = {
+    code?: number;
+    msg?: string;
+    data?: AgentMemoryVO;
   };
 
   type ResultCinemaPageVO = {
@@ -563,22 +717,34 @@ declare namespace API {
     data?: DraftVO;
   };
 
+  type ResultHallPageVO = {
+    code?: number;
+    msg?: string;
+    data?: HallPageVO;
+  };
+
   type ResultHallSeatVO = {
     code?: number;
     msg?: string;
     data?: HallSeatVO;
   };
 
-  type ResultHallVO = {
+  type ResultListAgentSessionSummaryVO = {
     code?: number;
     msg?: string;
-    data?: HallVO;
+    data?: AgentSessionSummaryVO[];
   };
 
-  type ResultListHallVO = {
+  type ResultListCinemaOptionVO = {
     code?: number;
     msg?: string;
-    data?: HallVO[];
+    data?: CinemaOptionVO[];
+  };
+
+  type ResultListMovieOptionVO = {
+    code?: number;
+    msg?: string;
+    data?: MovieOptionVO[];
   };
 
   type ResultListSearchHistoryVO = {
@@ -671,10 +837,22 @@ declare namespace API {
     data?: ShowtimeSeatStatusVO;
   };
 
-  type ResultShowtimeVO = {
+  type ResultSnackProductPageVO = {
     code?: number;
     msg?: string;
-    data?: ShowtimeVO;
+    data?: SnackProductPageVO;
+  };
+
+  type ResultSnackProductVO = {
+    code?: number;
+    msg?: string;
+    data?: SnackProductVO;
+  };
+
+  type ResultSnackSelectionVO = {
+    code?: number;
+    msg?: string;
+    data?: SnackSelectionVO;
   };
 
   type ResultUploadResultDTO = {
@@ -866,7 +1044,7 @@ declare namespace API {
   };
 
   type ShowtimeStatusDTO = {
-    status: "ON_SALE" | "SOLD_OUT" | "CANCELLED";
+    status: "SOLD_OUT" | "ON_SALE" | "SOLD_OUT_ALL" | "ENDED";
   };
 
   type ShowtimeUpdateDTO = {
@@ -890,6 +1068,74 @@ declare namespace API {
     totalSeats?: number;
     lockedCount?: number;
     createTime?: string;
+  };
+
+  type SnackOrderItemVO = {
+    snackId?: number;
+    name?: string;
+    image?: string;
+    unitPrice?: number;
+    quantity?: number;
+    amount?: number;
+    inventoryStatus?: string;
+  };
+
+  type SnackProductCreateDTO = {
+    cinemaId: number;
+    name: string;
+    description?: string;
+    image?: string;
+    priceFen: number;
+    stock: number;
+  };
+
+  type SnackProductPageVO = {
+    total?: number;
+    page?: number;
+    size?: number;
+    records?: SnackProductVO[];
+  };
+
+  type SnackProductStatusDTO = {
+    status: number;
+  };
+
+  type SnackProductStockDTO = {
+    stock: number;
+  };
+
+  type SnackProductUpdateDTO = {
+    name?: string;
+    description?: string;
+    image?: string;
+    priceFen?: number;
+  };
+
+  type SnackProductVO = {
+    id?: number;
+    cinemaId?: number;
+    cinemaName?: string;
+    name?: string;
+    description?: string;
+    image?: string;
+    priceFen?: number;
+    stock?: number;
+    soldCount?: number;
+    status?: number;
+    statusDesc?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
+  type SnackSelectionVO = {
+    orderId?: number;
+    cinemaId?: number;
+    cinemaName?: string;
+    options?: Option[];
+    selected?: SnackOrderItemVO[];
+    ticketAmount?: number;
+    snackAmount?: number;
+    totalAmount?: number;
   };
 
   type TicketInfo = {
@@ -937,6 +1183,10 @@ declare namespace API {
     id: number;
   };
 
+  type updateParams = {
+    id: number;
+  };
+
   type updateSeatParams = {
     hallId: number;
     seatId: number;
@@ -958,6 +1208,18 @@ declare namespace API {
     id: number;
   };
 
+  type updateStatusParams = {
+    id: number;
+  };
+
+  type updateStatusParams = {
+    id: number;
+  };
+
+  type updateStockParams = {
+    id: number;
+  };
+
   type UploadResultDTO = {
     url?: string;
     fileName?: string;
@@ -975,6 +1237,8 @@ declare namespace API {
     startAt?: string;
     endAt?: string;
     items?: OrderItemInfo[];
+    snacks?: SnackOrderItemVO[];
+    snackAmount?: number;
     amount?: number;
     status?: string;
     statusDesc?: string;

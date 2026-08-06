@@ -157,8 +157,42 @@ export interface OrderDetail extends OrderSummary {
   language?: string;
   endAt?: string;
   items?: Array<{ rowNo?: number; seatNo?: number; zone?: string; unitPrice: number; ticketCode?: string }>;
+  snacks?: SnackOrderItem[];
+  snackAmount?: number;
   payment?: { status?: string; amount?: number; processedAt?: string };
   tickets?: Array<{ ticketCode: string; rowNo?: number; seatNo?: number; qrContent?: string }>;
+}
+
+export interface SnackOrderItem {
+  snackId: ID;
+  name: string;
+  image?: string;
+  unitPrice: number;
+  quantity: number;
+  amount: number;
+  inventoryStatus?: string;
+}
+
+export interface SnackOption {
+  id: ID;
+  name: string;
+  description?: string;
+  image?: string;
+  priceFen: number;
+  availableStock: number;
+  selectedQuantity: number;
+  status?: number;
+}
+
+export interface SnackSelection {
+  orderId: ID;
+  cinemaId?: ID;
+  cinemaName?: string;
+  options: SnackOption[];
+  selected: SnackOrderItem[];
+  ticketAmount: number;
+  snackAmount: number;
+  totalAmount: number;
 }
 
 export interface UserProfile {
