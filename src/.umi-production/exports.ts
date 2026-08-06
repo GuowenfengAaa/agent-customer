@@ -5,14 +5,14 @@
 export { defineApp } from './core/defineApp'
 export type { RuntimeConfig } from './core/defineApp'
 // plugins
-export { useRequest, UseRequestProvider, request, getRequestInstance } from 'D:/agent-customer/src/.umi-production/plugin-request';
+export { useRequest, UseRequestProvider, request, getRequestInstance } from 'D:/movies-agent/agent-customer/src/.umi-production/plugin-request';
 // plugins types.d.ts
-export * from 'D:/agent-customer/src/.umi-production/plugin-request/types.d';
+export * from 'D:/movies-agent/agent-customer/src/.umi-production/plugin-request/types.d';
 // @umijs/renderer-*
-export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from 'D:/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react';
-export type { History, ClientLoader } from 'D:/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react'
+export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from 'D:/movies-agent/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react';
+export type { History, ClientLoader } from 'D:/movies-agent/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react'
 // umi/client/client/plugin
-export { ApplyPluginsType, PluginManager } from 'D:/agent-customer/node_modules/.pnpm/umi@4.6.84_@babel+core@7.23_211544f9ae71be8d8472d26852c315f7/node_modules/umi/client/client/plugin.js';
+export { ApplyPluginsType, PluginManager } from 'D:/movies-agent/agent-customer/node_modules/.pnpm/umi@4.6.84_@babel+core@7.23_211544f9ae71be8d8472d26852c315f7/node_modules/umi/client/client/plugin.js';
 export { history, createHistory } from './core/history';
 export { terminal } from './core/terminal';
 // react ssr

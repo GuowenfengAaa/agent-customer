@@ -9,6 +9,16 @@
   background: #eef5f2;
 }
 
+.navActions {
+  --gap: 4px;
+}
+
+.moreButton {
+  min-width: 28px;
+  padding: 0;
+  font-size: 18px;
+}
+
 .hero {
   display: flex;
   align-items: center;
@@ -45,6 +55,38 @@ h1 {
   margin: 0;
   color: var(--customer-muted);
   font-size: 12px;
+}
+
+.locationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.locationStatus {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  color: var(--customer-primary-dark);
+  font-size: 11px;
+}
+
+.locationStatus svg {
+  flex: 0 0 auto;
+  font-size: 16px;
+}
+
+.locationStatus span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .progress {
@@ -84,6 +126,16 @@ h1 {
   display: none;
 }
 
+.agentBlock,
+.userBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.userBlock {
+  justify-items: end;
+}
+
 .agentMessage,
 .userMessage {
   max-width: 88%;
@@ -101,6 +153,188 @@ h1 {
   justify-self: end;
   color: #fff;
   background: var(--customer-primary);
+}
+
+.statusText {
+  color: var(--customer-muted);
+}
+
+.cards {
+  display: grid;
+  gap: 10px;
+}
+
+.expiredCards {
+  opacity: 0.58;
+}
+
+.expiredHint {
+  justify-self: start;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #7b8b86;
+  background: #eef2f0;
+  font-size: 10px;
+}
+
+.agentCard {
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cardHeader strong {
+  font-size: 14px;
+}
+
+.cardSubtitle {
+  margin: 8px 0 0;
+  color: var(--customer-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.metaList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.metaList span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #53665f;
+  background: #eef5f2;
+  font-size: 11px;
+}
+
+.metaList b {
+  font-weight: 600;
+}
+
+.metaList em {
+  font-style: normal;
+}
+
+.detailList {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  margin-top: 10px;
+  border: 1px solid #e1ebe7;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.detailList span {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-top: 1px solid #edf3f1;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.detailList span:first-child {
+  border-top: 0;
+}
+
+.detailList b {
+  color: #7b8b86;
+  font-weight: 600;
+}
+
+.detailList em {
+  overflow-wrap: anywhere;
+  color: #1d2c28;
+  font-style: normal;
+  font-weight: 650;
+  text-align: right;
+}
+
+.seatPreview {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.seatButton {
+  display: grid;
+  min-width: 0;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d7e3df;
+  border-radius: 5px;
+  color: #31584c;
+  background: #f2faf7;
+  font-size: 10px;
+}
+
+.seatButton:disabled {
+  cursor: not-allowed;
+}
+
+.seatSelected {
+  border-color: var(--customer-primary);
+  color: #fff;
+  background: var(--customer-primary);
+}
+
+.seatUnavailable {
+  color: #a4aaa7;
+  background: #edf0ef;
+}
+
+.cardActions {
+  margin-top: 10px;
+}
+
+.paymentQr {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e3ece8;
+}
+
+.paymentQrFrame {
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e4ece9;
+  border-radius: 12px;
+  box-shadow: 0 5px 14px rgba(29, 66, 55, 0.08);
+}
+
+.paymentQrFrame :global(svg) {
+  display: block;
+  width: 160px;
+  height: 160px;
+}
+
+.paymentQrHint {
+  color: #6e817a;
+  font-size: 11px;
+  text-align: center;
+}
+
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .composer {
@@ -150,4 +384,102 @@ h1 {
     gap: 8px;
     padding-top: 10px;
   }
+}
+
+.sessionMenu {
+  position: absolute;
+  top: 54px;
+  right: 16px;
+  left: 16px;
+  z-index: 20;
+  overflow: hidden;
+  border: 1px solid rgba(25, 70, 58, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 18px 40px rgba(20, 48, 40, 0.16),
+    0 3px 10px rgba(20, 48, 40, 0.08);
+}
+
+.sessionPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 9px;
+  border-bottom: 1px solid #eef3f1;
+}
+
+.sessionPanelHeader > div {
+  display: grid;
+  gap: 2px;
+}
+
+.sessionPanelHeader strong {
+  color: #14231f;
+  font-size: 14px;
+}
+
+.sessionPanelHeader span {
+  color: #8b9994;
+  font-size: 11px;
+}
+
+.sessionList {
+  display: grid;
+  overflow: auto;
+  max-height: 312px;
+  padding: 6px;
+}
+
+.sessionItem {
+  display: grid;
+  width: 100%;
+  gap: 4px;
+  padding: 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #172622;
+  background: transparent;
+  text-align: left;
+}
+
+.sessionItem + .sessionItem {
+  margin-top: 2px;
+}
+
+.sessionItem:active {
+  background: #eef6f3;
+}
+
+.sessionItemActive {
+  background: #edf8f4;
+}
+
+.sessionTitle {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionPreview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #6f7f79;
+  font-size: 12px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sessionMeta,
+.sessionEmpty {
+  color: #94a19c;
+  font-size: 11px;
+}
+
+.sessionEmpty {
+  padding: 22px 0;
+  text-align: center;
 }
