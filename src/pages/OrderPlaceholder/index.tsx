@@ -1,4 +1,4 @@
-import { Button, Card, Dialog, NavBar, Space, Tag, Toast } from 'antd-mobile';
+import { Button, Card, Dialog, Image, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
 import { history, useLocation, useParams } from '@umijs/max';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import React, { useEffect, useRef, useState } from 'react';
 import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
-import type { OrderDetail, OrderSummary } from '@/types/domain';
+import type { OrderDetail, OrderSummary, SnackOption } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
 import styles from './index.module.less';
 
@@ -106,6 +106,68 @@ const OrderMovieSummary: React.FC<{ order?: OrderDetail; compact?: boolean }> = 
   );
 };
 
+const SnackSelector: React.FC<{
+  options: SnackOption[];
+  quantities: Record<string, number>;
+  savingId: string | null;
+  onChange: (snackId: string, quantity: number) => void;
+}> = ({ options, quantities, savingId, onChange }) => (
+  <section className={styles.snackSection}>
+    <div className={styles.snackSectionHead}>
+      <div>
+        <strong>观影小食</strong>
+        <span>锁座后可选，库存有限</span>
+      </div>
+      <span className={styles.snackOptional}>可选</span>
+    </div>
+    {options.length ? (
+      <div className={styles.snackList}>
+        {options.map((snack) => {
+          const quantity = quantities[snack.id] ?? snack.selectedQuantity;
+          const max = Math.min(10, snack.availableStock + quantity);
+          return (
+            <div className={styles.snackItem} key={snack.id}>
+              <div className={styles.snackImage}>
+                {snack.image ? (
+                  <Image src={snack.image} fit="cover" lazy alt="" />
+                ) : <span>{snack.name.slice(0, 1)}</span>}
+              </div>
+              <div className={styles.snackInfo}>
+                <strong>{snack.name}</strong>
+                <span>{snack.description || '影院精选小食'}</span>
+                <b>¥{(snack.priceFen / 100).toFixed(2)}</b>
+              </div>
+              <Stepper
+                min={0}
+                max={max}
+                value={quantity}
+                disabled={savingId !== null}
+                onChange={(value) => onChange(snack.id, value)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    ) : <div className={styles.snackEmpty}>该影院暂未上架零食</div>}
+  </section>
+);
+
+const SnackLines: React.FC<{ snacks?: OrderDetail['snacks'] }> = ({ snacks }) => {
+  const visible = snacks?.filter((item) => item.quantity > 0) || [];
+  if (!visible.length) return null;
+  return (
+    <div className={styles.snackLines}>
+      <div className={styles.snackLinesTitle}>零食明细</div>
+      {visible.map((snack) => (
+        <div className={styles.snackLine} key={`${snack.snackId}-${snack.inventoryStatus}`}>
+          <span>{snack.name} × {snack.quantity}</span>
+          <strong>¥{snack.amount.toFixed(2)}</strong>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const OrderItem: React.FC<{
   order: OrderSummary;
   posterUrl?: string;
@@ -195,6 +257,11 @@ const OrderPlaceholder: React.FC = () => {
     queryFn: () => customerApi.getOrder(orderId),
     enabled: isOrderFlow,
   });
+  const snackQuery = useQuery({
+    queryKey: queryKeys.orderSnacks(orderId),
+    queryFn: () => customerApi.getOrderSnacks(orderId),
+    enabled: location.pathname.endsWith('/confirm') && isOrderFlow && orderQuery.data?.status === 'PAYMENT_PENDING',
+  });
   const queryClient = useQueryClient();
   const [paymentTimedOut, setPaymentTimedOut] = useState(false);
   const ordersQuery = useQuery({
@@ -210,11 +277,20 @@ const OrderPlaceholder: React.FC = () => {
     ]),
   );
   const [paying, setPaying] = useState(false);
+  const [snackQuantities, setSnackQuantities] = useState<Record<string, number>>({});
+  const [savingSnackId, setSavingSnackId] = useState<string | null>(null);
   const paymentIdempotencyKeyRef = useRef(`customer-${orderId}-${Date.now()}`);
   const [cancellingOrderIds, setCancellingOrderIds] = useState<Set<string>>(() => new Set());
   const cancellingOrderIdsRef = useRef<Set<string>>(new Set());
   const order = orderQuery.data;
   const paymentFailed = order?.payment?.status === 'FAIL' || order?.payment?.status === 'CLOSED';
+
+  useEffect(() => {
+    if (!snackQuery.data) return;
+    setSnackQuantities(Object.fromEntries(
+      snackQuery.data.options.map((option) => [option.id, option.selectedQuantity]),
+    ));
+  }, [snackQuery.data]);
 
   useEffect(() => {
     const cancelled = new URLSearchParams(location.search).get('alipayCancelled') === '1';
@@ -320,6 +396,27 @@ const OrderPlaceholder: React.FC = () => {
     }
   };
 
+  const updateSnackQuantity = async (snackId: string, quantity: number) => {
+    if (!snackQuery.data || savingSnackId !== null) return;
+    const previous = snackQuantities[snackId] ?? 0;
+    const nextQuantities = { ...snackQuantities, [snackId]: quantity };
+    setSnackQuantities(nextQuantities);
+    setSavingSnackId(snackId);
+    try {
+      const items = Object.entries(nextQuantities)
+        .filter(([, value]) => value > 0)
+        .map(([id, value]) => ({ snackId: id, quantity: value }));
+      const result = await customerApi.replaceOrderSnacks(orderId, items);
+      queryClient.setQueryData(queryKeys.orderSnacks(orderId), result);
+      await queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) });
+    } catch (error) {
+      setSnackQuantities((current) => ({ ...current, [snackId]: previous }));
+      Toast.show({ content: error instanceof Error ? error.message : '零食选择保存失败，请稍后重试' });
+    } finally {
+      setSavingSnackId(null);
+    }
+  };
+
   if (location.pathname.endsWith('/confirm')) {
     const seats = order?.items?.map((item) => `${item.rowNo}排${item.seatNo}座`).join('、') || '座位信息待更新';
     return (
@@ -331,8 +428,20 @@ const OrderPlaceholder: React.FC = () => {
           <h1>确认你的观影计划</h1>
           <div className={styles.summary}><span>{order?.movie?.name || order?.movieName || '影片待更新'} · {order?.hallName || '影厅待更新'}</span><strong>{order?.startAt ? dayjs(order.startAt).format('HH:mm') : '--:--'}</strong></div>
           <div className={styles.summary}><span>座位</span><strong>{seats}</strong></div>
-          <div className={styles.total}><span>应付金额</span><strong>¥{(order?.amount ?? 0).toFixed(2)}</strong></div>
-          <Button color="primary" block loading={orderQuery.isLoading} onClick={() => history.push(`/orders/${orderId}/pay`)}>确认订单</Button>
+          {snackQuery.isLoading ? <div className={styles.snackLoading}>正在加载零食...</div> : null}
+          {snackQuery.isError ? <div className={styles.snackError}>零食加载失败，可跳过后继续购票</div> : null}
+          {snackQuery.data ? (
+            <SnackSelector
+              options={snackQuery.data.options}
+              quantities={snackQuantities}
+              savingId={savingSnackId}
+              onChange={updateSnackQuantity}
+            />
+          ) : null}
+          <div className={styles.summary}><span>电影票</span><strong>¥{(snackQuery.data?.ticketAmount ?? ((order?.amount ?? 0) - (order?.snackAmount ?? 0))).toFixed(2)}</strong></div>
+          <div className={styles.summary}><span>零食</span><strong>¥{(snackQuery.data?.snackAmount ?? order?.snackAmount ?? 0).toFixed(2)}</strong></div>
+          <div className={styles.total}><span>应付金额</span><strong>¥{(snackQuery.data?.totalAmount ?? order?.amount ?? 0).toFixed(2)}</strong></div>
+          <Button color="primary" block loading={orderQuery.isLoading || savingSnackId !== null} onClick={() => history.push(`/orders/${orderId}/pay`)}>确认订单</Button>
         </Card>
       </div>
     );
@@ -347,6 +456,8 @@ const OrderPlaceholder: React.FC = () => {
           <OrderMovieSummary order={order} compact />
           <h1>确认支付</h1>
           <p>点击确认后将跳转支付宝沙箱收银台，完成支付后等待订单状态同步。</p>
+          <div className={styles.summary}><span>电影票</span><strong>¥{((order?.amount ?? 0) - (order?.snackAmount ?? 0)).toFixed(2)}</strong></div>
+          <div className={styles.summary}><span>零食</span><strong>¥{(order?.snackAmount ?? 0).toFixed(2)}</strong></div>
           <div className={styles.paymentAmount}>¥{(order?.amount ?? 0).toFixed(2)}</div>
           <Space direction="vertical" block>
             <Button color="primary" block loading={paying} onClick={pay}>确认支付</Button>
@@ -411,6 +522,8 @@ const OrderPlaceholder: React.FC = () => {
                 <span>订单金额</span>
                 <strong>¥{order.amount.toFixed(2)}</strong>
               </div>
+
+              <SnackLines snacks={order.snacks} />
 
               {isCancelledOrder || isExpiredOrder ? (
                 <div className={styles.detailNotice}>
@@ -528,6 +641,8 @@ const OrderPlaceholder: React.FC = () => {
                 <strong>{order?.orderNo || '--'}</strong>
               </div>
             </div>
+
+            <SnackLines snacks={order?.snacks} />
 
             {tickets.length ? (
               <div className={styles.ticketPasses}>
