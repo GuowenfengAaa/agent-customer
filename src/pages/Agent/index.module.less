@@ -301,6 +301,35 @@ h1 {
   margin-top: 10px;
 }
 
+.paymentQr {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e3ece8;
+}
+
+.paymentQrFrame {
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e4ece9;
+  border-radius: 12px;
+  box-shadow: 0 5px 14px rgba(29, 66, 55, 0.08);
+}
+
+.paymentQrFrame :global(svg) {
+  display: block;
+  width: 160px;
+  height: 160px;
+}
+
+.paymentQrHint {
+  color: #6e817a;
+  font-size: 11px;
+  text-align: center;
+}
+
 .quickActions {
   display: flex;
   flex-wrap: wrap;

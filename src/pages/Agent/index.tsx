@@ -7,6 +7,7 @@ import {
   type AgentCardPayload,
   type AgentSseEvent,
 } from '@/services/agentSse';
+import { submitAlipayForm } from '@/services/alipay';
 import { customerApi } from '@/services/customerApi';
 import { requestBrowserLocation, type BrowserLocation } from '@/services/location';
 import { getSession, getToken } from '@/services/storage';
@@ -224,6 +225,7 @@ const Agent: React.FC = () => {
   const [sessionList, setSessionList] = useState<AgentMemorySummary[]>([]);
   const [newConversationSaving, setNewConversationSaving] = useState(false);
   const streamRef = useRef<{ close: () => void } | null>(null);
+  const paymentRedirectingRef = useRef(false);
   const greetingRequestedRef = useRef(false);
   const locationRequestRef = useRef<Promise<BrowserLocation> | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -433,9 +435,14 @@ const Agent: React.FC = () => {
     const content = (text ?? agentInput).trim();
     if (!content || running) return;
 
-    const nearbyRequest = event === 'search_nearby_cinemas' || /附近|周边|最近|离我近|nearby|around me/i.test(content);
+    const locationRequest =
+      event === 'search_nearby_cinemas' ||
+      event === 'get_current_location' ||
+      /附近|周边|最近|离我近|当前位置|具体位置|地理位置|我在哪|我在哪里|我在哪儿|现在在哪|现在在哪里|现在在哪儿|这里在哪|这里是哪里|这儿在哪|这是哪里|定位|经纬度|nearby|around me/i.test(
+        content,
+      );
     let currentLocation = agentBrowserLocation;
-    if (nearbyRequest && !payload?.location) {
+    if (locationRequest && !payload?.location) {
       try {
         currentLocation = currentLocation || await locate();
       } catch (error) {
@@ -487,6 +494,34 @@ const Agent: React.FC = () => {
         setRunning(false);
       },
     });
+  }
+
+  async function startAlipayPayment(card: AgentCardPayload, payload?: Record<string, unknown>) {
+    if (paymentRedirectingRef.current) return;
+    const paymentPayload = {
+      ...(card.payload || {}),
+      ...(payload || {}),
+    };
+    const orderId = paymentPayload.orderId ?? paymentPayload.orderNo ?? card.id;
+    if (!orderId || String(orderId) === 'payment') {
+      Toast.show({ content: '订单编号缺失，暂时无法发起支付' });
+      return;
+    }
+
+    paymentRedirectingRef.current = true;
+    try {
+      const result = await customerApi.payOrder(String(orderId), `agent-${createId()}`);
+      if (result.paymentStatus === 'SUCCESS') {
+        history.push(`/orders/${orderId}/tickets`);
+        return;
+      }
+      if (!result.payForm) throw new Error('支付宝沙箱支付表单为空，请稍后重试');
+      submitAlipayForm(result.payForm);
+    } catch (error) {
+      Toast.show({ content: error instanceof Error ? error.message : '支付失败，请稍后重试' });
+    } finally {
+      paymentRedirectingRef.current = false;
+    }
   }
 
   async function syncCurrentConversation(nextMemoryId?: string) {
@@ -765,7 +800,13 @@ const Agent: React.FC = () => {
                     key={`${card.type}-${card.id}-${index}`}
                     card={card}
                     disabled={running || latestActionMessageId !== item.id}
-                    onAction={(nextEvent, label, nextPayload) => send(label, nextEvent, nextPayload)}
+                    onAction={(nextEvent, label, nextPayload) => {
+                      if (nextEvent === 'pay_order' && String(card.type || '').toUpperCase() === 'PAYMENT') {
+                        void startAlipayPayment(card, nextPayload);
+                        return;
+                      }
+                      void send(label, nextEvent, nextPayload);
+                    }}
                   />
                 ))}
               </div>

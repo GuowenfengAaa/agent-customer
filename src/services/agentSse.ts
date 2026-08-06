@@ -31,6 +31,7 @@ export interface AgentCardPayload {
   subtitle?: string;
   meta?: Record<string, unknown>;
   payload?: Record<string, unknown>;
+  qrCode?: string;
   seats?: Array<Record<string, unknown>>;
   actions?: Array<{
     event: string;
