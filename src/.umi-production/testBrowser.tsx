@@ -3,14 +3,14 @@
 // DO NOT CHANGE IT MANUALLY!
 import React, { useEffect, useState } from 'react';
 import { ApplyPluginsType } from 'umi';
-import { renderClient, RenderClientOpts } from 'D:/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react';
+import { renderClient, RenderClientOpts } from 'D:/movies-agent/agent-customer/node_modules/.pnpm/@umijs+renderer-react@4.6.8_b462d5bdca8d4e59f9f87c7f27495787/node_modules/@umijs/renderer-react';
 import { createHistory } from './core/history';
 import { createPluginManager } from './core/plugin';
 import { getRoutes } from './core/route';
 import type { Location } from 'history';
 
 
-import 'D:/agent-customer/src/global.less';
+import 'D:/movies-agent/agent-customer/src/global.less';
 const publicPath = '/';
 const runtimePublicPath = false;
 
