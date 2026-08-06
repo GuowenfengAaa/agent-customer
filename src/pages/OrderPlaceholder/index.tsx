@@ -1,6 +1,6 @@
 import { Button, Card, Dialog, Image, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
 import { history, useLocation, useParams } from '@umijs/max';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { QRCodeSVG } from 'qrcode.react';
@@ -15,10 +15,30 @@ import styles from './index.module.less';
 const isPending = (status: string) => status === 'PAYMENT_PENDING' || status === 'PENDING';
 const isTicketViewable = (status: string) => status === 'PAID' || status === 'TICKETED';
 
-function submitAlipayForm(markup: string) {
+const ALIPAY_WINDOW_NAME = 'alipaySandboxPayment';
+
+function openAlipayPaymentWindow() {
+  if (window.innerWidth <= 600) return null;
+
+  const width = 430;
+  const height = Math.min(860, window.screen.availHeight - 40);
+  const left = Math.max(0, Math.round(window.screenX + (window.outerWidth - width) / 2));
+  const top = Math.max(0, Math.round(window.screenY + (window.outerHeight - height) / 2));
+  return window.open(
+    'about:blank',
+    ALIPAY_WINDOW_NAME,
+    `popup=yes,width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`,
+  );
+}
+
+function submitAlipayForm(markup: string, paymentWindow: Window | null) {
   const paymentContent = markup.trim();
   if (/^https:\/\//i.test(paymentContent)) {
-    window.location.assign(paymentContent);
+    if (paymentWindow) {
+      paymentWindow.location.assign(paymentContent);
+    } else {
+      window.location.assign(paymentContent);
+    }
     return;
   }
 
@@ -29,10 +49,21 @@ function submitAlipayForm(markup: string) {
   const action = source.getAttribute('action') || '';
   if (!/^https:\/\//i.test(action)) throw new Error('支付宝收银台地址无效，请稍后重试');
 
+  if (paymentWindow) {
+    const completeDocument = /<html[\s>]/i.test(paymentContent)
+      ? paymentContent
+      : `<!doctype html><html><head><meta charset="utf-8"><title>支付宝沙箱支付</title></head><body>${paymentContent}</body></html>`;
+    paymentWindow.document.open();
+    paymentWindow.document.write(completeDocument);
+    paymentWindow.document.close();
+    paymentWindow.focus();
+    return;
+  }
+
   const form = document.createElement('form');
   form.method = source.getAttribute('method') || 'post';
   form.action = action;
-  form.target = source.getAttribute('target') || '_self';
+  form.target = paymentWindow ? ALIPAY_WINDOW_NAME : '_self';
   source.querySelectorAll('input').forEach((input) => {
     const field = document.createElement('input');
     field.type = 'hidden';
@@ -42,6 +73,7 @@ function submitAlipayForm(markup: string) {
   });
   document.body.appendChild(form);
   HTMLFormElement.prototype.submit.call(form);
+  form.remove();
 }
 
 const OrderMovieSummary: React.FC<{ order?: OrderDetail; compact?: boolean }> = ({ order, compact = false }) => {
@@ -221,6 +253,7 @@ const OrderPlaceholder: React.FC = () => {
   const { orderId = 'demo-order' } = useParams<{ orderId: string }>();
   const isOrderFlow = location.pathname.includes('/orders/') && /^\d+$/.test(orderId);
   const isPaymentResult = location.pathname.endsWith('/pay/result');
+  const isTicketPage = location.pathname.endsWith('/tickets');
   const orderQuery = useQuery({
     queryKey: queryKeys.order(orderId),
     queryFn: () => customerApi.getOrder(orderId),
@@ -239,18 +272,10 @@ const OrderPlaceholder: React.FC = () => {
     enabled: location.pathname === '/me/orders',
   });
   const records = ordersQuery.data?.records ?? [];
-  const orderDetailQueries = useQueries({
-    queries: records.map((item) => ({
-      queryKey: queryKeys.order(item.id),
-      queryFn: () => customerApi.getOrder(item.id),
-      enabled: Boolean(item.id),
-      staleTime: 5 * 60 * 1000,
-    })),
-  });
   const posterByOrderId = new Map(
-    records.map((item, index) => [
+    records.map((item) => [
       item.id,
-      item.moviePoster || orderDetailQueries[index]?.data?.movie?.posterUrl,
+      item.moviePoster,
     ]),
   );
   const [paying, setPaying] = useState(false);
@@ -261,6 +286,18 @@ const OrderPlaceholder: React.FC = () => {
   const cancellingOrderIdsRef = useRef<Set<string>>(new Set());
   const order = orderQuery.data;
   const paymentFailed = order?.payment?.status === 'FAIL' || order?.payment?.status === 'CLOSED';
+
+  useEffect(() => {
+    const cancelled = new URLSearchParams(location.search).get('alipayCancelled') === '1';
+    if (!cancelled || !isOrderFlow) return;
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.focus();
+      window.close();
+      return;
+    }
+    history.replace(`/orders/${orderId}/pay`);
+  }, [isOrderFlow, location.search, orderId]);
   const paymentTerminal = order?.status === 'TICKETED'
     || order?.status === 'CANCELLED'
     || order?.status === 'EXPIRED'
@@ -274,7 +311,7 @@ const OrderPlaceholder: React.FC = () => {
   }, [snackQuery.data]);
 
   useEffect(() => {
-    if (!isPaymentResult || paymentTerminal || paymentTimedOut) return undefined;
+    if ((!isPaymentResult && !isTicketPage) || paymentTerminal || paymentTimedOut) return undefined;
     setPaymentTimedOut(false);
     const interval = window.setInterval(() => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) });
@@ -287,7 +324,7 @@ const OrderPlaceholder: React.FC = () => {
       window.clearInterval(interval);
       window.clearTimeout(timeout);
     };
-  }, [isPaymentResult, orderId, paymentTerminal, paymentTimedOut, queryClient]);
+  }, [isPaymentResult, isTicketPage, orderId, paymentTerminal, paymentTimedOut, queryClient]);
 
   useEffect(() => {
     if (isPaymentResult && order?.status === 'TICKETED') {
@@ -336,18 +373,25 @@ const OrderPlaceholder: React.FC = () => {
 
   const pay = async () => {
     if (paying) return;
+    const paymentWindow = openAlipayPaymentWindow();
+    if (window.innerWidth > 600 && !paymentWindow) {
+      Toast.show({ content: '支付窗口被浏览器拦截，请允许弹出式窗口后重试' });
+      return;
+    }
     // 每次重新发起支付都使用新的幂等键，避免复用支付宝沙箱中的异常交易。
     paymentIdempotencyKeyRef.current = `customer-${orderId}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     setPaying(true);
     try {
       const result = await customerApi.payOrder(orderId, paymentIdempotencyKeyRef.current);
       if (result.paymentStatus === 'SUCCESS') {
+        paymentWindow?.close();
         history.replace(`/orders/${orderId}/tickets`);
         return;
       }
       if (!result.payForm) throw new Error('支付宝支付表单为空，请稍后重试');
-      submitAlipayForm(result.payForm);
+      submitAlipayForm(result.payForm, paymentWindow);
     } catch (error) {
+      paymentWindow?.close();
       Toast.show({ content: error instanceof Error ? error.message : '支付失败，请稍后重试' });
     } finally {
       setPaying(false);
@@ -542,6 +586,7 @@ const OrderPlaceholder: React.FC = () => {
 
   if (location.pathname.endsWith('/tickets')) {
     const tickets = order?.tickets || [];
+    const ticketReady = order?.status === 'TICKETED';
     const title = order?.movie?.name || order?.movieName || '影片信息待更新';
     const posterUrl = order?.movie?.posterUrl || order?.moviePoster;
     const cinema = order?.cinema?.name || order?.cinemaName || '影院待更新';
@@ -553,7 +598,9 @@ const OrderPlaceholder: React.FC = () => {
         <main className={styles.ticketContent}>
           <section className={styles.ticketSheet}>
             <div className={styles.ticketStatusRow}>
-              <Tag color="success">{order?.statusDesc || '已出票'}</Tag>
+              <Tag color={ticketReady ? 'success' : 'warning'}>
+                {order?.statusDesc || (orderQuery.isLoading ? '正在加载' : '出票处理中')}
+              </Tag>
               <span>电子票</span>
             </div>
 

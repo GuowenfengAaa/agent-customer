@@ -1259,6 +1259,7 @@ declare namespace API {
     id?: number;
     orderNo?: string;
     movieName?: string;
+    moviePoster?: string;
     cinemaName?: string;
     hallName?: string;
     startAt?: string;
