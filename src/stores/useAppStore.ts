@@ -63,7 +63,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       mode: 'TRADITIONAL',
       city: '北京',
-      locationStatus: 'idle',
+      locationStatus: 'idle' as LocationStatus,
       agentInput: '',
       agentMessages: defaultAgentMessages(),
       agentProgress: [],
