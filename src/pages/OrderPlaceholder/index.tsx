@@ -1,6 +1,6 @@
-import { Button, Card, Dialog, Image, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
+import { Button, Card, Dialog, Image, InfiniteScroll, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
 import { history, useLocation, useParams } from '@umijs/max';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { QRCodeSVG } from 'qrcode.react';
@@ -15,6 +15,7 @@ const isPending = (status: string) => status === 'PAYMENT_PENDING' || status ===
 const isTicketViewable = (status: string) => status === 'PAID' || status === 'TICKETED';
 
 const ALIPAY_WINDOW_NAME = 'alipaySandboxPayment';
+const ORDER_PAGE_SIZE = 20;
 
 function openAlipayPaymentWindow() {
   if (window.innerWidth <= 600) return null;
@@ -264,12 +265,18 @@ const OrderPlaceholder: React.FC = () => {
   });
   const queryClient = useQueryClient();
   const [paymentTimedOut, setPaymentTimedOut] = useState(false);
-  const ordersQuery = useQuery({
-    queryKey: queryKeys.orders({ page: 1, size: 20 }),
-    queryFn: () => customerApi.listOrders({ page: 1, size: 20 }),
+  const ordersQuery = useInfiniteQuery({
+    queryKey: queryKeys.orders({ size: ORDER_PAGE_SIZE }),
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => customerApi.listOrders({ page: pageParam, size: ORDER_PAGE_SIZE }),
+    getNextPageParam: (lastPage, pages) => {
+      const loadedCount = pages.reduce((total, page) => total + page.records.length, 0);
+      if (!lastPage.records.length || loadedCount >= lastPage.total) return undefined;
+      return (lastPage.page ?? pages.length) + 1;
+    },
     enabled: location.pathname === '/me/orders',
   });
-  const records = ordersQuery.data?.records ?? [];
+  const records = ordersQuery.data?.pages.flatMap((page) => page.records) ?? [];
   const posterByOrderId = new Map(
     records.map((item) => [
       item.id,
@@ -702,6 +709,15 @@ const OrderPlaceholder: React.FC = () => {
           />
         ))}
       </div>
+      {records.length ? (
+        <InfiniteScroll
+          loadMore={async () => { await ordersQuery.fetchNextPage(); }}
+          hasMore={Boolean(ordersQuery.hasNextPage)}
+          threshold={80}
+        >
+          {ordersQuery.hasNextPage ? '正在加载更多订单...' : '全部订单已加载'}
+        </InfiniteScroll>
+      ) : null}
     </div>
   );
 };
