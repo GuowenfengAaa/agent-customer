@@ -183,6 +183,90 @@ h1 {
   background: #fff;
 }
 
+.movieAgentCard {
+  overflow: hidden;
+}
+
+.movieAgentCard :global(.adm-card-body),
+.snackAgentCard :global(.adm-card-body) {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.moviePosterFace {
+  overflow: hidden;
+  width: 82px;
+  min-height: 118px;
+  border-radius: 7px;
+  background: #10231d;
+}
+
+.moviePosterFace img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.moviePosterFallback {
+  display: grid;
+  height: 100%;
+  min-height: 118px;
+  align-content: center;
+  gap: 5px;
+  padding: 10px;
+  color: #fff;
+  background: linear-gradient(145deg, #0b7f63, #1d2c28 62%, #b94747);
+}
+
+.moviePosterFallback strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.moviePosterFallback span {
+  font-size: 11px;
+  opacity: 0.78;
+}
+
+.movieCardContent {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+}
+
+.snackCover {
+  display: grid;
+  overflow: hidden;
+  width: 82px;
+  min-height: 82px;
+  place-items: center;
+  border-radius: 7px;
+  color: #fff;
+  background: #0b7f63;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.snackCover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.snackQuantityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  color: #53665f;
+  font-size: 12px;
+}
+
 .cardHeader {
   display: flex;
   align-items: center;
@@ -191,7 +275,9 @@ h1 {
 }
 
 .cardHeader strong {
+  min-width: 0;
   font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .cardSubtitle {

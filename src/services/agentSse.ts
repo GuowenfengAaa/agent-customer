@@ -8,6 +8,7 @@ export type AgentCardType =
   | 'ALTERNATIVE'
   | 'ORDER_CONFIRM'
   | 'PAYMENT'
+  | 'REFUND'
   | 'TICKET'
   | 'LOCATION_PICKER'
   | 'SNACK_LIST'
@@ -29,6 +30,9 @@ export interface AgentCardPayload {
   id?: string;
   title?: string;
   subtitle?: string;
+  image?: string;
+  poster?: string;
+  posterUrl?: string;
   meta?: Record<string, unknown>;
   payload?: Record<string, unknown>;
   qrCode?: string;
