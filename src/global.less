@@ -1,20 +1,20 @@
 :root {
   color-scheme: light;
-  --customer-ink: #17211f;
-  --customer-muted: #6e7976;
-  --customer-line: #e4e9e7;
+  --customer-ink: #25272a;
+  --customer-muted: #797b80;
+  --customer-line: #e6e7e9;
   --customer-surface: #ffffff;
-  --customer-bg: #f4f7f6;
-  --customer-primary: #16785c;
-  --customer-primary-dark: #0f5c46;
-  --customer-primary-soft: #e5f3ee;
-  --customer-amber: #a96813;
-  --customer-amber-soft: #fff3df;
-  --customer-coral: #bd554f;
-  --customer-coral-soft: #fae9e7;
+  --customer-bg: #f6f7f8;
+  --customer-primary: #c88b32;
+  --customer-primary-dark: #7a5524;
+  --customer-primary-soft: #fff3df;
+  --customer-amber: #a87124;
+  --customer-amber-soft: #fff4e2;
+  --customer-coral: #d85252;
+  --customer-coral-soft: #fff0ef;
   --customer-blue: #496da8;
   --customer-blue-soft: #eaf0fa;
-  --customer-shadow: 0 8px 24px rgba(25, 50, 43, 0.08);
+  --customer-shadow: 0 8px 24px rgba(37, 39, 42, 0.09);
   --customer-header-height: 52px;
   --customer-bottom-height: 87px;
 }
@@ -32,7 +32,7 @@ body,
 
 body {
   color: var(--customer-ink);
-  background: #e8eeec;
+  background: #eceef0;
   font-family: Inter, 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
   letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
@@ -63,7 +63,7 @@ a {
 .adm-nav-bar {
   --height: 44px;
   --border-bottom: 1px solid var(--customer-line);
-  background: rgba(246, 248, 247, 0.96);
+  background: rgba(248, 248, 249, 0.96);
 }
 
 .adm-nav-bar-back {
@@ -72,22 +72,22 @@ a {
 }
 
 .adm-nav-bar-back-arrow {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  margin-right: 5px;
-  color: #fff;
-  background: var(--customer-primary-dark);
-  border: 0;
+  margin-right: 8px;
+  color: #303437;
+  background: #fff;
+  border: 1px solid #e0e2e3;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(15, 92, 70, 0.24);
-  font-size: 20px;
+  box-shadow: 0 3px 10px rgba(37, 39, 42, 0.08);
+  font-size: 22px;
   transition: transform 150ms ease, background-color 150ms ease;
 }
 
 .adm-nav-bar-back:active .adm-nav-bar-back-arrow {
-  background: var(--customer-primary);
+  background: #f5f6f6;
   transform: scale(0.92);
 }
 

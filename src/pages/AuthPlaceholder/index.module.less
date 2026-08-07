@@ -7,6 +7,12 @@
   background: var(--customer-bg);
 }
 
+.registerPage {
+  min-height: 100%;
+  padding-top: 16px;
+  background: #f6f7f8;
+}
+
 .header {
   display: grid;
   height: 52px;
@@ -20,21 +26,22 @@
 .backButton,
 .headerSide {
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   place-items: center;
 }
 
 .backButton {
-  color: var(--customer-ink);
-  background: transparent;
-  border: 0;
-  border-radius: 8px;
-  font-size: 21px;
+  color: #303437;
+  background: #fff;
+  border: 1px solid #e0e2e3;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(37, 39, 42, 0.08);
+  font-size: 22px;
   cursor: pointer;
 }
 
-.backButton:active { background: #eaf0ee; }
+.backButton:active { background: #f5f6f6; transform: scale(0.94); }
 
 .appName {
   color: var(--customer-ink);
@@ -48,7 +55,14 @@
   min-height: 220px;
   padding: 27px 25px 38px;
   color: #fff;
-  background: #174f41;
+  background: #25272a;
+}
+
+.registerBrandPanel {
+  min-height: 219px;
+  padding: 24px 24px 48px;
+  overflow: hidden;
+  background: #191c1e;
 }
 
 .brandRow {
@@ -57,16 +71,66 @@
   gap: 9px;
 }
 
+.registerPage .brandRow {
+  position: relative;
+  z-index: 1;
+  gap: 11px;
+}
+
 .logo {
   display: grid;
   width: 32px;
   height: 32px;
   place-items: center;
-  color: #174f41;
+  color: #25272a;
   background: #fff;
   border-radius: 7px;
   font-size: 17px;
   font-weight: 850;
+}
+
+.registerPage .logo {
+  width: 38px;
+  height: 38px;
+  color: #fff;
+  background: #c88b32;
+  border-radius: 8px;
+  font-size: 21px;
+  box-shadow: 0 8px 20px rgba(200, 139, 50, 0.26);
+}
+
+.brandName {
+  display: grid;
+  gap: 1px;
+}
+
+.brandName strong {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.brandName small {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.heroEyebrow,
+.welcomeMark {
+  display: block;
+  color: #e2b35b;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.registerPage .heroEyebrow {
+  position: relative;
+  z-index: 1;
+  margin-top: 25px;
+  margin-bottom: 7px;
+  font-size: 9px;
 }
 
 .kicker {
@@ -83,11 +147,28 @@
   letter-spacing: 0;
 }
 
+.registerPage .brandPanel h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 29px;
+  font-weight: 820;
+}
+
 .brandPanel p {
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.registerPage .brandPanel p {
+  position: relative;
+  z-index: 1;
+  margin-top: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .ticketLine {
@@ -109,6 +190,37 @@
 .ticketLine span:nth-child(2) { width: 28px; }
 .ticketLine span:nth-child(3) { width: 10px; }
 
+.cinemaStrip {
+  position: absolute;
+  right: 24px;
+  bottom: 35px;
+  z-index: 1;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  color: rgba(255, 255, 255, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.cinemaStrip span {
+  display: grid;
+  min-width: 21px;
+  height: 15px;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cinemaStrip .stripWide {
+  min-width: 42px;
+  color: #fff;
+  background: #c88b32;
+}
+
 .sheet {
   position: relative;
   min-height: calc(100dvh - 245px);
@@ -116,6 +228,32 @@
   padding: 27px 22px 30px;
   background: var(--customer-surface);
   border-radius: 22px 22px 0 0;
+}
+
+.registerSheet {
+  z-index: 2;
+  min-height: calc(100% - 207px);
+  margin-top: -28px;
+  padding: 28px 22px 34px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+}
+
+.registerPage .welcomeMark {
+  margin-bottom: 4px;
+}
+
+.registerPage .sheetHeading h2 {
+  color: #1d2224;
+  font-size: 24px;
+  font-weight: 820;
+  line-height: 1.25;
+}
+
+.registerPage .sheetHeading p {
+  margin-top: 5px;
+  color: #858c8e;
+  font-size: 12px;
 }
 
 .handle {
@@ -148,6 +286,11 @@
   margin-top: 25px;
 }
 
+.registerPage .form {
+  gap: 14px;
+  margin-top: 18px;
+}
+
 .field {
   display: flex;
   height: 52px;
@@ -159,10 +302,21 @@
   border-radius: 8px;
 }
 
+.registerPage .field {
+  background: #f6f7f7;
+  border-color: transparent;
+  border-radius: 12px;
+}
+
 .field:focus-within {
   background: #fff;
   border-color: var(--customer-primary);
-  box-shadow: 0 0 0 3px rgba(22, 120, 92, 0.11);
+  box-shadow: 0 0 0 3px rgba(200, 139, 50, 0.12);
+}
+
+.registerPage .field:focus-within {
+  border-color: #c88b32;
+  box-shadow: 0 0 0 3px rgba(200, 139, 50, 0.12);
 }
 
 .fieldIcon {
@@ -171,11 +325,20 @@
   font-size: 19px;
 }
 
+.registerPage .fieldIcon {
+  color: #737b7d;
+  font-size: 18px;
+}
+
 .input {
   --font-size: 14px;
   --placeholder-color: #9aa5a1;
   flex: 1;
   min-width: 0;
+}
+
+.registerPage .input {
+  --placeholder-color: #a3a9aa;
 }
 
 .codeRow {
@@ -196,6 +359,15 @@
   white-space: nowrap;
 }
 
+.registerPage .codeButton {
+  --border-radius: 12px;
+  color: #7a5524;
+  background: #fff8e8;
+  border-color: #ead3a4;
+  font-size: 11px;
+  font-weight: 750;
+}
+
 .passwordField { padding-right: 8px; }
 
 .eye {
@@ -210,11 +382,20 @@
   cursor: pointer;
 }
 
+.registerPage .eye {
+  color: #7e8587;
+  border-radius: 50%;
+}
+
 .passwordHint {
   margin: -4px 2px 0;
   color: var(--customer-muted);
   font-size: 11px;
   line-height: 1.45;
+}
+
+.registerPage .passwordHint {
+  color: #8a9092;
 }
 
 .submit {
@@ -226,6 +407,16 @@
   margin-top: 4px;
   font-size: 16px;
   font-weight: 720;
+}
+
+.registerPage .submit {
+  --background-color: #c88b32 !important;
+  --border-color: #c88b32 !important;
+  --border-radius: 12px;
+  height: 52px;
+  margin-top: 1px;
+  font-weight: 780;
+  box-shadow: 0 10px 22px rgba(200, 139, 50, 0.22);
 }
 
 .loginLink {
@@ -240,12 +431,24 @@
   cursor: pointer;
 }
 
+.registerPage .loginLink {
+  margin-top: 18px;
+  color: #7a5524;
+  font-size: 12px;
+  font-weight: 750;
+}
+
 .policy {
   margin: 23px 0 0;
   color: #99a29f;
   font-size: 10px;
   line-height: 1.6;
   text-align: center;
+}
+
+.registerPage .policy {
+  margin-top: 19px;
+  color: #969c9e;
 }
 
 @media (min-width: 481px) {
@@ -255,7 +458,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     border-radius: 45px;
-    box-shadow: 0 0 42px rgba(20, 42, 36, 0.16);
+    box-shadow: 0 0 42px rgba(37, 39, 42, 0.16);
   }
 
   .sheet {

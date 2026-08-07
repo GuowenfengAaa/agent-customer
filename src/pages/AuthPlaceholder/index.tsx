@@ -1,5 +1,5 @@
 import { Button, Input, Toast } from 'antd-mobile';
-import { EyeInvisibleOutline, EyeOutline, LeftOutline, LockOutline, MailOutline, UserOutline } from 'antd-mobile-icons';
+import { EyeInvisibleOutline, EyeOutline, LeftOutline, LockOutline, MailOutline, MovieOutline, UserOutline } from 'antd-mobile-icons';
 import { history, useLocation } from '@umijs/max';
 import React, { useEffect, useState } from 'react';
 import { registerAccount, resetPassword, sendEmailCode } from '@/services/auth';
@@ -64,31 +64,46 @@ const AuthPlaceholder: React.FC = () => {
   };
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
+    <div className={[styles.page, isRegister ? styles.registerPage : ''].filter(Boolean).join(' ')}>
+      {!isRegister ? (
+        <header className={styles.header}>
         <button className={styles.backButton} type="button" aria-label="返回登录" title="返回登录" onClick={() => history.push('/auth/login')}>
           <LeftOutline />
         </button>
         <span className={styles.appName}>光影票务</span>
         <span className={styles.headerSide} />
-      </header>
-      <section className={styles.brandPanel}>
+        </header>
+      ) : null}
+      <section className={[styles.brandPanel, isRegister ? styles.registerBrandPanel : ''].filter(Boolean).join(' ')}>
         <div className={styles.brandRow}>
-          <span className={styles.logo}>M</span>
-          <span className={styles.kicker}>{isRegister ? 'CREATE ACCOUNT' : 'RESET PASSWORD'}</span>
+          <span className={styles.logo}>{isRegister ? <MovieOutline /> : 'M'}</span>
+          {isRegister ? (
+            <span className={styles.brandName}>
+              <strong>光影票务</strong>
+              <small>MOVIE TICKET</small>
+            </span>
+          ) : <span className={styles.kicker}>RESET PASSWORD</span>}
         </div>
+        {isRegister ? <span className={styles.heroEyebrow}>CREATE ACCOUNT</span> : null}
         <h1>{isRegister ? '加入光影票务' : '找回登录密码'}</h1>
         <p>{isRegister ? '完成注册后，随时保存想看的电影和座位。' : '验证邮箱后，为账户设置一个新的登录密码。'}</p>
-        <div className={styles.ticketLine} aria-hidden="true">
+        {isRegister ? (
+          <div className={styles.cinemaStrip} aria-hidden="true">
+            <span>01</span>
+            <span className={styles.stripWide}>JOIN</span>
+            <span>24</span>
+          </div>
+        ) : <div className={styles.ticketLine} aria-hidden="true">
           <span />
           <span />
           <span />
           <span />
-        </div>
+        </div>}
       </section>
-      <main className={styles.sheet}>
-        <span className={styles.handle} aria-hidden="true" />
+      <main className={[styles.sheet, isRegister ? styles.registerSheet : ''].filter(Boolean).join(' ')}>
+        {!isRegister ? <span className={styles.handle} aria-hidden="true" /> : null}
         <div className={styles.sheetHeading}>
+          {isRegister ? <span className={styles.welcomeMark}>CREATE ACCOUNT</span> : null}
           <h2>{isRegister ? '创建账户' : '重置密码'}</h2>
           <p>{isRegister ? '填写信息后即可开始选片和购票。' : '输入邮箱验证码，保护你的账户安全。'}</p>
         </div>

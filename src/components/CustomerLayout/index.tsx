@@ -41,7 +41,7 @@ const CustomerLayout: React.FC = () => {
     isCinemaBooking ||
     path === "/me/preferences" ||
     path.startsWith("/me/security");
-  const hideGlobalHeader = path === "/me/preferences" || path.startsWith("/me/security");
+  const hideGlobalHeader = path === "/me/preferences" || path.startsWith("/me/security") || path.startsWith("/agent");
   const headerTitle = path === "/me/orders"
     ? "我的订单"
     : path === "/me/wishlist"
@@ -76,7 +76,7 @@ const CustomerLayout: React.FC = () => {
                 type="button"
                 aria-label="返回上一页"
                 title="返回上一页"
-                onClick={() => history.back()}
+                onClick={() => history.replace('/home')}
               >
                 <LeftOutline />
               </button>

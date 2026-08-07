@@ -1,14 +1,15 @@
 .page {
   min-height: 100dvh;
-  background: var(--customer-bg);
+  background: #f3f4f4;
 }
 
 .homeSearchRow {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) 38px;
-  gap: 7px;
-  padding: 6px 12px 7px;
-  background: var(--customer-surface);
+  gap: 8px;
+  padding: 9px 14px 10px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 15px rgba(31, 42, 39, 0.06);
 }
 
 .homeCity {
@@ -40,7 +41,9 @@
 
 .search :global(.adm-search-bar-input-box) {
   height: 38px;
-  border: 1px solid var(--customer-line);
+  border: 1px solid #dfe3e1;
+  background: #f7f8f7;
+  box-shadow: inset 0 1px 2px rgba(25, 39, 35, 0.03);
   border-radius: 999px;
   box-sizing: border-box;
 }
@@ -54,24 +57,25 @@
   color: #53615d;
   background: var(--customer-surface);
   border: 1px solid var(--customer-line);
-  border-radius: 11px;
+  border-radius: 13px;
+  box-shadow: 0 2px 8px rgba(31, 42, 39, 0.06);
   font-size: 20px;
 }
 
 .homePromo {
-  min-height: 82px;
+  min-height: 98px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 120px;
   align-items: center;
-  margin: 0 14px 11px;
-  padding: 12px 12px 12px 14px;
+  margin: 10px 14px 14px;
+  padding: 15px 13px 15px 16px;
   overflow: hidden;
   color: #fff;
-  background: #173d35;
-  border: 1px solid rgba(89, 131, 118, 0.56);
-  border-radius: 8px;
-  box-shadow: 0 7px 18px rgba(25, 55, 47, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: #172d2a;
+  border: 1px solid rgba(200, 139, 50, 0.5);
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(23, 45, 42, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .homePromo strong,
@@ -82,13 +86,13 @@
 .welcomeCopy {
   min-width: 0;
   padding-left: 10px;
-  border-left: 3px solid var(--customer-coral);
+  border-left: 3px solid #d9a34c;
 }
 
 .welcomeCopy > span {
   display: block;
   margin-bottom: 4px;
-  color: #91cbb9;
+  color: #e1bd78;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 1.2px;
@@ -97,7 +101,7 @@
 .homePromo strong {
   margin-bottom: 6px;
   overflow: hidden;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -123,7 +127,8 @@
   width: 41px;
   height: 56px;
   border: 2px solid rgba(255, 255, 255, 0.75);
-  border-radius: 4px;
+  border-radius: 7px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.28);
   transform: rotate(4deg);
 }
 
@@ -144,16 +149,16 @@
 .serviceGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 4px;
-  padding: 2px 10px 12px;
+  gap: 7px;
+  padding: 2px 12px 14px;
   background: var(--customer-surface);
   border-bottom: 1px solid var(--customer-line);
 }
 
 .serviceGrid button {
   min-width: 0;
-  min-height: 58px;
-  padding: 4px 1px 0;
+  min-height: 64px;
+  padding: 5px 1px 0;
   color: var(--customer-ink);
   background: transparent;
   border: 0;
@@ -162,14 +167,15 @@
 }
 
 .serviceGrid button span {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
   margin: 0 auto 5px;
   color: #fff;
   background: var(--customer-primary);
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(31, 42, 39, 0.12);
   font-size: 16px;
 }
 
@@ -188,8 +194,8 @@
 }
 
 .homeBand {
-  margin-top: 9px;
-  padding: 12px 0 14px;
+  margin-top: 10px;
+  padding: 15px 0 16px;
   background: var(--customer-surface);
   border-top: 1px solid var(--customer-line);
   border-bottom: 1px solid var(--customer-line);
@@ -206,7 +212,8 @@
 
 .bandHead h2 {
   margin: 0;
-  font-size: 17px;
+  font-size: 19px;
+  letter-spacing: 0.2px;
 }
 
 .bandHead p,
@@ -243,8 +250,8 @@
 .posterScroller {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 94px;
-  gap: 9px;
+  grid-auto-columns: 100px;
+  gap: 11px;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding: 0 14px 6px;
@@ -279,11 +286,12 @@
 .poster,
 .compactPoster {
   position: relative;
-  width: 94px;
-  height: 132px;
+  width: 100px;
+  height: 142px;
   margin-bottom: 6px;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 9px;
+  box-shadow: 0 4px 10px rgba(31, 42, 39, 0.13);
 }
 
 .posterArt,
@@ -320,7 +328,7 @@
 }
 
 .posterTone0 {
-  background: #174f41;
+  background: #25272a;
 }
 .posterTone1 {
   background: #8d4d3e;
@@ -366,21 +374,21 @@
 }
 
 .posterBuyButton {
-  width: 50%;
-  height: 18px;
+  width: 58%;
+  height: 22px;
   justify-self: start;
   padding: 0;
   color: #fff;
-  background: var(--customer-coral);
+  background: #c9574f;
   border: 0;
-  border-radius: 4px;
-  font-size: 10px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 750;
   cursor: pointer;
 }
 
 .posterBuyButton:active {
-  background: #9f423e;
+  background: var(--customer-primary-dark);
 }
 
 .posterDetailButton {
@@ -391,7 +399,7 @@
   color: var(--customer-primary-dark);
   background: #fff;
   border: 1px solid #a9cfc2;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 9px;
   font-weight: 700;
   cursor: pointer;
@@ -572,7 +580,7 @@
   padding: 0;
   color: var(--customer-primary-dark);
   background: #fff;
-  border: 1px solid #bcd8cf;
+  border: 1px solid #ead9b5;
   border-radius: 4px;
   font-size: 9px;
   font-weight: 700;
@@ -580,12 +588,12 @@
 
 .mustSeeActionRow button:last-child {
   color: #fff;
-  background: var(--customer-coral);
-  border-color: var(--customer-coral);
+  background: var(--customer-primary);
+  border-color: var(--customer-primary);
 }
 
 .mustSeeScroller {
-  grid-auto-columns: calc((100% - 16px) / 3);
+  grid-auto-columns: calc((100% - 20px) / 3);
 }
 
 .mustSeeMovie {

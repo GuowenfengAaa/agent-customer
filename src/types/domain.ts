@@ -138,6 +138,7 @@ export interface RefundResult {
   orderId: ID;
   status: 'SUCCESS' | 'PENDING' | 'FAIL' | string;
   amount?: number;
+  serviceFee?: number;
   outRequestNo?: string;
   message?: string;
   updatedAt?: string;

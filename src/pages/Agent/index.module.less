@@ -5,8 +5,68 @@
   min-height: 0 !important;
   flex-direction: column;
   overflow: hidden;
-  padding: 0 16px calc(var(--customer-bottom-height) + 102px);
-  background: #eef5f2;
+  padding: 0 16px 18px;
+  background: #f4f5f5;
+}
+
+.agentTopBar {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(54px, 0.8fr) minmax(0, 1.5fr) auto;
+  align-items: center;
+  min-height: 48px;
+  margin: 0 -16px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #e3e6e4;
+  backdrop-filter: blur(14px);
+}
+
+.agentCity {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 3px;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: #2d3633;
+  background: transparent;
+  border: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.agentCity > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agentCityChevron {
+  color: var(--customer-primary);
+  font-size: 16px;
+}
+
+.agentTitle {
+  justify-self: center;
+  color: #252b29;
+  font-size: 17px;
+  white-space: nowrap;
+}
+
+.agentTopBar .navActions {
+  justify-self: end;
+}
+
+.agentTopBar .navActions :global(.adm-button) {
+  color: #7a5524;
+  font-size: 12px;
+}
+
+.legacyNavBar {
+  display: none;
 }
 
 .navActions {
@@ -19,12 +79,50 @@
   font-size: 18px;
 }
 
+.historyButton {
+  min-width: 48px;
+  padding: 0;
+}
+
 .hero {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
   flex: 0 0 auto;
-  padding: 16px 0 12px;
+  min-height: 108px;
+  margin: 10px 0 12px;
+  padding: 14px 16px 14px 76px;
+  border: 1px solid #e3e6e4;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(31, 42, 39, 0.06);
+}
+
+.heroBack {
+  position: absolute;
+  top: 91px;
+  left: 26px;
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #303437;
+  background: #fff;
+  border: 1px solid #e0e2e3;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(37, 39, 42, 0.08);
+  font-size: 22px;
+}
+
+.heroBack:active {
+  background: #f5f6f6;
+  transform: scale(0.94);
+}
+
+.heroBack + .hero {
+  margin-left: 0;
 }
 
 .avatar {
@@ -33,9 +131,9 @@
   height: 48px;
   place-items: center;
   color: #fff;
-  background: var(--customer-primary);
-  border-radius: 8px;
-  box-shadow: 0 7px 18px rgba(23, 79, 65, 0.2);
+  background: #c88b32;
+  border-radius: 13px;
+  box-shadow: 0 7px 16px rgba(200, 139, 50, 0.25);
   font-size: 24px;
 }
 
@@ -48,7 +146,9 @@
 
 h1 {
   margin: 4px 0;
-  font-size: 22px;
+  color: #1f2926;
+  font-size: 21px;
+  letter-spacing: 0.2px;
 }
 
 .hero p {
@@ -62,11 +162,12 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  min-height: 38px;
-  padding: 7px 10px;
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #e0e5e2;
+  border-radius: 12px;
   background: #fff;
+  box-shadow: 0 3px 10px rgba(31, 42, 39, 0.04);
 }
 
 .locationStatus {
@@ -93,10 +194,11 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 7px;
   padding: 10px 12px;
   color: #a1a1a3;
   background: #fff;
-  border-radius: 7px;
+  border-radius: 11px;
   font-size: 11px;
 }
 
@@ -111,14 +213,27 @@ h1 {
   font-weight: 700;
 }
 
+.locationBar,
+.progress {
+  display: none;
+}
+
 .messages {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 500px;
+  height: 500px;
+  min-height: 500px;
+  max-height: 500px;
   align-content: start;
   overflow-y: auto;
-  padding: 14px 0 128px;
+  margin-top: 12px;
+  padding: 14px 14px 86px;
+  background: #f8f9f8;
+  border: 1px solid #e7eae8;
+  border-radius: 16px;
+  overscroll-behavior: contain;
   scrollbar-width: none;
 }
 
@@ -140,23 +255,29 @@ h1 {
 .userMessage {
   max-width: 88%;
   border: 0;
-  border-radius: 8px;
+  border-radius: 14px;
   font-size: 13px;
   line-height: 1.7;
 }
 
 .agentMessage {
+  border: 1px solid #e2e6e4;
   background: #fff;
+  box-shadow: 0 5px 14px rgba(31, 42, 39, 0.06);
 }
 
 .userMessage {
   justify-self: end;
   color: #fff;
-  background: var(--customer-primary);
+  background: #2c3835;
 }
 
 .statusText {
   color: var(--customer-muted);
+}
+
+.messages > :global(.adm-tag) {
+  display: none;
 }
 
 .cards {
@@ -333,24 +454,78 @@ h1 {
 .quickActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 7px;
+  margin: 14px 0 36px;
+}
+
+.quickActions :global(.adm-button) {
+  min-height: 31px;
+  padding: 0 11px;
+  color: #56625e;
+  background: #fff;
+  border: 1px solid #e1e5e3;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(31, 42, 39, 0.04);
+  font-size: 12px;
+}
+
+.quickActions :global(.adm-button):active {
+  color: #7a5524;
+  background: #fff7e9;
+  border-color: #e7c886;
 }
 
 .composer {
   position: fixed;
   right: auto;
-  bottom: calc(var(--customer-bottom-height) - 1px);
+  bottom: 28px;
   left: 50%;
   z-index: 45;
   width: min(calc(100% - 32px), 398px);
   transform: translateX(-50%);
-  padding: 10px;
+  min-height: 64px;
+  padding: 9px 13px;
   background: rgba(255, 255, 255, 0.98);
-  border-radius: 8px;
-  border: 1px solid var(--customer-line);
-  box-shadow: 0 5px 18px rgba(24, 62, 51, 0.14);
+  border-radius: 18px;
+  border: 1px solid #dfe4e1;
+  box-shadow: 0 8px 24px rgba(24, 62, 51, 0.14);
   backdrop-filter: blur(14px);
+}
+
+.composer :global(.adm-text-area) {
+  padding: 0;
+}
+
+.composer :global(.adm-text-area-element) {
+  min-height: 42px;
+  padding: 7px 76px 7px 0;
+  box-sizing: border-box;
+  color: #27312e;
+  font-size: 14px;
+  line-height: 1.55;
+  resize: none;
+}
+
+.composer :global(.adm-text-area-element)::placeholder {
+  color: #aeb5b2;
+}
+
+.composer :global(.adm-space) {
+  position: absolute;
+  right: 13px;
+  bottom: 9px;
+  padding: 0;
+}
+
+.composer :global(.adm-button-primary) {
+  min-width: 62px;
+  height: 34px;
+  color: #fff;
+  background: #c88b32;
+  border-color: #c88b32;
+  border-radius: 9px;
+  box-shadow: 0 4px 10px rgba(200, 139, 50, 0.25);
+  font-weight: 700;
 }
 
 .tip {

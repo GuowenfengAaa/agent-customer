@@ -11,12 +11,85 @@ import styles from './index.module.less';
 
 const isValidOrderId = (orderId: string) => /^\d+$/.test(orderId);
 
+const DAY_IN_MINUTES = 24 * 60;
+const REFUND_CUTOFF_MINUTES = 30;
+
+type RefundFeeRuleId = 'early' | 'standard' | 'unavailable' | 'unknown';
+
+type RefundFeeRule = {
+  id: RefundFeeRuleId;
+  rate: number;
+  refundable: boolean;
+  title: string;
+  description: string;
+};
+
+const REFUND_FEE_RULES: Array<{ id: Exclude<RefundFeeRuleId, 'unknown'>; time: string; charge: string }> = [
+  { id: 'early', time: '不少于 24 小时', charge: '订单金额的 5%' },
+  { id: 'standard', time: '不少于 30 分钟且不足 24 小时', charge: '订单金额的 10%' },
+  { id: 'unavailable', time: '不足 30 分钟', charge: '不支持退票' },
+];
+
+// 当前规则仅用于提交前预估，提交后始终展示后端保存的实际退款金额与手续费。
+const getRefundFeeRule = (minutesUntilStart?: number): RefundFeeRule => {
+  if (minutesUntilStart === undefined || !Number.isFinite(minutesUntilStart)) {
+    return {
+      id: 'unknown',
+      rate: 0,
+      refundable: false,
+      title: '场次时间待确认',
+      description: '暂时无法计算退票手续费，请稍后重试。',
+    };
+  }
+
+  if (minutesUntilStart >= DAY_IN_MINUTES) {
+    return {
+      id: 'early',
+      rate: 0.05,
+      refundable: true,
+      title: '距开场不少于 24 小时',
+      description: '本次退票按订单总额（含零食）的 5% 收取手续费。',
+    };
+  }
+
+  if (minutesUntilStart >= REFUND_CUTOFF_MINUTES) {
+    return {
+      id: 'standard',
+      rate: 0.1,
+      refundable: true,
+      title: '距开场不少于 30 分钟',
+      description: '本次退票按订单总额（含零食）的 10% 收取手续费。',
+    };
+  }
+
+  return {
+    id: 'unavailable',
+    rate: 0,
+    refundable: false,
+    title: '距开场不足 30 分钟',
+    description: '距离电影开场不足 30 分钟，暂不支持退票。',
+  };
+};
+
+const estimateRefund = (amount: number, rate: number) => {
+  const amountFen = Math.max(0, Math.round(amount * 100));
+  const feePercent = Math.round(rate * 100);
+  // 与后端一致：手续费按分四舍五入，实际退款金额由原金额减手续费得到。
+  const serviceFeeFen = Math.floor((amountFen * feePercent + 50) / 100);
+  return {
+    serviceFee: serviceFeeFen / 100,
+    refundAmount: (amountFen - serviceFeeFen) / 100,
+  };
+};
+
 const Refund: React.FC = () => {
   const { orderId = '' } = useParams<{ orderId: string }>();
   const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
   const [polling, setPolling] = useState(false);
+  const [refreshingStatus, setRefreshingStatus] = useState(false);
   const [refundResult, setRefundResult] = useState<RefundResult>();
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
   const redirectingRef = useRef(false);
 
   const orderQuery = useQuery({
@@ -42,14 +115,38 @@ const Refund: React.FC = () => {
     ?.filter((item) => item.rowNo !== undefined && item.seatNo !== undefined)
     .map((item) => `${item.rowNo}排${item.seatNo}座`)
     .join('、') || order?.seatSummary || '座位信息待更新';
-  const ticketAmount = order?.items?.reduce((total, item) => total + (item.unitPrice || 0), 0) ?? 0;
-  const snackAmount = order?.snacks?.reduce((total, item) => total + (item.amount || 0), 0) ?? 0;
-  const showtimeStarted = order?.startAt ? !dayjs(order.startAt).isAfter(dayjs()) : true;
+  const snackItemsAmount = order?.snacks?.reduce((total, item) => total + (item.amount || 0), 0) ?? 0;
+  const snackAmount = snackItemsAmount || order?.snackAmount || 0;
+  const itemTicketAmount = order?.items?.reduce((total, item) => total + (item.unitPrice || 0), 0) ?? 0;
+  const ticketAmount = itemTicketAmount || Math.max(0, (order?.amount || 0) - snackAmount);
+  const minutesUntilStart = order?.startAt && dayjs(order.startAt).isValid()
+    ? dayjs(order.startAt).diff(currentTime, 'minute', true)
+    : undefined;
+  const refundFeeRule = getRefundFeeRule(minutesUntilStart);
+  const refundEstimate = refundFeeRule.refundable
+    ? estimateRefund(order?.amount || 0, refundFeeRule.rate)
+    : undefined;
+  const returnedServiceFee = refundResult?.serviceFee;
+  const returnedRefundAmount = refundResult?.amount;
+  const hasBackendRefundAmounts = returnedServiceFee !== undefined && returnedRefundAmount !== undefined;
+  const refundFee = hasBackendRefundAmounts ? returnedServiceFee : refundEstimate?.serviceFee ?? 0;
+  const estimatedRefundAmount = hasBackendRefundAmounts ? returnedRefundAmount : refundEstimate?.refundAmount ?? 0;
+  const hasRefundAmountToDisplay = refundFeeRule.refundable || hasBackendRefundAmounts;
   const status = refundResult?.status;
   const processing = order?.status === 'REFUND_PENDING' || status === 'PENDING';
   const success = order?.status === 'REFUNDED' || status === 'SUCCESS';
   const failed = status === 'FAIL';
-  const canRefund = order?.status === 'TICKETED' && !showtimeStarted && !submitting && !processing && !success;
+  const canRefund = order?.status === 'TICKETED'
+    && refundFeeRule.refundable
+    && !submitting
+    && !processing
+    && !success;
+
+  useEffect(() => {
+    // 停留在退款页时定期刷新时间，避免临近开场后仍显示可退票。
+    const timer = window.setInterval(() => setCurrentTime(Date.now()), 30000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (order?.status === 'REFUND_PENDING' || refundResult?.status === 'PENDING') {
@@ -86,7 +183,7 @@ const Refund: React.FC = () => {
     if (!canRefund) return;
     const confirmed = await Dialog.confirm({
       title: '确认整单退款',
-      content: '退款会同时处理电影票和已购买的零食，电子票会暂时冻结。是否继续？',
+      content: `预计退票手续费为 ¥${refundFee.toFixed(2)}，预计退款 ¥${estimatedRefundAmount.toFixed(2)}。退款会同时处理电影票和已购买的零食，电子票会暂时冻结，实际金额以实际退款到账为准。是否继续？`,
       cancelText: '暂不退款',
       confirmText: '确认退款',
     });
@@ -121,14 +218,22 @@ const Refund: React.FC = () => {
   };
 
   const refreshRefundStatus = async () => {
+    if (refreshingStatus) return;
     setPolling(true);
-    await refundStatusQuery.refetch();
-    await orderQuery.refetch();
+    setRefreshingStatus(true);
+    try {
+      await Promise.all([
+        refundStatusQuery.refetch(),
+        orderQuery.refetch(),
+      ]);
+    } finally {
+      setRefreshingStatus(false);
+    }
   };
 
   return (
     <div className={styles.page}>
-      <NavBar onBack={() => history.back()}>申请退款</NavBar>
+      <NavBar onBack={() => history.back()}>申请退票</NavBar>
       <main className={styles.content}>
         {orderQuery.isLoading ? (
           <div className={styles.loading}>
@@ -180,7 +285,51 @@ const Refund: React.FC = () => {
               {snackAmount > 0 ? (
                 <div className={styles.detailRow}><span>零食合计</span><strong>¥{snackAmount.toFixed(2)}</strong></div>
               ) : null}
-              <div className={styles.amountRow}><span>退款金额</span><strong>¥{order.amount.toFixed(2)}</strong></div>
+              <div className={styles.detailRow}>
+                <span>{hasBackendRefundAmounts ? '退票手续费' : '预计退票手续费'}</span>
+                <strong className={hasRefundAmountToDisplay ? styles.feeDeduction : styles.feeUnavailable}>
+                  {hasRefundAmountToDisplay ? `-¥${refundFee.toFixed(2)}` : '暂不可退'}
+                </strong>
+              </div>
+              <div className={styles.amountRow}>
+                <span>{hasBackendRefundAmounts ? '实际退款金额' : '预计退款金额'}</span>
+                <strong>{hasRefundAmountToDisplay ? `¥${estimatedRefundAmount.toFixed(2)}` : '--'}</strong>
+              </div>
+            </section>
+
+            <section className={styles.feePanel} aria-labelledby="refund-fee-title">
+              <div className={styles.feeHeader}>
+                <div>
+                  <span>REFUND FEE</span>
+                  <h2 id="refund-fee-title">退票手续费</h2>
+                </div>
+                <b className={refundFeeRule.refundable ? styles.feeRate : styles.feeRateUnavailable}>
+                  {refundFeeRule.refundable ? `费率 ${Math.round(refundFeeRule.rate * 100)}%` : '暂不可退'}
+                </b>
+              </div>
+              <div className={styles.feeCurrent}>
+                <div>
+                  <strong>{refundFeeRule.title}</strong>
+                  <span>{refundFeeRule.description}</span>
+                </div>
+                <b>{refundFeeRule.refundable ? `¥${refundFee.toFixed(2)}` : '--'}</b>
+              </div>
+              <div className={styles.feeTable}>
+                <div className={styles.feeTableHead}>
+                  <span>申请退票距开场时间</span>
+                  <span>手续费</span>
+                </div>
+                {REFUND_FEE_RULES.map((rule) => (
+                  <div
+                    className={[styles.feeRuleRow, refundFeeRule.id === rule.id ? styles.feeRuleActive : ''].filter(Boolean).join(' ')}
+                    key={rule.id}
+                  >
+                    <span>{rule.time}</span>
+                    <strong>{rule.charge}</strong>
+                  </div>
+                ))}
+              </div>
+              <p className={styles.feeHint}>手续费按订单总额计算，已购买的零食也会计入退款金额和手续费。</p>
             </section>
 
             <section className={styles.rules}>
@@ -213,7 +362,7 @@ const Refund: React.FC = () => {
               <div className={styles.unavailable}>
                 {order.status !== 'TICKETED'
                   ? `当前订单状态为“${order.statusDesc || order.status}”，不能申请退款。`
-                  : '该场次已经开始，不能申请退款。'}
+                  : refundFeeRule.description}
               </div>
             ) : null}
           </>
@@ -222,7 +371,13 @@ const Refund: React.FC = () => {
       {order ? (
         <div className={styles.actionBar}>
           {processing ? (
-            <Button color="primary" block loading={refundStatusQuery.isFetching} onClick={() => { void refreshRefundStatus(); }}>
+            <Button
+              color="primary"
+              block
+              loading={refreshingStatus}
+              disabled={refreshingStatus}
+              onClick={() => { void refreshRefundStatus(); }}
+            >
               {polling ? '刷新退款状态' : '查询退款状态'}
             </Button>
           ) : success ? (

@@ -1,5 +1,5 @@
 import { Button, Card, NavBar, Space, Tag, TextArea, Toast } from 'antd-mobile';
-import { EnvironmentOutline, MoreOutline } from 'antd-mobile-icons';
+import { EnvironmentOutline, LeftOutline, MoreOutline } from 'antd-mobile-icons';
 import { history, useSearchParams } from '@umijs/max';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -196,6 +196,9 @@ const Agent: React.FC = () => {
   const [searchParams] = useSearchParams();
   const {
     setMode,
+    city,
+    locationStatus,
+    locateCurrentPosition,
     setAgentContext,
     memoryId,
     sessionId,
@@ -656,6 +659,7 @@ const Agent: React.FC = () => {
     : agentLocationState === 'ready'
       ? `已定位 · ${agentBrowserLocation?.latitude.toFixed(4)}, ${agentBrowserLocation?.longitude.toFixed(4)}`
       : agentLocationError || '未获取当前位置';
+  const locationDisplayLabel = agentLocationState === 'ready' ? `已定位 · ${city}` : locationLabel;
   const latestActionMessageId = useMemo(
     () =>
       [...agentMessages]
@@ -673,7 +677,22 @@ const Agent: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <NavBar
+      <div className={styles.agentTopBar}>
+        <button className={styles.agentCity} type="button" onClick={locateCurrentPosition}>
+          <span>{locationStatus === 'locating' ? '定位中' : city}</span>
+          <span className={styles.agentCityChevron}>⌄</span>
+        </button>
+        <strong className={styles.agentTitle}>AI 智能购票</strong>
+        <Space align="center" className={styles.navActions}>
+          <Button fill="none" size="mini" loading={newConversationSaving} onClick={startNewConversation}>
+            新会话
+          </Button>
+          <Button fill="none" size="mini" className={styles.historyButton} onClick={openSessionList}>
+            历史对话
+          </Button>
+        </Space>
+      </div>
+      <NavBar className={styles.legacyNavBar}
         onBack={() => history.push('/home')}
         right={
           <Space align="center" className={styles.navActions}>
@@ -744,6 +763,9 @@ const Agent: React.FC = () => {
           </div>
         </div>
       ) : null}
+      <button className={styles.heroBack} type="button" aria-label="返回首页" onClick={() => history.push('/home')}>
+        <LeftOutline />
+      </button>
       <div className={styles.hero}>
         <div className={styles.avatar}>✦</div>
         <div>
@@ -755,7 +777,7 @@ const Agent: React.FC = () => {
       <div className={styles.locationBar}>
         <div className={styles.locationStatus}>
           <EnvironmentOutline />
-          <span>{locationLabel}</span>
+          <span>{locationDisplayLabel}</span>
         </div>
         <Button
           fill="none"
@@ -834,7 +856,7 @@ const Agent: React.FC = () => {
           disabled={running}
         />
         <Space justify="between" block align="center">
-          <span className={styles.tip}>接入：POST /api/agent/chat/stream</span>
+          <span className={styles.tip} aria-hidden="true" />
           <Button color="primary" size="small" disabled={running || !agentInput.trim()} onClick={() => send()}>
             发送
           </Button>

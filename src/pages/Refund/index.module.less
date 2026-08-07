@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
   padding: 0 14px 96px;
-  background: #f1f6f4;
+  background: #f6f7f8;
 }
 
 .content {
@@ -24,10 +24,10 @@
   align-items: center;
   padding: 14px;
   color: #fff;
-  background: #263e39;
-  border: 1px solid #39554e;
+  background: #25272a;
+  border: 1px solid #3b3d40;
   border-radius: 8px;
-  box-shadow: 0 9px 22px rgba(28, 56, 49, 0.15);
+  box-shadow: 0 9px 22px rgba(37, 39, 42, 0.16);
 }
 
 .poster {
@@ -38,7 +38,7 @@
   display: grid;
   place-items: center;
   color: #fff;
-  background: #43685e;
+  background: #4a4d52;
   border-radius: 6px;
   font-size: 18px;
   font-weight: 800;
@@ -87,6 +87,7 @@
 }
 
 .refundPanel,
+.feePanel,
 .rules {
   padding: 15px;
   background: #fff;
@@ -150,6 +151,14 @@
   text-align: right;
 }
 
+.feeDeduction {
+  color: #bd554f !important;
+}
+
+.feeUnavailable {
+  color: #9b4d50 !important;
+}
+
 .amountRow {
   align-items: center;
   padding: 16px 0 2px;
@@ -159,6 +168,141 @@
 .amountRow strong {
   color: var(--customer-coral);
   font-size: 24px;
+}
+
+.feeHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feeHeader > div > span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--customer-primary);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.feeHeader h2 {
+  margin: 0;
+  color: var(--customer-ink);
+  font-size: 17px;
+}
+
+.feeRate,
+.feeRateUnavailable {
+  margin-top: 2px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.feeRate {
+  color: #246b53;
+  background: #edf8f3;
+}
+
+.feeRateUnavailable {
+  color: #9b4d50;
+  background: #fff2f2;
+}
+
+.feeCurrent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 13px;
+  padding: 11px 0;
+  border-top: 1px solid var(--customer-line);
+  border-bottom: 1px solid var(--customer-line);
+}
+
+.feeCurrent > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.feeCurrent strong {
+  color: var(--customer-ink);
+  font-size: 12px;
+}
+
+.feeCurrent span {
+  color: var(--customer-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.feeCurrent > b {
+  flex: 0 0 auto;
+  color: var(--customer-coral);
+  font-size: 18px;
+}
+
+.feeTable {
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid #e5ece9;
+  border-radius: 6px;
+}
+
+.feeTableHead,
+.feeRuleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(96px, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 11px;
+  font-size: 11px;
+}
+
+.feeTableHead {
+  color: #66736f;
+  background: #f3f7f5;
+  font-weight: 700;
+}
+
+.feeRuleRow {
+  color: var(--customer-muted);
+  border-top: 1px solid #edf2f0;
+}
+
+.feeRuleRow strong {
+  color: var(--customer-ink);
+  font-weight: 700;
+}
+
+.feeRuleActive {
+  position: relative;
+  color: #804240;
+  background: #fff7f6;
+}
+
+.feeRuleActive::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  content: '';
+  background: var(--customer-coral);
+}
+
+.feeRuleActive strong {
+  color: #b64b48;
+}
+
+.feeHint {
+  margin: 10px 0 0;
+  color: #7a8581;
+  font-size: 10px;
+  line-height: 1.55;
 }
 
 .rules h2 { margin-bottom: 10px; }

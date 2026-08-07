@@ -4,6 +4,7 @@ import {
   EyeOutline,
   LockOutline,
   MailOutline,
+  MovieOutline,
   UserOutline,
 } from 'antd-mobile-icons';
 import { history } from '@umijs/max';
@@ -96,30 +97,32 @@ const AuthLogin: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <span className={styles.headerSide} />
-        <span className={styles.appName}>光影票务</span>
-        <span className={styles.headerSide} />
-      </header>
       <section className={styles.brandPanel}>
         <div className={styles.brandRow}>
-          <span className={styles.logo}>M</span>
-          <span className={styles.kicker}>MOVIE TICKET</span>
+          <span className={styles.logo}><MovieOutline /></span>
+          <span className={styles.brandName}>
+            <strong>光影票务</strong>
+            <small>MOVIE TICKET</small>
+          </span>
         </div>
-        <h1>好电影，正当时</h1>
-        <p>登录后同步订单、观影偏好和选座草稿。</p>
-        <div className={styles.ticketLine} aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <span />
+        <div className={styles.heroCopy}>
+          <span className={styles.heroEyebrow}>NOW SHOWING</span>
+          <h1>把今晚，<br />留给好电影</h1>
+          <p>登录后继续你的观影旅程</p>
+        </div>
+        <div className={styles.cinemaStrip} aria-hidden="true">
+          <span>01</span>
+          <span className={styles.stripWide}>LIGHT</span>
+          <span>24</span>
         </div>
       </section>
       <main className={styles.sheet}>
-        <span className={styles.handle} aria-hidden="true" />
         <div className={styles.sheetHeading}>
-          <h2>欢迎回来</h2>
-          <p>{mode === 'password' ? '使用手机号和密码登录观影账户' : '使用已注册邮箱的验证码快捷登录'}</p>
+          <div>
+            <span className={styles.welcomeMark}>WELCOME BACK</span>
+            <h2>欢迎回来</h2>
+            <p>{mode === 'password' ? '使用手机号和密码登录' : '使用已注册邮箱快捷登录'}</p>
+          </div>
         </div>
 
         <div className={styles.modeSwitch} role="tablist" aria-label="登录方式">
@@ -146,121 +149,135 @@ const AuthLogin: React.FC = () => {
         <div className={styles.form}>
           {mode === 'password' ? (
             <>
-              <label className={styles.field}>
-                <span className={styles.fieldIcon}><UserOutline /></span>
-                <Input
-                  className={styles.input}
-                  placeholder="请输入手机号"
-                  value={phone}
-                  onChange={setPhone}
-                  clearable
-                  type="tel"
-                  maxLength={11}
-                />
-              </label>
-              <label className={[styles.field, styles.passwordField].join(' ')}>
-                <span className={styles.fieldIcon}><LockOutline /></span>
-                <Input
-                  className={styles.input}
-                  placeholder="请输入密码"
-                  value={password}
-                  onChange={setPassword}
-                  type={visible ? 'text' : 'password'}
-                />
-                <button
-                  className={styles.eye}
-                  type="button"
-                  title={visible ? '隐藏密码' : '显示密码'}
-                  aria-label={visible ? '隐藏密码' : '显示密码'}
-                  onClick={() => setVisible((value) => !value)}
-                >
-                  {visible ? <EyeOutline /> : <EyeInvisibleOutline />}
-                </button>
-              </label>
-            </>
-          ) : (
-            <>
-              <label className={styles.field}>
-                <span className={styles.fieldIcon}><MailOutline /></span>
-                <Input
-                  className={styles.input}
-                  placeholder="请输入已注册邮箱"
-                  value={email}
-                  onChange={setEmail}
-                  clearable
-                  type="email"
-                />
-              </label>
-              <div className={styles.codeRow}>
+              <div className={styles.fieldGroup}>
+                <span className={styles.fieldLabel}>手机号</span>
                 <label className={styles.field}>
+                  <span className={styles.fieldIcon}><UserOutline /></span>
+                  <Input
+                    className={styles.input}
+                    placeholder="请输入 11 位手机号"
+                    value={phone}
+                    onChange={setPhone}
+                    clearable
+                    type="tel"
+                    maxLength={11}
+                  />
+                </label>
+              </div>
+              <div className={styles.fieldGroup}>
+                <div className={styles.fieldLabelRow}>
+                  <span className={styles.fieldLabel}>密码</span>
+                  <button type="button" onClick={() => history.push('/auth/forgot-password')}>忘记密码？</button>
+                </div>
+                <label className={[styles.field, styles.passwordField].join(' ')}>
                   <span className={styles.fieldIcon}><LockOutline /></span>
                   <Input
                     className={styles.input}
-                    placeholder="6 位验证码"
-                    value={code}
-                    onChange={setCode}
-                    inputMode="numeric"
-                    maxLength={6}
+                    placeholder="请输入登录密码"
+                    value={password}
+                    onChange={setPassword}
+                    type={visible ? 'text' : 'password'}
+                  />
+                  <button
+                    className={styles.eye}
+                    type="button"
+                    title={visible ? '隐藏密码' : '显示密码'}
+                    aria-label={visible ? '隐藏密码' : '显示密码'}
+                    onClick={() => setVisible((value) => !value)}
+                  >
+                    {visible ? <EyeOutline /> : <EyeInvisibleOutline />}
+                  </button>
+                </label>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.fieldGroup}>
+                <span className={styles.fieldLabel}>邮箱</span>
+                <label className={styles.field}>
+                  <span className={styles.fieldIcon}><MailOutline /></span>
+                  <Input
+                    className={styles.input}
+                    placeholder="请输入已注册邮箱"
+                    value={email}
+                    onChange={setEmail}
+                    clearable
+                    type="email"
                   />
                 </label>
-                <Button
-                  className={styles.codeButton}
-                  fill="outline"
-                  loading={sendingCode}
-                  disabled={sendingCode || cooldown > 0}
-                  onClick={requestCode}
-                >
-                  {cooldown > 0 ? cooldown + 's 后重发' : '获取验证码'}
-                </Button>
+              </div>
+              <div className={styles.fieldGroup}>
+                <span className={styles.fieldLabel}>邮箱验证码</span>
+                <div className={styles.codeRow}>
+                  <label className={styles.field}>
+                    <span className={styles.fieldIcon}><LockOutline /></span>
+                    <Input
+                      className={styles.input}
+                      placeholder="请输入 6 位验证码"
+                      value={code}
+                      onChange={setCode}
+                      inputMode="numeric"
+                      maxLength={6}
+                    />
+                  </label>
+                  <Button
+                    className={styles.codeButton}
+                    fill="outline"
+                    loading={sendingCode}
+                    disabled={sendingCode || cooldown > 0}
+                    onClick={requestCode}
+                  >
+                    {cooldown > 0 ? cooldown + 's 后重发' : '获取验证码'}
+                  </Button>
+                </div>
               </div>
             </>
           )}
 
+          <label className={styles.agreement}>
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(event) => setAgreed(event.target.checked)}
+            />
+            <span className={styles.checkbox} aria-hidden="true" />
+            <span className={styles.agreementText}>
+              我已阅读并同意
+              <a
+                href="/legal/terms"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  history.push('/legal/terms');
+                }}
+              >
+                《用户协议》
+              </a>
+              和
+              <a
+                href="/legal/privacy"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  history.push('/legal/privacy');
+                }}
+              >
+                《隐私政策》
+              </a>
+            </span>
+          </label>
+
           <Button className={styles.submit} color="primary" block loading={loading} onClick={submit}>
-            {mode === 'password' ? '登录' : '邮箱验证码登录'}
+            登录
           </Button>
         </div>
 
         <div className={styles.links}>
-          <button type="button" onClick={() => history.push('/auth/forgot-password')}>
-            忘记密码
-          </button>
+          <span>还没有光影票务账号？</span>
           <button type="button" onClick={() => history.push('/auth/register')}>
-            注册账号
+            立即注册
           </button>
         </div>
-        <label className={styles.agreement}>
-          <input
-            type="checkbox"
-            checked={agreed}
-            onChange={(event) => setAgreed(event.target.checked)}
-          />
-          <span className={styles.checkbox} aria-hidden="true" />
-          <span className={styles.agreementText}>
-            我已阅读并同意
-            <a
-              href="/legal/terms"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                history.push('/legal/terms');
-              }}
-            >
-              《用户协议》
-            </a>
-            和
-            <a
-              href="/legal/privacy"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                history.push('/legal/privacy');
-              }}
-            >
-              《隐私政策》
-            </a>
-          </span>
-        </label>
       </main>
     </div>
   );

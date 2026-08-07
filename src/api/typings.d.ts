@@ -675,6 +675,7 @@ declare namespace API {
     orderId?: number;
     status?: string;
     amount?: number;
+    serviceFee?: number;
     outRequestNo?: string;
     message?: string;
     updatedAt?: string;
