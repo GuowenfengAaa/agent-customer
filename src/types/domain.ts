@@ -134,6 +134,15 @@ export interface PaymentInit {
   payForm?: string;
 }
 
+export interface RefundResult {
+  orderId: ID;
+  status: 'SUCCESS' | 'PENDING' | 'FAIL' | string;
+  amount?: number;
+  outRequestNo?: string;
+  message?: string;
+  updatedAt?: string;
+}
+
 export interface OrderSummary {
   id: ID;
   orderNo: string;

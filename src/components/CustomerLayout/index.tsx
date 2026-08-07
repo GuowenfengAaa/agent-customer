@@ -1,6 +1,7 @@
 import {
   AppOutline,
   EnvironmentOutline,
+  LeftOutline,
   MessageOutline,
   MovieOutline,
   UserOutline,
@@ -18,6 +19,9 @@ const CustomerLayout: React.FC = () => {
     (state) => state.locateCurrentPosition
   );
   const path = location.pathname;
+  const isCinemaBooking =
+    path === "/cinemas" &&
+    new URLSearchParams(location.search).has("movieId");
   const active =
     path === "/home" || path.startsWith("/movies") || path.startsWith("/search")
       ? "movies"
@@ -34,6 +38,7 @@ const CustomerLayout: React.FC = () => {
     path.startsWith("/cinemas/") ||
     path.startsWith("/showtimes/") ||
     path.startsWith("/orders/") ||
+    isCinemaBooking ||
     path === "/me/preferences" ||
     path.startsWith("/me/security");
   const hideGlobalHeader = path === "/me/preferences" || path.startsWith("/me/security");
@@ -42,7 +47,7 @@ const CustomerLayout: React.FC = () => {
     : path === "/me/wishlist"
     ? "想看的电影"
     : path === "/cinemas"
-    ? "影院"
+    ? isCinemaBooking ? "选择影院" : "影院"
     : path === "/me"
     ? "我的"
     : "";
@@ -65,17 +70,29 @@ const CustomerLayout: React.FC = () => {
       {path !== "/home" && !path.startsWith("/search") && !hideGlobalHeader ? (
         <header className={styles.header}>
           <div className={`${styles.topRow} ${headerTitle ? styles.topRowWithTitle : ""}`}>
-            <button
-              className={styles.cityButton}
-              type="button"
-              aria-label="重新定位"
-              aria-busy={locationStatus === "locating"}
-              title={locationTitle}
-              onClick={locateCurrentPosition}
-            >
-              <span>{locationStatus === "locating" ? "定位中" : city}</span>
-              <span className={styles.chevron}>⌄</span>
-            </button>
+            {isCinemaBooking ? (
+              <button
+                className={styles.backButton}
+                type="button"
+                aria-label="返回上一页"
+                title="返回上一页"
+                onClick={() => history.back()}
+              >
+                <LeftOutline />
+              </button>
+            ) : (
+              <button
+                className={styles.cityButton}
+                type="button"
+                aria-label="重新定位"
+                aria-busy={locationStatus === "locating"}
+                title={locationTitle}
+                onClick={locateCurrentPosition}
+              >
+                <span>{locationStatus === "locating" ? "定位中" : city}</span>
+                <span className={styles.chevron}>⌄</span>
+              </button>
+            )}
             {headerTitle ? <strong className={styles.pageTitle}>{headerTitle}</strong> : null}
             {headerTitle ? <span className={styles.topRowSpacer} aria-hidden="true" /> : null}
           </div>

@@ -1,6 +1,6 @@
-import { Button, Card, Dialog, Image, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
+import { Button, Card, Dialog, Image, InfiniteScroll, NavBar, Space, Stepper, Tag, Toast } from 'antd-mobile';
 import { history, useLocation, useParams } from '@umijs/max';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { QRCodeSVG } from 'qrcode.react';
@@ -13,8 +13,17 @@ import styles from './index.module.less';
 
 const isPending = (status: string) => status === 'PAYMENT_PENDING' || status === 'PENDING';
 const isTicketViewable = (status: string) => status === 'PAID' || status === 'TICKETED';
+const isRefundable = (status?: string, startAt?: string) => (
+  status === 'TICKETED' && Boolean(startAt) && dayjs(startAt).isAfter(dayjs())
+);
+const getOrderStatusText = (status?: string, statusDesc?: string) => {
+  if (status === 'REFUND_PENDING') return '退款处理中';
+  if (status === 'REFUNDED') return '已退票';
+  return statusDesc || status || '订单状态待更新';
+};
 
 const ALIPAY_WINDOW_NAME = 'alipaySandboxPayment';
+const ORDER_PAGE_SIZE = 20;
 
 function openAlipayPaymentWindow() {
   if (window.innerWidth <= 600) return null;
@@ -175,18 +184,21 @@ const OrderItem: React.FC<{
   onCancel: (order: OrderSummary) => void;
 }> = ({ order, posterUrl, cancelling, onCancel }) => {
   const pending = isPending(order.status);
+  const refundPending = order.status === 'REFUND_PENDING';
   const canCancel = order.status === 'PAYMENT_PENDING';
   const canViewTicket = isTicketViewable(order.status);
   const cancelled = order.status === 'CANCELLED';
   const expired = order.status === 'EXPIRED';
-  const canViewOrderDetail = cancelled || expired;
+  const refunded = order.status === 'REFUNDED';
+  const canApplyRefund = isRefundable(order.status, order.startAt);
+  const canViewOrderDetail = cancelled || expired || refunded || refundPending;
   const title = order.movieName || '影片信息待更新';
   return (
     <Card className={styles.orderItem}>
       <div className={styles.orderHead}>
-        <strong>{pending ? '待支付订单' : cancelled ? '已取消订单' : expired ? '已过期订单' : '购票订单'}</strong>
-        <span className={pending ? styles.statusPending : cancelled || expired ? styles.statusClosed : styles.statusPaid}>
-          {order.statusDesc || (pending ? '待支付' : cancelled ? '已取消' : expired ? '已过期' : '已完成')}
+        <strong>{pending ? '待支付订单' : cancelled ? '已取消订单' : expired ? '已过期订单' : refunded ? '已退票订单' : '购票订单'}</strong>
+        <span className={pending || refundPending ? styles.statusPending : refunded ? styles.statusRefunded : cancelled || expired ? styles.statusClosed : styles.statusPaid}>
+          {getOrderStatusText(order.status, order.statusDesc)}
         </span>
       </div>
       <div className={styles.orderMain}>
@@ -213,6 +225,17 @@ const OrderItem: React.FC<{
       <div className={styles.orderActions}>
         <strong className={styles.orderPrice}>¥{order.amount.toFixed(2)}</strong>
         <div className={styles.orderActionButtons}>
+          {canApplyRefund ? (
+            <Button
+              className={styles.refundOrderButton}
+              size="small"
+              color="danger"
+              fill="outline"
+              onClick={() => history.push(`/orders/${order.id}/refund`)}
+            >
+              申请退票
+            </Button>
+          ) : null}
           {canCancel ? (
             <Button
               className={styles.cancelOrderButton}
@@ -264,12 +287,18 @@ const OrderPlaceholder: React.FC = () => {
   });
   const queryClient = useQueryClient();
   const [paymentTimedOut, setPaymentTimedOut] = useState(false);
-  const ordersQuery = useQuery({
-    queryKey: queryKeys.orders({ page: 1, size: 20 }),
-    queryFn: () => customerApi.listOrders({ page: 1, size: 20 }),
+  const ordersQuery = useInfiniteQuery({
+    queryKey: queryKeys.orders({ size: ORDER_PAGE_SIZE }),
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => customerApi.listOrders({ page: pageParam, size: ORDER_PAGE_SIZE }),
+    getNextPageParam: (lastPage, pages) => {
+      const loadedCount = pages.reduce((total, page) => total + page.records.length, 0);
+      if (!lastPage.records.length || loadedCount >= lastPage.total) return undefined;
+      return (lastPage.page ?? pages.length) + 1;
+    },
     enabled: location.pathname === '/me/orders',
   });
-  const records = ordersQuery.data?.records ?? [];
+  const records = ordersQuery.data?.pages.flatMap((page) => page.records) ?? [];
   const posterByOrderId = new Map(
     records.map((item) => [
       item.id,
@@ -306,6 +335,8 @@ const OrderPlaceholder: React.FC = () => {
   const paymentTerminal = order?.status === 'TICKETED'
     || order?.status === 'CANCELLED'
     || order?.status === 'EXPIRED'
+    || order?.status === 'REFUND_PENDING'
+    || order?.status === 'REFUNDED'
     || paymentFailed;
 
   useEffect(() => {
@@ -476,6 +507,9 @@ const OrderPlaceholder: React.FC = () => {
     )).join('、') || order?.seatSummary || '座位信息待更新';
     const isCancelledOrder = order?.status === 'CANCELLED';
     const isExpiredOrder = order?.status === 'EXPIRED';
+    const isRefundedOrder = order?.status === 'REFUNDED';
+    const isRefundPendingOrder = order?.status === 'REFUND_PENDING';
+    const canApplyRefund = isRefundable(order?.status, order?.startAt);
 
     return (
       <div className={`${styles.page} ${styles.orderDetailPage}`}>
@@ -488,10 +522,10 @@ const OrderPlaceholder: React.FC = () => {
               <div className={styles.detailStatusRow}>
                 <div>
                   <span>订单状态</span>
-                  <strong>{order.statusDesc || order.status}</strong>
+                  <strong>{getOrderStatusText(order.status, order.statusDesc)}</strong>
                 </div>
-                <Tag color={isCancelledOrder ? 'danger' : isExpiredOrder ? 'default' : 'primary'}>
-                  {order.statusDesc || order.status}
+                <Tag color={isCancelledOrder || isRefundedOrder ? 'danger' : isExpiredOrder ? 'default' : isRefundPendingOrder ? 'warning' : 'primary'}>
+                  {getOrderStatusText(order.status, order.statusDesc)}
                 </Tag>
               </div>
 
@@ -525,12 +559,27 @@ const OrderPlaceholder: React.FC = () => {
 
               <SnackLines snacks={order.snacks} />
 
-              {isCancelledOrder || isExpiredOrder ? (
+              {isCancelledOrder || isExpiredOrder || isRefundedOrder || isRefundPendingOrder ? (
                 <div className={styles.detailNotice}>
-                  {isCancelledOrder
+                  {isRefundPendingOrder
+                    ? '退款正在支付宝沙箱处理中，电子票暂时冻结，请稍后刷新退款状态。'
+                    : isRefundedOrder
+                    ? '本订单已完成退票，电子票和取票码已失效，座位及零食库存已释放。'
+                    : isCancelledOrder
                     ? '该订单已取消，锁定座位已释放。'
                     : '该订单已超时关闭，锁定座位已释放。'}
                 </div>
+              ) : null}
+              {canApplyRefund ? (
+                <Button
+                  className={styles.detailRefundButton}
+                  color="danger"
+                  fill="outline"
+                  block
+                  onClick={() => history.push(`/orders/${orderId}/refund`)}
+                >
+                  申请退票
+                </Button>
               ) : null}
             </Card>
           ) : null}
@@ -541,16 +590,19 @@ const OrderPlaceholder: React.FC = () => {
 
   if (isPaymentResult) {
     const closed = order?.status === 'CANCELLED' || order?.status === 'EXPIRED';
+    const refunded = order?.status === 'REFUNDED';
     const failed = paymentFailed && !closed;
     return (
       <div className={styles.page}>
         <NavBar onBack={() => history.push('/me/orders')}>支付结果</NavBar>
         <Card className={styles.paymentResultCard}>
-          <div className={`${styles.paymentResultIcon} ${closed || failed ? styles.paymentResultIconClosed : ''}`}>
-            {closed || failed || orderQuery.isError ? '!' : '✓'}
+          <div className={`${styles.paymentResultIcon} ${closed || refunded || failed ? styles.paymentResultIconClosed : ''}`}>
+            {closed || refunded || failed || orderQuery.isError ? '!' : '✓'}
           </div>
           <h1>
-            {closed
+            {refunded
+              ? '订单已退票'
+              : closed
               ? '订单已关闭'
               : failed
                 ? '支付未完成'
@@ -561,7 +613,9 @@ const OrderPlaceholder: React.FC = () => {
                     : '正在确认支付'}
           </h1>
           <p>
-            {closed
+            {refunded
+              ? '本订单已完成退票，电子票和取票码已失效。'
+              : closed
               ? '该订单已取消或过期，座位已释放。'
               : failed
                 ? '支付宝交易已关闭或失败，请返回订单列表重新发起支付。'
@@ -586,6 +640,9 @@ const OrderPlaceholder: React.FC = () => {
   if (location.pathname.endsWith('/tickets')) {
     const tickets = order?.tickets || [];
     const ticketReady = order?.status === 'TICKETED';
+    const isRefundedOrder = order?.status === 'REFUNDED';
+    const isRefundPendingOrder = order?.status === 'REFUND_PENDING';
+    const canApplyRefund = isRefundable(order?.status, order?.startAt);
     const title = order?.movie?.name || order?.movieName || '影片信息待更新';
     const posterUrl = order?.movie?.posterUrl || order?.moviePoster;
     const cinema = order?.cinema?.name || order?.cinemaName || '影院待更新';
@@ -597,10 +654,10 @@ const OrderPlaceholder: React.FC = () => {
         <main className={styles.ticketContent}>
           <section className={styles.ticketSheet}>
             <div className={styles.ticketStatusRow}>
-              <Tag color={ticketReady ? 'success' : 'warning'}>
-                {order?.statusDesc || (orderQuery.isLoading ? '正在加载' : '出票处理中')}
+              <Tag color={ticketReady ? 'success' : isRefundedOrder ? 'danger' : 'warning'}>
+                {getOrderStatusText(order?.status, order?.statusDesc || (orderQuery.isLoading ? '正在加载' : '出票处理中'))}
               </Tag>
-              <span>电子票</span>
+              <span>{isRefundedOrder ? '电子票已失效' : '电子票'}</span>
             </div>
 
             <div className={styles.ticketMovie}>
@@ -644,7 +701,11 @@ const OrderPlaceholder: React.FC = () => {
 
             <SnackLines snacks={order?.snacks} />
 
-            {tickets.length ? (
+            {isRefundPendingOrder ? (
+              <div className={styles.emptyTicket}>退款处理中，电子票二维码暂时冻结，请稍后刷新退款状态。</div>
+            ) : null}
+
+            {ticketReady && tickets.length && !isRefundPendingOrder ? (
               <div className={styles.ticketPasses}>
                 {tickets.map((ticket, index) => (
                   <article className={styles.ticketPass} key={ticket.ticketCode || `${order?.id}-${index}`}>
@@ -672,10 +733,19 @@ const OrderPlaceholder: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className={styles.emptyTicket}>出票信息会在支付完成后显示</div>
+              <div className={styles.emptyTicket}>
+                {isRefundedOrder ? '订单已退票，电子票和取票码均已失效。' : '出票信息会在支付完成后显示'}
+              </div>
             )}
           </section>
-          <Button className={styles.ticketBackButton} color="primary" block onClick={() => history.push('/me/orders')}>返回订单</Button>
+          <Space direction="vertical" block>
+            {canApplyRefund ? (
+              <Button color="danger" fill="outline" block onClick={() => history.push(`/orders/${orderId}/refund`)}>
+                申请退票
+              </Button>
+            ) : null}
+            <Button className={styles.ticketBackButton} color="primary" block onClick={() => history.push('/me/orders')}>返回订单</Button>
+          </Space>
         </main>
       </div>
     );
@@ -702,6 +772,15 @@ const OrderPlaceholder: React.FC = () => {
           />
         ))}
       </div>
+      {records.length ? (
+        <InfiniteScroll
+          loadMore={async () => { await ordersQuery.fetchNextPage(); }}
+          hasMore={Boolean(ordersQuery.hasNextPage)}
+          threshold={80}
+        >
+          {ordersQuery.hasNextPage ? '正在加载更多订单...' : '全部订单已加载'}
+        </InfiniteScroll>
+      ) : null}
     </div>
   );
 };

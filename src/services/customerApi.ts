@@ -8,6 +8,7 @@ import type {
   OrderSummary,
   PageResult,
   PaymentInit,
+  RefundResult,
   PurchaseDraftSummary,
   SearchHistorySummary,
   SeatSummary,
@@ -511,6 +512,28 @@ export const customerApi = {
 
   cancelOrder(orderId: string) {
     return generatedApi.orderController.cancel({ id: asLong(orderId) }).then(() => undefined);
+  },
+
+  refundOrder(orderId: string): Promise<RefundResult> {
+    return generatedApi.orderController.refund({ id: asLong(orderId) }).then((result) => unwrap(result) as RawRecord).then((raw) => ({
+      orderId: asId(raw.orderId ?? orderId),
+      status: raw.status ?? 'PENDING',
+      amount: asOptionalNumber(raw.amount),
+      outRequestNo: raw.outRequestNo ?? undefined,
+      message: raw.message ?? undefined,
+      updatedAt: raw.updatedAt ?? undefined,
+    } satisfies RefundResult));
+  },
+
+  getRefundStatus(orderId: string): Promise<RefundResult> {
+    return generatedApi.orderController.refundStatus({ id: asLong(orderId) }).then((result) => unwrap(result) as RawRecord).then((raw) => ({
+      orderId: asId(raw.orderId ?? orderId),
+      status: raw.status ?? 'PENDING',
+      amount: asOptionalNumber(raw.amount),
+      outRequestNo: raw.outRequestNo ?? undefined,
+      message: raw.message ?? undefined,
+      updatedAt: raw.updatedAt ?? undefined,
+    } satisfies RefundResult));
   },
 
   getProfile() {

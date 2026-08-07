@@ -56,6 +56,7 @@
 .statusPaid { color: var(--customer-primary); font-size: 11px; font-weight: 700; }
 .statusPending { color: var(--customer-amber); font-size: 11px; font-weight: 700; }
 .statusClosed { color: var(--customer-muted); font-size: 11px; font-weight: 700; }
+.statusRefunded { color: #d9363e; font-size: 11px; font-weight: 700; }
 
 .orderMain {
   display: grid;
@@ -129,6 +130,12 @@
 }
 
 .cancelOrderButton {
+  --text-color: #d9363e;
+  --border-color: #d9363e;
+  --background-color: #fff7f7;
+}
+
+.refundOrderButton {
   --text-color: #d9363e;
   --border-color: #d9363e;
   --background-color: #fff7f7;
@@ -287,6 +294,13 @@
   font-size: 11px;
   line-height: 1.6;
   text-align: center;
+}
+
+.detailRefundButton {
+  margin-top: 14px;
+  --text-color: #d9363e;
+  --border-color: #d9363e;
+  --background-color: #fff7f7;
 }
 
 .ticketCard {

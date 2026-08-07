@@ -102,6 +102,40 @@ export async function pay(
   });
 }
 
+/** 此处后端没有提供注释 GET /api/user/orders/${param0}/refund */
+export async function refundStatus(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.refundStatusParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.ResultRefundResultVO>(
+    `/api/user/orders/${param0}/refund`,
+    {
+      method: "GET",
+      params: { ...queryParams },
+      ...(options || {}),
+    }
+  );
+}
+
+/** 此处后端没有提供注释 POST /api/user/orders/${param0}/refund */
+export async function refund(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.refundParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.ResultRefundResultVO>(
+    `/api/user/orders/${param0}/refund`,
+    {
+      method: "POST",
+      params: { ...queryParams },
+      ...(options || {}),
+    }
+  );
+}
+
 /** 此处后端没有提供注释 POST /api/user/orders/lock */
 export async function lock(
   body: API.LockSeatsDTO,

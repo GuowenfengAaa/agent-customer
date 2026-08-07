@@ -54,6 +54,28 @@
   cursor: pointer;
 }
 
+.backButton {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  justify-self: start;
+  padding: 0;
+  color: var(--customer-ink);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(207, 219, 214, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 2px 7px rgba(24, 54, 46, 0.08);
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.backButton:active {
+  color: var(--customer-primary-dark);
+  background: var(--customer-primary-soft);
+  transform: scale(0.96);
+}
+
 .cityButton {
   display: flex;
   align-items: center;
