@@ -645,6 +645,7 @@ declare namespace API {
     outTradeNo?: string;
     paymentStatus?: string;
     payForm?: string;
+    qrCode?: string;
   };
 
   type payParams = {
@@ -664,6 +665,23 @@ declare namespace API {
     budget?: number;
     budgetRaw?: number;
     seatZone?: string;
+  };
+
+  type refundParams = {
+    id: number;
+  };
+
+  type RefundResultVO = {
+    orderId?: number;
+    status?: string;
+    amount?: number;
+    outRequestNo?: string;
+    message?: string;
+    updatedAt?: string;
+  };
+
+  type refundStatusParams = {
+    id: number;
   };
 
   type RegisterDTO = {
@@ -801,6 +819,12 @@ declare namespace API {
     data?: PreferenceVO;
   };
 
+  type ResultRefundResultVO = {
+    code?: number;
+    msg?: string;
+    data?: RefundResultVO;
+  };
+
   type ResultSearchHistoryVO = {
     code?: number;
     msg?: string;
@@ -887,6 +911,7 @@ declare namespace API {
 
   type returnFromAlipayParams = {
     out_trade_no?: string;
+    cancelled?: boolean;
   };
 
   type RowVO = {
@@ -1259,7 +1284,7 @@ declare namespace API {
     id?: number;
     orderNo?: string;
     movieName?: string;
-    moviePoster?: string;
+    poster?: string;
     cinemaName?: string;
     hallName?: string;
     startAt?: string;

@@ -78,6 +78,11 @@ export default defineConfig({
       wrappers: ['@/wrappers/customer'],
     },
     {
+      path: '/orders/:orderId/refund',
+      component: './Refund',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
       path: '/orders/:orderId/detail',
       component: './OrderPlaceholder',
       wrappers: ['@/wrappers/customer'],
