@@ -162,17 +162,35 @@ h1 {
 .selected { background: var(--customer-primary) !important; border-color: var(--customer-primary) !important; }
 .sold { background: #bdc5c2; border-color: #bdc5c2 !important; }
 .locked { background: #f8d9a9; border-color: #e1a452 !important; }
+.bestViewingLegend { background: #fff0bd; border: 1px solid #ddb04b; }
 .unavailable { background: repeating-linear-gradient(45deg, #f2f3f3, #f2f3f3 3px, #d8dddb 3px, #d8dddb 5px); border-color: #d3d7d6 !important; }
 .couple { background: #eaf0fa; border-color: var(--customer-blue) !important; }
 
 .map {
+  position: relative;
   display: grid;
   gap: 7px;
   margin: 0 auto 20px;
   overflow-x: auto;
 }
 
+.map::before {
+  position: absolute;
+  top: 47px;
+  left: calc(50% - 79px);
+  z-index: 0;
+  width: 184px;
+  height: 107px;
+  content: '';
+  background: rgba(255, 240, 189, 0.5);
+  border: 1px solid #ddb04b;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(194, 143, 43, 0.1);
+  pointer-events: none;
+}
+
 .row {
+  position: relative;
   display: grid;
   grid-template-columns: 20px repeat(10, 24px);
   align-items: center;
@@ -188,6 +206,7 @@ h1 {
 
 .seat {
   position: relative;
+  z-index: 1;
   width: 22px;
   height: 19px;
   padding: 0;

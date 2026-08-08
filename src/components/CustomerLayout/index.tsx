@@ -22,6 +22,13 @@ const CustomerLayout: React.FC = () => {
   const isCinemaBooking =
     path === "/cinemas" &&
     new URLSearchParams(location.search).has("movieId");
+  const isCinemaShowtimes = /^\/cinemas\/[^/]+\/showtimes$/.test(path);
+  const isSeatSelection = /^\/showtimes\/[^/]+\/seats$/.test(path);
+  const isOrderConfirmation = /^\/orders\/[^/]+\/confirm$/.test(path);
+  const isOrderPayment = /^\/orders\/[^/]+\/pay$/.test(path);
+  const isOrderTickets = /^\/orders\/[^/]+\/tickets$/.test(path);
+  const isOrderRefund = /^\/orders\/[^/]+\/refund$/.test(path);
+  const isMovieList = path === "/movies";
   const active =
     path === "/home" || path.startsWith("/movies") || path.startsWith("/search")
       ? "movies"
@@ -41,7 +48,17 @@ const CustomerLayout: React.FC = () => {
     isCinemaBooking ||
     path === "/me/preferences" ||
     path.startsWith("/me/security");
-  const hideGlobalHeader = path === "/me/preferences" || path.startsWith("/me/security") || path.startsWith("/agent");
+  const hideGlobalHeader =
+    path === "/me/preferences" ||
+    path.startsWith("/me/security") ||
+    path.startsWith("/agent") ||
+    isCinemaShowtimes ||
+    isSeatSelection ||
+    isOrderConfirmation ||
+    isOrderPayment ||
+    isOrderTickets ||
+    isOrderRefund ||
+    isMovieList;
   const headerTitle = path === "/me/orders"
     ? "我的订单"
     : path === "/me/wishlist"

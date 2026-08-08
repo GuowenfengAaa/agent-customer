@@ -1,7 +1,6 @@
 import {
   CouponOutline,
   EnvironmentOutline,
-  FilterOutline,
   FireFill,
   MovieOutline,
   UnorderedListOutline,
@@ -210,9 +209,6 @@ const Home: React.FC = () => {
           className={styles.search}
           onFocus={() => history.push("/search")}
         />
-        <button className={styles.filterButton} type="button" aria-label="筛选">
-          <FilterOutline />
-        </button>
       </div>
 
       <section className={styles.homePromo} aria-label="首页欢迎">

@@ -1,5 +1,7 @@
 import { Button, Card, NavBar, Space, Stepper, Tag, TextArea, Toast } from 'antd-mobile';
-import { EnvironmentOutline, MoreOutline, LeftOutline } from 'antd-mobile-icons';
+import { EnvironmentOutline, MoreOutline, LeftOutline, RightOutline } from 'antd-mobile-icons';
+import { QRCodeSVG } from 'qrcode.react';
+import dayjs from 'dayjs';
 import { history, useSearchParams } from '@umijs/max';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -12,7 +14,7 @@ import { customerApi } from '@/services/customerApi';
 import { requestBrowserLocation, type BrowserLocation } from '@/services/location';
 import { getSession, getToken } from '@/services/storage';
 import { type AgentChatMessage, useAppStore } from '@/stores/useAppStore';
-import type { AgentMemorySummary } from '@/types/domain';
+import type { AgentMemorySummary, OrderDetail } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
 import styles from './index.module.less';
 
@@ -50,6 +52,86 @@ function displayValue(value: unknown) {
   return String(value);
 }
 
+function getFirstValue(record: Record<string, unknown> | undefined, keys: string[]) {
+  if (!record) return undefined;
+  for (const key of keys) {
+    const value = record[key];
+    if (value !== undefined && value !== null && value !== '') return value;
+  }
+  return undefined;
+}
+
+function formatCurrency(value: unknown) {
+  const text = displayValue(value);
+  if (!text) return '';
+  if (text.includes('元') || text.includes('¥')) return text;
+  const amount = Number(text);
+  return Number.isFinite(amount) ? `¥${amount.toFixed(2)}` : text;
+}
+
+function formatAgentContent(content: string) {
+  return content.replace(/\r\n/g, '\n').replace(/\n[ \t]*\n+/g, '\n').trim();
+}
+
+function displayMetaLabel(key: string) {
+  const labels: Record<string, string> = {
+    distance: '距离',
+    address: '地址',
+    district: '区域',
+    minprice: '最低票价',
+    location: '经纬度',
+  };
+  return labels[key.toLowerCase()] || key;
+}
+
+function displayMetaValue(key: string, value: unknown) {
+  const text = displayValue(value);
+  if (key.toLowerCase() !== 'distance') return text;
+
+  const distance = Number(text);
+  return Number.isFinite(distance) ? `${distance.toFixed(1)} 公里` : text;
+}
+
+function displayCinemaMetaValue(key: string, value: unknown) {
+  if (key.toLowerCase() === 'minprice') {
+    const price = Number(value);
+    return Number.isFinite(price) ? `${price.toFixed(2)} 元起` : displayValue(value);
+  }
+  return displayMetaValue(key, value);
+}
+
+function getServiceTags(card: AgentCardPayload) {
+  const payload = card.payload || {};
+  const nestedCinema = payload.cinema;
+  const nestedCinemaInfo = payload.cinemaInfo;
+  const source =
+    card.meta?.services ??
+    card.meta?.serviceTags ??
+    payload.services ??
+    payload.serviceTags ??
+    (nestedCinema && typeof nestedCinema === 'object'
+      ? (nestedCinema as Record<string, unknown>).services
+      : undefined) ??
+    (nestedCinemaInfo && typeof nestedCinemaInfo === 'object'
+      ? (nestedCinemaInfo as Record<string, unknown>).services
+      : undefined);
+  if (Array.isArray(source)) {
+    return source.map((item) => String(item).trim()).filter(Boolean);
+  }
+  if (typeof source !== 'string' || !source.trim()) return [];
+
+  const text = source.trim();
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item).trim()).filter(Boolean);
+    }
+  } catch {
+    // 非 JSON 字符串按逗号分隔处理
+  }
+  return text.split(/[,，、|]/).map((item) => item.trim()).filter(Boolean);
+}
+
 function getCardPosterUrl(card: AgentCardPayload) {
   const payload = card.payload || {};
   const poster =
@@ -70,6 +152,62 @@ function getCardImageUrl(card: AgentCardPayload) {
     (typeof payload.posterUrl === 'string' ? payload.posterUrl : '') ||
     (typeof payload.poster === 'string' ? payload.poster : '');
   return getPosterThumbnailUrl(image);
+}
+
+function AgentTicketInline({ order }: { order: OrderDetail }) {
+  const title = order.movie?.name || order.movieName || '电影信息';
+  const cinema = order.cinema?.name || order.cinemaName || '影院信息';
+  const hall = order.hallName || '影厅信息';
+  const showtime = order.startAt
+    ? `${dayjs(order.startAt).format('MM月DD日 HH:mm')}${order.endAt ? ` - ${dayjs(order.endAt).format('HH:mm')}` : ''}`
+    : '场次时间待更新';
+  const tickets = order.tickets || [];
+  const seats = tickets.length
+    ? tickets.map((ticket) => ticket.rowNo !== undefined ? `${ticket.rowNo}排${ticket.seatNo}座` : '座位').join('、')
+    : '座位信息待更新';
+
+  return (
+    <div className={styles.agentTicketInline}>
+      <div className={styles.agentTicketStatus}>
+        <strong>已出票</strong>
+        <span>电子票</span>
+      </div>
+      <div className={styles.agentTicketMovie}>
+        <div className={styles.agentTicketPoster}>
+          {order.movie?.posterUrl ? <img src={getPosterThumbnailUrl(order.movie.posterUrl)} alt={`${title}海报`} /> : <span>{title.slice(0, 2)}</span>}
+        </div>
+        <div>
+          <strong>{title}</strong>
+          <p>{cinema} · {hall}</p>
+          <p>{showtime}</p>
+        </div>
+      </div>
+      <div className={styles.agentTicketMeta}>
+        <span><small>座位</small><b>{seats}</b></span>
+        <span><small>订单号</small><b>{order.orderNo || order.id}</b></span>
+      </div>
+      {tickets.length ? (
+        <div className={styles.agentTicketPasses}>
+          {tickets.map((ticket, index) => (
+            <div className={styles.agentTicketPass} key={ticket.ticketCode || `${order.id}-${index}`}>
+              <b>{ticket.rowNo !== undefined ? `${ticket.rowNo}排${ticket.seatNo}座` : `第${index + 1}张电子票`}</b>
+              <QRCodeSVG
+                value={ticket.qrContent || ticket.ticketCode || `${order.id}-${index}`}
+                size={150}
+                bgColor="#ffffff"
+                fgColor="#102c25"
+                level="M"
+                includeMargin
+                role="img"
+                aria-label={`${title}第${index + 1}张电子票二维码`}
+              />
+              <span>取票码：{ticket.ticketCode || '--'}</span>
+            </div>
+          ))}
+        </div>
+      ) : <div className={styles.agentTicketEmpty}>出票信息暂未生成</div>}
+    </div>
+  );
 }
 
 function toPositiveNumber(value: unknown, fallback: number) {
@@ -122,28 +260,112 @@ function AgentCard({
   card,
   disabled,
   onAction,
+  ticketDetail,
+  ticketLoading,
 }: {
   card: AgentCardPayload;
   disabled?: boolean;
   onAction: (event: string, label: string, payload?: Record<string, unknown>) => void;
+  ticketDetail?: OrderDetail;
+  ticketLoading?: boolean;
 }) {
   const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
-  const [snackQuantity, setSnackQuantity] = useState(1);
+  const [snackQuantity, setSnackQuantity] = useState(0);
   const cardType = String(card.type || '').toUpperCase();
   const isSeatMap = cardType === 'SEAT_MAP';
   const isMovieCard = cardType === 'MOVIE_LIST' || cardType === 'MOVIE';
+  const isCinemaCard = cardType === 'CINEMA_LIST' || cardType === 'CINEMA';
+  const isShowtimeCard = cardType === 'SHOWTIME_LIST' || cardType === 'SHOWTIME';
+  const isRefundCard = cardType === 'REFUND';
   const isSnackCard = cardType === 'SNACK_LIST' || cardType === 'SNACK';
   const isTicketCard = cardType === 'TICKET';
   const isOrderDetailCard = cardType === 'PAYMENT' || cardType === 'ORDER_CONFIRM';
   const posterUrl = isMovieCard ? getCardPosterUrl(card) : '';
   const snackImageUrl = isSnackCard ? getCardImageUrl(card) : '';
+  const serviceTags = isCinemaCard ? getServiceTags(card) : [];
+  const showtimeActionPayload = isShowtimeCard
+    ? card.actions?.find((action) => action.event === 'select_showtime')?.payload
+    : undefined;
+  const cardPayload = { ...(card.payload || {}), ...(showtimeActionPayload || {}) };
+  const showtimeCinema = cardPayload.cinemaName || cardPayload.cinema || cardPayload.cinema_name;
+  const showtimeHall = cardPayload.hallName || cardPayload.hall || cardPayload.hall_name || cardPayload.hallType;
+  const showtimeDate = cardPayload.date || (typeof cardPayload.startAt === 'string' ? cardPayload.startAt.slice(0, 10) : '');
+  const showtimeTime = cardPayload.time || (typeof cardPayload.startAt === 'string' ? cardPayload.startAt.slice(11, 16) : '');
+  const showtimeEndTime = cardPayload.endTime || (typeof cardPayload.endAt === 'string' ? cardPayload.endAt.slice(11, 16) : '');
+  const showtimeTimeRange = showtimeTime
+    ? `${showtimeTime}${showtimeEndTime ? ` - ${showtimeEndTime}` : ''}`
+    : showtimeEndTime;
+  const showtimeSubtitle = isShowtimeCard
+    ? [
+        showtimeCinema ? `影院：${showtimeCinema}` : '',
+        showtimeHall ? `影厅：${showtimeHall}` : '',
+        showtimeDate && showtimeTimeRange
+          ? `${showtimeDate} ${showtimeTimeRange}`
+          : showtimeDate || showtimeTimeRange,
+      ].filter(Boolean).join(' · ') || card.subtitle
+    : card.subtitle;
+  const showtimePrice = Number(cardPayload.price ?? card.meta?.price);
+  const showtimePriceYuan = Number.isFinite(showtimePrice)
+    ? showtimePrice > 1000 ? showtimePrice / 100 : showtimePrice
+    : undefined;
+  const showtimeRemaining = cardPayload.remainingSeats ?? card.meta?.remainingSeats;
+  const seatMapPrice = Number(cardPayload.price ?? card.meta?.price);
+  const seatMapPriceYuan = Number.isFinite(seatMapPrice)
+    ? seatMapPrice > 1000 ? seatMapPrice / 100 : seatMapPrice
+    : undefined;
+  const ticketOrderId = cardPayload.orderId ?? card.meta?.orderId;
+  const ticketStatus = String(cardPayload.ticketStatus ?? card.meta?.ticketStatus ?? '').toLowerCase();
+  const ticketStatusText = ticketStatus === 'issued' ? '已出票' : ticketStatus === 'pending' ? '出票处理中' : '电子票已生成';
+  const snackPrice = Number(cardPayload.price ?? card.meta?.price);
+  const snackPriceYuan = Number.isFinite(snackPrice)
+    ? snackPrice > 1000 ? snackPrice / 100 : snackPrice
+    : undefined;
+  const snackAvailableStock = cardPayload.availableStock ?? cardPayload.stock ?? card.meta?.stock;
+  const refundOrderId = getFirstValue(cardPayload, ['orderId', 'orderNo']) ?? getFirstValue(card.meta, ['订单号']);
+  const refundStatus = String(getFirstValue(cardPayload, ['status']) ?? getFirstValue(card.meta, ['状态']) ?? '').toUpperCase();
+  const refundStatusText = refundStatus === 'SUCCESS' ? '退款成功' : refundStatus === 'PENDING' ? '退款处理中' : refundStatus === 'FAIL' ? '退款失败' : '退款状态待确认';
+  const refundAmount = formatCurrency(getFirstValue(cardPayload, ['amount', 'refundAmount']) ?? getFirstValue(card.meta, ['金额']));
+  const refundServiceFee = formatCurrency(getFirstValue(cardPayload, ['serviceFee']) ?? getFirstValue(card.meta, ['手续费']));
+  const refundRequestNo = displayValue(getFirstValue(cardPayload, ['outRequestNo']) ?? getFirstValue(card.meta, ['退款请求号']));
+  const refundUpdatedAt = displayValue(getFirstValue(cardPayload, ['updatedAt']) ?? getFirstValue(card.meta, ['更新时间'])).replace('T', ' ');
   const snackStock = Math.min(
     10,
     toPositiveNumber(card.payload?.availableStock ?? card.meta?.stock, 10),
   );
-  const metaEntries = Object.entries(card.meta || {})
-    .map(([key, value]) => [key, displayValue(value)] as const)
+  const cinemaActionPayload = isCinemaCard
+    ? card.actions?.find((action) => action.event === 'select_cinema')?.payload
+    : undefined;
+  const mergedMeta = { ...(card.meta || {}) };
+  if (isCinemaCard && cinemaActionPayload) {
+    for (const key of ['district', 'minPrice']) {
+      if (mergedMeta[key] === undefined || mergedMeta[key] === null || mergedMeta[key] === '') {
+        mergedMeta[key] = cinemaActionPayload[key];
+      }
+    }
+  }
+  const rawMetaEntries = Object.entries(mergedMeta);
+  const metaEntries = rawMetaEntries
+    .filter(
+      ([key]) =>
+        key.toLowerCase() !== 'location' &&
+        key.toLowerCase() !== 'services' &&
+        key.toLowerCase() !== 'servicetags' &&
+        !(isSeatMap && key.toLowerCase() === 'price') &&
+        !(isSnackCard && ['price', 'stock', 'availablestock'].includes(key.toLowerCase())) &&
+        !(isTicketCard && ['orderid', 'ticketstatus', 'calendar', 'notification'].includes(key.toLowerCase())) &&
+        !isRefundCard,
+    )
+    .map(([key, value]) => [displayMetaLabel(key), displayCinemaMetaValue(key, value)] as const)
     .filter(([, value]) => value);
+  const seatRows = isSeatMap
+    ? Object.entries(
+        (card.seats || []).reduce<Record<string, Array<Record<string, unknown>>>>((groups, seat) => {
+          const row = String(seat.row ?? seat.rowNo ?? '');
+          (groups[row] ||= []).push(seat);
+          return groups;
+        }, {}),
+      )
+    : [];
 
   const toggleSeat = (seatId: string) => {
     setSelectedSeatIds((current) =>
@@ -161,7 +383,7 @@ function AgentCard({
         ...basePayload,
         snackId,
         quantity: snackQuantity,
-        snackItems: snackId ? [{ snackId, quantity: snackQuantity }] : [],
+        snackItems: snackId && snackQuantity > 0 ? [{ snackId, quantity: snackQuantity }] : [],
       };
     }
     if (!isSeatMap) return Object.keys(basePayload).length ? basePayload : undefined;
@@ -198,10 +420,46 @@ function AgentCard({
       <div className={isMovieCard || isSnackCard ? styles.movieCardContent : undefined}>
         <div className={styles.cardHeader}>
           <strong>{card.title || card.id || '候选项'}</strong>
-          <Tag color="primary">{cardTypeText(String(card.type || ''))}</Tag>
+          {!isTicketCard && !isRefundCard ? <Tag color="primary">{cardTypeText(String(card.type || ''))}</Tag> : null}
         </div>
-        {card.subtitle ? <p className={styles.cardSubtitle}>{card.subtitle}</p> : null}
-        {metaEntries.length ? (
+        {showtimeSubtitle ? <p className={styles.cardSubtitle}>{showtimeSubtitle}</p> : null}
+        {isTicketCard ? (
+          <div className={styles.ticketSummary}>
+            <span>{ticketOrderId ? `订单号 #${ticketOrderId}` : '电子票已生成'}</span>
+            <strong>{ticketStatusText}</strong>
+          </div>
+        ) : null}
+        {isRefundCard ? (
+          <div className={styles.refundSummary}>
+            <div className={styles.refundSummaryTop}>
+              <span>{refundOrderId ? `订单号 #${refundOrderId}` : '退款订单'}</span>
+              <strong>{refundStatusText}</strong>
+            </div>
+            <div className={styles.refundAmount}>{refundAmount || '金额待确认'}</div>
+            {refundServiceFee ? <p>退款手续费：{refundServiceFee}</p> : null}
+            {refundRequestNo ? <p>退款请求号：{refundRequestNo}</p> : null}
+            {refundUpdatedAt ? <p>处理时间：{refundUpdatedAt}</p> : null}
+          </div>
+        ) : null}
+        {isShowtimeCard ? (
+          <div className={styles.showtimeSummary}>
+            <span>
+              <b>票价</b>
+              <em>{showtimePriceYuan !== undefined ? `${showtimePriceYuan.toFixed(2)} 元` : '待定'}</em>
+            </span>
+            <span>
+              <b>余座</b>
+              <em>{showtimeRemaining !== undefined && showtimeRemaining !== null ? `${showtimeRemaining} 个` : '待定'}</em>
+            </span>
+          </div>
+        ) : null}
+        {isSnackCard ? (
+          <div className={styles.snackSummary}>
+            {snackPriceYuan !== undefined ? <strong>¥{snackPriceYuan.toFixed(2)}</strong> : <strong>价格待定</strong>}
+            {snackAvailableStock !== undefined && snackAvailableStock !== null ? <span>库存 {String(snackAvailableStock)} 份</span> : null}
+          </div>
+        ) : null}
+        {!isShowtimeCard && metaEntries.length ? (
           <div className={isOrderDetailCard ? styles.detailList : styles.metaList}>
             {metaEntries.map(([key, value]) => (
               <span key={key}>
@@ -211,43 +469,74 @@ function AgentCard({
             ))}
           </div>
         ) : null}
-        {card.seats?.length ? (
-          <div className={styles.seatPreview}>
-            {card.seats.slice(0, 48).map((seat, index) => {
-              const seatId = getSeatId(seat, index);
-              const seatLabel = getSeatLabel(seat, index);
-              const status = String(seat.status || '').toLowerCase();
-              const unavailable = ['locked', 'sold', 'unavailable'].includes(status);
-              const selected = selectedSeatIds.includes(seatId);
-              return (
-                <button
-                  key={seatId}
-                  type="button"
-                  className={[
-                    styles.seatButton,
-                    selected ? styles.seatSelected : '',
-                    unavailable ? styles.seatUnavailable : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  disabled={disabled || unavailable}
-                  onClick={() => toggleSeat(seatId)}
-                >
-                  {seatLabel}
-                </button>
-              );
-            })}
+        {!isShowtimeCard && serviceTags.length ? (
+          <div className={styles.serviceTags}>
+            <span className={styles.serviceTagsLabel}>服务标签</span>
+            <div className={styles.serviceTagsList}>
+              {serviceTags.map((service) => (
+                <span className={styles.serviceTag} key={service}>{service}</span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {isSeatMap && seatRows.length ? (
+          <div className={styles.seatMapPanel}>
+            <div className={styles.seatMapHint}>
+              <span>最多选择 6 个座位</span>
+              {seatMapPriceYuan !== undefined ? <strong>¥{seatMapPriceYuan.toFixed(2)} / 座</strong> : null}
+            </div>
+            <div className={styles.seatLegend}>
+              <span><i className={styles.seatLegendAvailable} />可选</span>
+              <span><i className={styles.seatLegendSelected} />已选</span>
+              <span><i className={styles.seatLegendSold} />已售</span>
+              <span><i className={styles.seatLegendLocked} />锁定</span>
+            </div>
+            <div className={styles.seatScreen}>银幕</div>
+            <div className={styles.seatPreview}>
+              {seatRows.map(([row, seats]) => (
+                <div className={styles.seatRow} key={row}>
+                  <small>{row || '-'}</small>
+                  <div className={styles.seatRowItems}>
+                    {seats.map((seat, index) => {
+                      const seatId = getSeatId(seat, index);
+                      const seatLabel = String(seat.number ?? seat.seatNo ?? index + 1);
+                      const status = String(seat.status || '').toLowerCase();
+                      const unavailable = ['locked', 'sold', 'unavailable'].includes(status);
+                      const selected = selectedSeatIds.includes(seatId);
+                      return (
+                        <button
+                          key={seatId}
+                          type="button"
+                          aria-label={`${row}排${seatLabel}座`}
+                          className={[
+                            styles.seatButton,
+                            status === 'sold' ? styles.seatSold : '',
+                            status === 'locked' ? styles.seatLocked : '',
+                            selected ? styles.seatSelected : '',
+                            unavailable ? styles.seatUnavailable : '',
+                          ].filter(Boolean).join(' ')}
+                          disabled={disabled || unavailable}
+                          onClick={() => toggleSeat(seatId)}
+                        >
+                          {seatLabel}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
         {isSnackCard ? (
           <div className={styles.snackQuantityRow}>
             <span>数量</span>
             <Stepper
-              min={1}
+              min={0}
               max={snackStock}
               value={snackQuantity}
               disabled={disabled}
-              onChange={(value) => setSnackQuantity(Number(value) || 1)}
+              onChange={(value) => setSnackQuantity(Math.max(0, Number(value) || 0))}
             />
           </div>
         ) : null}
@@ -271,8 +560,165 @@ function AgentCard({
             ))}
           </Space>
         ) : null}
+        {isTicketCard ? (
+          ticketLoading ? (
+            <div className={styles.agentTicketLoading}>正在加载电子票详情...</div>
+          ) : ticketDetail ? <AgentTicketInline order={ticketDetail} /> : null
+        ) : null}
       </div>
     </Card>
+  );
+}
+
+function getMovieCarouselValue(
+  card: AgentCardPayload,
+  payloadKeys: string[],
+  metaKeywords: string[],
+) {
+  const payload = card.payload || {};
+  for (const key of payloadKeys) {
+    const value = payload[key];
+    if (value !== undefined && value !== null && value !== '') return value;
+  }
+  const entry = Object.entries(card.meta || {}).find(([key]) =>
+    metaKeywords.some((keyword) => key.includes(keyword)),
+  );
+  return entry?.[1];
+}
+
+function AgentMovieCarousel({
+  cards,
+  disabled,
+  onAction,
+}: {
+  cards: AgentCardPayload[];
+  disabled?: boolean;
+  onAction: (
+    card: AgentCardPayload,
+    event: string,
+    label: string,
+    payload?: Record<string, unknown>,
+  ) => void;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveIndex((current) => Math.min(current, Math.max(cards.length - 1, 0)));
+  }, [cards.length]);
+
+  const card = cards[activeIndex];
+  if (!card) return null;
+
+  const action = card.actions?.[0];
+  const genre = displayValue(getMovieCarouselValue(card, ['genre'], ['类型']));
+  const scoreValue = getMovieCarouselValue(card, ['score', 'rating'], ['评分']);
+  const score = Number(scoreValue);
+  const durationValue = getMovieCarouselValue(card, ['durationMinutes', 'duration'], ['时长']);
+  const duration = displayValue(durationValue);
+  const status = displayValue(getMovieCarouselValue(card, ['status'], ['状态']));
+  const posterUrl = getCardPosterUrl(card);
+  const canSwitch = cards.length > 1;
+  const switchMovie = (direction: number) => {
+    if (!canSwitch) return;
+    setActiveIndex((current) => (current + direction + cards.length) % cards.length);
+  };
+
+  return (
+    <section className={styles.agentMovieCarousel}>
+      <button
+        className={styles.agentCarouselArrow}
+        type="button"
+        aria-label="上一部电影"
+        disabled={!canSwitch}
+        onClick={() => switchMovie(-1)}
+      >
+        <LeftOutline />
+      </button>
+      <div className={styles.agentCarouselPoster}>
+        {posterUrl ? (
+          <img src={posterUrl} alt={card.title || '电影海报'} />
+        ) : (
+          <span>{String(card.title || '影').slice(0, 1)}</span>
+        )}
+      </div>
+      <div className={styles.agentCarouselInfo}>
+        <div className={styles.agentCarouselKicker}>
+          <span>MOVIE INTRO</span>
+          <em>{activeIndex + 1}/{cards.length}</em>
+        </div>
+        <strong>{card.title || '电影'}</strong>
+        {genre ? <span className={styles.agentCarouselGenre}>{genre}</span> : null}
+        <p>
+          {[duration ? (/分钟$/.test(duration) ? duration : `${duration} 分钟`) : '', status]
+            .filter(Boolean)
+            .join(' · ')}
+        </p>
+        <div className={styles.agentCarouselFooter}>
+          {Number.isFinite(score) ? <b>{score.toFixed(1)}<small> 分</small></b> : <span />}
+          {action ? (
+            <Button
+              size="mini"
+              disabled={disabled}
+              onClick={() => onAction(card, action.event, action.label, action.payload || card.payload)}
+            >
+              {action.label}
+            </Button>
+          ) : null}
+        </div>
+      </div>
+      <button
+        className={styles.agentCarouselArrow}
+        type="button"
+        aria-label="下一部电影"
+        disabled={!canSwitch}
+        onClick={() => switchMovie(1)}
+      >
+        <RightOutline />
+      </button>
+    </section>
+  );
+}
+
+function AgentCardCollection({
+  cards,
+  disabled,
+  onAction,
+  ticketDetails,
+  ticketLoadingId,
+}: {
+  cards: AgentCardPayload[];
+  disabled?: boolean;
+  onAction: (
+    card: AgentCardPayload,
+    event: string,
+    label: string,
+    payload?: Record<string, unknown>,
+  ) => void;
+  ticketDetails?: Record<string, OrderDetail>;
+  ticketLoadingId?: string;
+}) {
+  const movieCards = cards.filter((card) => {
+    const type = String(card.type || '').toUpperCase();
+    return type === 'MOVIE_LIST' || type === 'MOVIE';
+  });
+  const otherCards = cards.filter((card) => !movieCards.includes(card));
+
+  return (
+    <>
+      {movieCards.length ? (
+        <AgentMovieCarousel cards={movieCards} disabled={disabled} onAction={onAction} />
+      ) : null}
+      {otherCards.map((card, index) => (
+        <AgentCard
+          key={`${card.type}-${card.id}-${index}`}
+          card={card}
+          disabled={disabled}
+          ticketDetail={ticketDetails?.[String(card.payload?.orderId ?? card.id)]}
+          ticketLoading={ticketLoadingId === String(card.payload?.orderId ?? card.id)}
+          onAction={(event, label, payload) => onAction(card, event, label, payload)}
+        />
+      ))}
+    </>
   );
 }
 
@@ -293,17 +739,6 @@ function readPendingPayment(): Record<string, unknown> | undefined {
 
 function clearPendingPayment() {
   sessionStorage.removeItem(pendingPaymentStorageKey);
-}
-
-function ticketPathFromPayload(card: AgentCardPayload, payload?: Record<string, unknown>) {
-  const source = {
-    ...(card.payload || {}),
-    ...(payload || {}),
-  };
-  const path = typeof source.path === 'string' ? source.path : '';
-  if (path) return path;
-  const orderId = source.orderId ?? source.orderNo ?? card.id;
-  return orderId && String(orderId) !== 'ticket' ? `/orders/${orderId}/tickets` : '';
 }
 
 const Agent: React.FC = () => {
@@ -341,6 +776,8 @@ const Agent: React.FC = () => {
   const [sessionListLoading, setSessionListLoading] = useState(false);
   const [sessionList, setSessionList] = useState<AgentMemorySummary[]>([]);
   const [newConversationSaving, setNewConversationSaving] = useState(false);
+  const [ticketDetails, setTicketDetails] = useState<Record<string, OrderDetail>>({});
+  const [ticketLoadingId, setTicketLoadingId] = useState<string>();
   const streamRef = useRef<{ close: () => void } | null>(null);
   const paymentRedirectingRef = useRef(false);
   const paymentReturnCheckingRef = useRef(false);
@@ -829,20 +1266,45 @@ const Agent: React.FC = () => {
       ? `已定位 · ${agentBrowserLocation?.latitude.toFixed(4)}, ${agentBrowserLocation?.longitude.toFixed(4)}`
       : agentLocationError || '未获取当前位置';
   const locationDisplayLabel = agentLocationState === 'ready' ? `已定位 · ${city}` : locationLabel;
-  const latestActionMessageId = useMemo(
-    () =>
-      [...agentMessages]
-        .reverse()
-        .find((item) =>
-          item.role === 'assistant' &&
-          item.cards?.some((card) => card.actions?.length),
-        )?.id,
-    [agentMessages],
-  );
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
   }, [agentMessages.length, running]);
+
+  async function handleAgentCardAction(
+    card: AgentCardPayload,
+    nextEvent: string,
+    label: string,
+    nextPayload?: Record<string, unknown>,
+  ) {
+    if (nextEvent === 'view_order_list') {
+      history.push('/me/orders');
+      return;
+    }
+    if (nextEvent === 'view_ticket' || nextEvent === 'navigate_ticket') {
+      const source = { ...(card.payload || {}), ...(nextPayload || {}) };
+      const orderId = source.orderId ?? source.orderNo ?? card.id;
+      if (!orderId || String(orderId) === 'ticket') {
+        Toast.show({ content: '订单编号缺失，暂时无法查看电子票' });
+        return;
+      }
+      const key = String(orderId);
+      setTicketLoadingId(key);
+      try {
+        const order = await customerApi.getOrder(key);
+        setTicketDetails((current) => ({ ...current, [key]: order }));
+      } catch (error) {
+        Toast.show({ content: error instanceof Error ? error.message : '电子票详情加载失败' });
+      } finally {
+        setTicketLoadingId(undefined);
+      }
+      return;
+    }
+    if (nextEvent === 'pay_order' && String(card.type || '').toUpperCase() === 'PAYMENT') {
+      void startAlipayPayment(card, nextPayload);
+      return;
+    }
+    void send(label, nextEvent, nextPayload);
+  }
 
   return (
     <div className={styles.page}>
@@ -974,47 +1436,37 @@ const Agent: React.FC = () => {
             className={item.role === 'user' ? styles.userBlock : styles.agentBlock}
           >
             <Card className={item.role === 'user' ? styles.userMessage : styles.agentMessage}>
-              {item.status ? <span className={styles.statusText}>{item.status}</span> : item.content}
+              {item.status ? (
+                <span className={styles.statusText}>{item.status}</span>
+              ) : (
+                formatAgentContent(item.content || '')
+              )}
             </Card>
+            {item.role === 'assistant' && item.cards?.some(
+              (card) => String(card.type || '').toUpperCase() === 'ORDER',
+            ) ? (
+              <div className={styles.orderListAction}>
+                <Button
+                  size="mini"
+                  color="primary"
+                  disabled={running}
+                  onClick={() => history.push('/me/orders')}
+                >
+                  订单列表
+                </Button>
+              </div>
+            ) : null}
             {item.cards?.length ? (
               <div
-                className={[
-                  styles.cards,
-                  latestActionMessageId !== item.id ? styles.expiredCards : '',
-                ].filter(Boolean).join(' ')}
+                className={styles.cards}
               >
-                {latestActionMessageId !== item.id ? (
-                  <span className={styles.expiredHint}>历史结果，仅供查看</span>
-                ) : null}
-                {item.cards.map((card, index) => (
-                  <AgentCard
-                    key={`${card.type}-${card.id}-${index}`}
-                    card={card}
-                    disabled={
-                      running ||
-                      (
-                        latestActionMessageId !== item.id &&
-                        String(card.type || '').toUpperCase() !== 'TICKET'
-                      )
-                    }
-                    onAction={(nextEvent, label, nextPayload) => {
-                      if (nextEvent === 'view_ticket' || nextEvent === 'navigate_ticket') {
-                        const ticketPath = ticketPathFromPayload(card, nextPayload);
-                        if (!ticketPath) {
-                          Toast.show({ content: '订单编号缺失，暂时无法查看电子票' });
-                          return;
-                        }
-                        history.push(ticketPath);
-                        return;
-                      }
-                      if (nextEvent === 'pay_order' && String(card.type || '').toUpperCase() === 'PAYMENT') {
-                        void startAlipayPayment(card, nextPayload);
-                        return;
-                      }
-                      void send(label, nextEvent, nextPayload);
-                    }}
-                  />
-                ))}
+                <AgentCardCollection
+                  cards={item.cards}
+                  disabled={running}
+                  ticketDetails={ticketDetails}
+                  ticketLoadingId={ticketLoadingId}
+                  onAction={handleAgentCardAction}
+                />
               </div>
             ) : null}
           </div>

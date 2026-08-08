@@ -1,15 +1,20 @@
 .page {
   min-height: 100dvh;
-  background: #f3f4f4;
+  background: #f5f6f6;
 }
 
 .homeSearchRow {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 38px;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 8px;
-  padding: 9px 14px 10px;
+  padding: 10px 15px 11px;
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 4px 15px rgba(31, 42, 39, 0.06);
+  border-bottom: 1px solid #e6eae8;
+  box-shadow: 0 3px 12px rgba(31, 42, 39, 0.05);
+  backdrop-filter: blur(14px);
 }
 
 .homeCity {
@@ -42,40 +47,26 @@
 .search :global(.adm-search-bar-input-box) {
   height: 38px;
   border: 1px solid #dfe3e1;
-  background: #f7f8f7;
+  background: #f4f6f5;
   box-shadow: inset 0 1px 2px rgba(25, 39, 35, 0.03);
   border-radius: 999px;
   box-sizing: border-box;
 }
 
-.filterButton {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  color: #53615d;
-  background: var(--customer-surface);
-  border: 1px solid var(--customer-line);
-  border-radius: 13px;
-  box-shadow: 0 2px 8px rgba(31, 42, 39, 0.06);
-  font-size: 20px;
-}
-
 .homePromo {
-  min-height: 98px;
+  min-height: 104px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 120px;
   align-items: center;
-  margin: 10px 14px 14px;
-  padding: 15px 13px 15px 16px;
+  margin: 13px 14px 12px;
+  padding: 16px 13px 16px 16px;
   overflow: hidden;
   color: #fff;
   background: #172d2a;
   border: 1px solid rgba(200, 139, 50, 0.5);
-  border-radius: 14px;
-  box-shadow: 0 10px 24px rgba(23, 45, 42, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(23, 45, 42, 0.17), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .homePromo strong,
@@ -86,7 +77,7 @@
 .welcomeCopy {
   min-width: 0;
   padding-left: 10px;
-  border-left: 3px solid #d9a34c;
+  border-left: 2px solid #e2b75e;
 }
 
 .welcomeCopy > span {
@@ -99,9 +90,9 @@
 }
 
 .homePromo strong {
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   overflow: hidden;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -149,16 +140,17 @@
 .serviceGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
-  padding: 2px 12px 14px;
+  gap: 4px;
+  padding: 11px 12px 15px;
   background: var(--customer-surface);
-  border-bottom: 1px solid var(--customer-line);
+  border-top: 1px solid #edf0ef;
+  border-bottom: 1px solid #e4e9e6;
 }
 
 .serviceGrid button {
   min-width: 0;
-  min-height: 64px;
-  padding: 5px 1px 0;
+  min-height: 67px;
+  padding: 3px 1px 0;
   color: var(--customer-ink);
   background: transparent;
   border: 0;
@@ -167,15 +159,15 @@
 }
 
 .serviceGrid button span {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   margin: 0 auto 5px;
   color: #fff;
   background: var(--customer-primary);
-  border-radius: 12px;
-  box-shadow: 0 5px 10px rgba(31, 42, 39, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 4px 9px rgba(31, 42, 39, 0.1);
   font-size: 16px;
 }
 
@@ -194,11 +186,11 @@
 }
 
 .homeBand {
-  margin-top: 10px;
-  padding: 15px 0 16px;
+  margin-top: 9px;
+  padding: 17px 0 18px;
   background: var(--customer-surface);
-  border-top: 1px solid var(--customer-line);
-  border-bottom: 1px solid var(--customer-line);
+  border-top: 1px solid #e3e9e6;
+  border-bottom: 1px solid #e3e9e6;
 }
 
 .bandHead {
@@ -207,12 +199,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  padding: 0 14px 9px;
+  padding: 0 15px 11px;
 }
 
 .bandHead h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 20px;
   letter-spacing: 0.2px;
 }
 
@@ -224,8 +216,8 @@
 }
 
 .bandHead button {
-  padding: 0;
-  color: var(--customer-primary-dark);
+  padding: 4px 0 4px 8px;
+  color: #946724;
   background: transparent;
   border: 0;
   font-size: 12px;
@@ -250,8 +242,8 @@
 .posterScroller {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 100px;
-  gap: 11px;
+  grid-auto-columns: 108px;
+  gap: 12px;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding: 0 14px 6px;
@@ -286,12 +278,12 @@
 .poster,
 .compactPoster {
   position: relative;
-  width: 100px;
-  height: 142px;
+  width: 108px;
+  height: 153px;
   margin-bottom: 6px;
   overflow: hidden;
-  border-radius: 9px;
-  box-shadow: 0 4px 10px rgba(31, 42, 39, 0.13);
+  border-radius: 7px;
+  box-shadow: 0 5px 12px rgba(31, 42, 39, 0.15);
 }
 
 .posterArt,
@@ -362,9 +354,9 @@
 }
 
 .compactMovieMain > strong {
-  height: 18px;
+  height: 19px;
   margin-bottom: 5px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .compactMovieMain > span {
@@ -374,8 +366,8 @@
 }
 
 .posterBuyButton {
-  width: 58%;
-  height: 22px;
+  width: 64%;
+  height: 25px;
   justify-self: start;
   padding: 0;
   color: #fff;
@@ -392,8 +384,8 @@
 }
 
 .posterDetailButton {
-  width: 68%;
-  height: 20px;
+  width: 72%;
+  height: 24px;
   justify-self: start;
   padding: 0;
   color: var(--customer-primary-dark);
@@ -424,8 +416,8 @@
 
 .viewAllPoster {
   position: relative;
-  width: 94px;
-  height: 132px;
+  width: 102px;
+  height: 143px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -434,7 +426,7 @@
   overflow: hidden;
   color: #fff;
   background: #263a35;
-  border-radius: 5px;
+  border-radius: 7px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import BookingDateTabs from "@/components/BookingDateTabs";
 import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
+import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 import type { ShowtimeSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
 import styles from "./index.module.less";
@@ -69,6 +70,10 @@ const CinemaShowtimes: React.FC = () => {
   const movie = validMovieId
     ? carouselMovies[matchedMovieIndex]
     : carouselMovies[0];
+  const wishlistMutation = useWishlistToggle(
+    movie?.id || activeMovieId || "",
+    Boolean(movie?.wanted),
+  );
   const movieName = movie?.title || query.data?.movie?.name;
   const movieGenreTags = (movie?.genre || "类型待更新")
     .split(/\s*[\/·,，]\s*/)
@@ -148,12 +153,17 @@ const CinemaShowtimes: React.FC = () => {
               <span>&#35266;&#20247;&#35780;&#20998;</span>
             </div>
             <Button
-              className={styles.wantButton}
+              className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
               fill="none"
-              onClick={(event) => event.stopPropagation()}
+              loading={wishlistMutation.isPending}
+              disabled={!activeMovieId}
+              onClick={(event) => {
+                event.stopPropagation();
+                wishlistMutation.mutate();
+              }}
             >
               <HeartOutline />
-              &#24819;&#30475;
+              {movie?.wanted ? "已想看" : "想看"}
             </Button>
           </div>
           <button className={styles.carouselArrow} type="button" aria-label="Next movie" title="Next movie" disabled={!canSwitchMovie} onClick={() => switchMovie(1)}>

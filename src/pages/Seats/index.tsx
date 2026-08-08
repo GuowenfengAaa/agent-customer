@@ -130,10 +130,14 @@ const Seats: React.FC = () => {
           <span><i className={styles.selected} />已选</span>
           <span><i className={styles.sold} />已售</span>
           <span><i className={styles.locked} />锁定</span>
+          <span><i className={styles.bestViewingLegend} />最佳观影区</span>
         </div>
         <div className={styles.map}>
           {rows.map((row) => (
-            <div className={styles.row} key={row.rowNo}>
+            <div
+              className={`${styles.row} ${row.rowNo >= 3 && row.rowNo <= 6 ? styles.bestViewingRow : ''}`}
+              key={row.rowNo}
+            >
               <small>{row.rowNo}</small>
               {row.seats.map((seat) => {
                 const isSelected = selected.includes(seat.id);
