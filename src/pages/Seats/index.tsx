@@ -44,12 +44,36 @@ const Seats: React.FC = () => {
   const seatMap = useMemo(() => new Map(rows.flatMap((row) => row.seats.map((seat) => [seat.id, seat]))), [rows]);
   const selectedSeats = selected.map((id) => seatMap.get(id)).filter((seat): seat is SeatSummary => Boolean(seat));
   const amountFen = selectedSeats.reduce((sum, seat) => sum + (seat.priceFen || query.data?.basePriceFen || 0), 0);
+  const isCoupleSeat = (seat: SeatSummary) =>
+    seat.zone?.toUpperCase() === 'COUPLE'
+    || seat.type?.toUpperCase() === 'COUPLE'
+    || seat.status === 'COUPLE';
+
+  const couplePartner = (seat: SeatSummary) => {
+    if (!isCoupleSeat(seat)) return undefined;
+    const partnerNo = seat.seatNo % 2 === 1 ? seat.seatNo + 1 : seat.seatNo - 1;
+    return rows
+      .flatMap((row) => row.seats)
+      .find((candidate) => candidate.rowNo === seat.rowNo && candidate.seatNo === partnerNo);
+  };
 
   const toggle = (seat: SeatSummary) => {
     if (isBlocked(seat.status)) return;
-    setSelected((current) => current.includes(seat.id)
-      ? current.filter((id) => id !== seat.id)
-      : current.length < 6 ? [...current, seat.id] : current);
+    const partner = couplePartner(seat);
+    const ids = partner ? [seat.id, partner.id] : [seat.id];
+    if (partner && isBlocked(partner.status)) {
+      Toast.show({ content: '情侣座必须选择相邻的两个座位，另一个座位当前不可选' });
+      return;
+    }
+    setSelected((current) => {
+      const isSelected = ids.every((id) => current.includes(id));
+      if (isSelected) return current.filter((id) => !ids.includes(id));
+      if (current.length + ids.filter((id) => !current.includes(id)).length > 6) {
+        Toast.show({ content: '最多选择 6 个座位' });
+        return current;
+      }
+      return Array.from(new Set([...current, ...ids]));
+    });
   };
 
   const confirm = async () => {
@@ -130,32 +154,44 @@ const Seats: React.FC = () => {
           <span><i className={styles.selected} />已选</span>
           <span><i className={styles.sold} />已售</span>
           <span><i className={styles.locked} />锁定</span>
+          <span><i className={styles.couple} />情侣座（成对选）</span>
           <span><i className={styles.bestViewingLegend} />最佳观影区</span>
         </div>
         <div className={styles.map}>
+          <div className={styles.seatScroll}>
           {rows.map((row) => (
             <div
               className={`${styles.row} ${row.rowNo >= 3 && row.rowNo <= 6 ? styles.bestViewingRow : ''}`}
               key={row.rowNo}
             >
               <small>{row.rowNo}</small>
-              {row.seats.map((seat) => {
+              <div className={styles.rowSeats}>
+              {Array.from(
+                { length: Math.max(...row.seats.map((seat) => seat.seatNo), 0) },
+                (_, index) => row.seats.find((seat) => seat.seatNo === index + 1),
+              ).map((seat, index) => {
+                if (!seat) {
+                  return <span className={styles.seatPlaceholder} key={`empty-${row.rowNo}-${index + 1}`} />;
+                }
                 const isSelected = selected.includes(seat.id);
                 const stateClass = seat.status.toLowerCase();
+                const coupleClass = isCoupleSeat(seat) ? styles.couple : '';
                 return (
                   <button
                     key={seat.id}
                     type="button"
                     aria-label={`${seat.rowNo}排${seat.seatNo}座`}
-                    className={`${styles.seat} ${styles[stateClass] || ''} ${isSelected ? styles.selected : ''}`}
+                    className={`${styles.seat} ${styles[stateClass] || ''} ${coupleClass} ${isSelected ? styles.selected : ''}`}
                     onClick={() => toggle(seat)}
                   >
                     {seat.seatNo}
                   </button>
                 );
               })}
+              </div>
             </div>
           ))}
+          </div>
         </div>
       </Card>
       <div className={styles.footer}>

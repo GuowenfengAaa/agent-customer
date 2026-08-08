@@ -234,6 +234,18 @@ function getSeatLabel(seat: Record<string, unknown>, index: number) {
   return getSeatId(seat, index);
 }
 
+function parseCardsJson(cardsJson?: string): AgentCardPayload[] {
+  if (!cardsJson?.trim()) return [];
+  try {
+    const cards = JSON.parse(cardsJson);
+    return Array.isArray(cards)
+      ? cards.filter((card): card is AgentCardPayload => Boolean(card) && typeof card === 'object')
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function toAgentMessages(memory: AgentMemorySummary): AgentChatMessage[] {
   return memory.messages
     .filter((message) => message.role === 'user' || message.role === 'assistant')
@@ -241,7 +253,7 @@ function toAgentMessages(memory: AgentMemorySummary): AgentChatMessage[] {
       id: message.id,
       role: message.role as 'user' | 'assistant',
       content: message.content,
-      cards: [],
+      cards: parseCardsJson(message.cardsJson),
     }));
 }
 
@@ -504,14 +516,27 @@ function AgentCard({
               {hasBestViewingZone ? <span><i className={styles.seatLegendBestViewing} />最佳观影区</span> : null}
             </div>
             <div className={styles.seatScreen}>银幕</div>
-            <div className={`${styles.seatPreview} ${hasBestViewingZone ? styles.seatPreviewBestViewing : ''}`}>
+            <div className={styles.seatPreview}>
+              <div className={`${styles.seatPreviewInner} ${hasBestViewingZone ? styles.seatPreviewBestViewing : ''}`}>
               {seatRows.map(([row, seats]) => (
                 <div className={styles.seatRow} key={row}>
                   <small>{row || '-'}</small>
                   <div className={styles.seatRowItems}>
-                    {seats.map((seat, index) => {
-                      const seatId = getSeatId(seat, index);
-                      const seatLabel = String(seat.number ?? seat.seatNo ?? index + 1);
+                    {Array.from({
+                      length: Math.max(
+                        ...seats.map((seat) => Number(seat.number ?? seat.seatNo)).filter(Number.isFinite),
+                        seats.length,
+                      ),
+                    }, (_, seatIndex) => {
+                      const seatNumber = seatIndex + 1;
+                      const seat = seats.find(
+                        (item) => Number(item.number ?? item.seatNo) === seatNumber,
+                      );
+                      if (!seat) {
+                        return <span className={styles.seatPlaceholder} key={`empty-${row}-${seatNumber}`} />;
+                      }
+                      const seatId = getSeatId(seat, seatIndex);
+                      const seatLabel = String(seat.number ?? seat.seatNo ?? seatIndex + 1);
                       const status = String(seat.status || '').toLowerCase();
                       const unavailable = ['locked', 'sold', 'unavailable'].includes(status);
                       const selected = selectedSeatIds.includes(seatId);
@@ -537,6 +562,7 @@ function AgentCard({
                   </div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
         ) : null}
@@ -797,6 +823,7 @@ const Agent: React.FC = () => {
   const locationRequestRef = useRef<Promise<BrowserLocation> | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const generatedSessionIdRef = useRef(sessionId || createId());
+  const sessionMemoryCacheRef = useRef(new Map<string, AgentMemorySummary>());
 
   const activeSessionId = sessionId || generatedSessionIdRef.current;
   const queryDraftId = searchParams.get('draftId') || undefined;
@@ -1241,18 +1268,23 @@ const Agent: React.FC = () => {
   async function restoreConversation(item: AgentMemorySummary) {
     const memoryIdToLoad = item.memoryId || item.sessionId;
     if (!memoryIdToLoad) return;
-    setSessionListLoading(true);
+    setSessionListVisible(false);
+    setRunning(true);
     try {
-      const memory = await customerApi.getAgentMemory(memoryIdToLoad, memoryIdToLoad);
+      const memory = sessionMemoryCacheRef.current.get(memoryIdToLoad)
+        ?? await customerApi.getAgentMemory(memoryIdToLoad, memoryIdToLoad);
       if (!memory) {
         Toast.show({ content: '这个会话没有可恢复的消息' });
         return;
+      }
+      sessionMemoryCacheRef.current.set(memoryIdToLoad, memory);
+      if (memory.memoryId) {
+        sessionMemoryCacheRef.current.set(memory.memoryId, memory);
       }
       const restoredMessages = toAgentMessages(memory);
       streamRef.current?.close();
       generatedSessionIdRef.current = memory.sessionId || memory.memoryId;
       greetingRequestedRef.current = true;
-      setRunning(false);
       setHistoryReady(true);
       setAgentMessages(restoredMessages);
       setAgentProgress([]);
@@ -1268,7 +1300,7 @@ const Agent: React.FC = () => {
         content: error instanceof Error ? error.message : '恢复会话失败',
       });
     } finally {
-      setSessionListLoading(false);
+      setRunning(false);
     }
   }
 

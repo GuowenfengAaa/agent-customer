@@ -39,8 +39,15 @@ const Cinemas: React.FC = () => {
   const city = useAppStore((state) => state.city);
   const latitude = useAppStore((state) => state.latitude);
   const longitude = useAppStore((state) => state.longitude);
-  const movieId = new URLSearchParams(location.search).get("movieId") || "";
-  const [date, setDate] = React.useState(new Date());
+  const searchParams = new URLSearchParams(location.search);
+  const movieId = searchParams.get("movieId") || "";
+  const dateParam = searchParams.get("date") || "";
+  const [date, setDate] = React.useState(() => {
+    const parsed = dayjs(dateParam);
+    return parsed.isValid() && parsed.format("YYYY-MM-DD") === dateParam
+      ? parsed.toDate()
+      : new Date();
+  });
   const dateValue = dayjs(date).format("YYYY-MM-DD");
   const movieQuery = useQuery({
     queryKey: queryKeys.movie(movieId),
@@ -271,7 +278,7 @@ const Cinemas: React.FC = () => {
           const cinemaPath = movieId
             ? `/cinemas/${cinema.id}/showtimes?movieId=${encodeURIComponent(
                 movieId
-              )}`
+              )}&date=${encodeURIComponent(dateValue)}`
             : `/cinemas/${cinema.id}/showtimes`;
 
           return (

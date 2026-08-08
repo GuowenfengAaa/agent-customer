@@ -944,7 +944,7 @@ h1 {
 
 .seatMapPanel {
   margin-top: 11px;
-  padding: 10px 8px 12px;
+  padding: 12px 10px 14px;
   background: #fff;
   border: 1px solid #e1e6e3;
   border-radius: 10px;
@@ -968,8 +968,8 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 9px;
-  margin: 10px 0 9px;
+  gap: 10px;
+  margin: 11px 0 12px;
   color: #7b8984;
   font-size: 10px;
 }
@@ -981,8 +981,8 @@ h1 {
 }
 
 .seatLegend i {
-  width: 11px;
-  height: 10px;
+  width: 13px;
+  height: 11px;
   border-radius: 3px 3px 2px 2px;
 }
 
@@ -993,9 +993,9 @@ h1 {
 .seatLegendBestViewing { background: #fff0bd; border: 1px solid #ddb04b; }
 
 .seatScreen {
-  width: 62%;
-  margin: 0 auto 12px;
-  padding: 3px 0;
+  width: 70%;
+  margin: 0 auto 15px;
+  padding: 4px 0;
   color: #87938e;
   background: #f2f5f3;
   border-radius: 50% 50% 5px 5px;
@@ -1005,14 +1005,20 @@ h1 {
 
 .seatPreview {
   position: relative;
-  display: grid;
-  gap: 6px;
   overflow-x: scroll;
   overflow-y: hidden;
-  padding-bottom: 7px;
+  padding-bottom: 10px;
   overscroll-behavior-x: contain;
   scrollbar-color: #b6c1bd #eef2f0;
   scrollbar-width: thin;
+}
+
+.seatPreviewInner {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  width: max-content;
+  min-width: 100%;
 }
 
 .seatPreview::-webkit-scrollbar {
@@ -1031,11 +1037,11 @@ h1 {
 
 .seatPreviewBestViewing::before {
   position: absolute;
-  top: 45px;
-  left: calc(50% - 97px);
+  top: 55px;
+  left: 93px;
   z-index: 0;
-  width: 166px;
-  height: 104px;
+  width: 202px;
+  height: 143px;
   content: '';
   background: rgba(255, 240, 189, 0.5);
   border: 1px solid #ddb04b;
@@ -1048,15 +1054,20 @@ h1 {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 16px max-content;
-  gap: 5px;
+  grid-template-columns: 20px max-content;
+  gap: 9px;
   align-items: center;
   width: max-content;
   min-width: max-content;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .seatRow > small {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 20px;
+  background: #fff;
   color: #9aa5a1;
   font-size: 9px;
   text-align: center;
@@ -1065,24 +1076,31 @@ h1 {
 .seatRowItems {
   display: flex;
   justify-content: flex-start;
-  gap: 5px;
+  gap: 8px;
   width: max-content;
   flex-wrap: nowrap;
+}
+
+.seatPlaceholder {
+  display: block;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 23px;
 }
 
 .seatButton {
   position: relative;
   display: grid;
-  flex: 0 0 22px;
-  width: 22px;
-  height: 19px;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 23px;
   place-items: center;
   padding: 0;
   color: #567068;
   background: #fff;
   border: 1px solid #b5c4bf;
-  border-radius: 4px 4px 2px 2px;
-  font-size: 9px;
+  border-radius: 5px 5px 3px 3px;
+  font-size: 10px;
 }
 
 .seatButton::after {

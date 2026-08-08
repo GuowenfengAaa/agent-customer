@@ -23,9 +23,16 @@ const movieCarouselFilters = {
 const CinemaShowtimes: React.FC = () => {
   const { cinemaId = "" } = useParams<{ cinemaId: string }>();
   const location = useLocation();
-  const movieId = new URLSearchParams(location.search).get("movieId") || "";
+  const searchParams = new URLSearchParams(location.search);
+  const movieId = searchParams.get("movieId") || "";
+  const dateParam = searchParams.get("date") || "";
   const validMovieId = /^\d+$/.test(movieId) ? movieId : undefined;
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(() => {
+    const parsed = dayjs(dateParam);
+    return parsed.isValid() && parsed.format("YYYY-MM-DD") === dateParam
+      ? parsed.toDate()
+      : new Date();
+  });
   const [now, setNow] = useState(() => Date.now());
   const dateValue = dayjs(date).format("YYYY-MM-DD");
   useEffect(() => {
@@ -101,7 +108,7 @@ const CinemaShowtimes: React.FC = () => {
     );
   };
   const backPath = activeMovieId
-    ? `/cinemas?movieId=${encodeURIComponent(activeMovieId)}`
+    ? `/cinemas?movieId=${encodeURIComponent(activeMovieId)}&date=${encodeURIComponent(dateValue)}`
     : "/cinemas";
 
   return (

@@ -242,6 +242,7 @@ export interface AgentMessageSummary {
   memoryId: string;
   role: 'user' | 'assistant' | 'system' | 'tool';
   content: string;
+  cardsJson?: string;
   event?: string;
   intent?: string;
   action?: string;

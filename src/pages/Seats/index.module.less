@@ -169,18 +169,28 @@ h1 {
 .map {
   position: relative;
   display: grid;
-  gap: 7px;
+  gap: 22px;
   margin: 0 auto 20px;
-  overflow-x: auto;
 }
 
-.map::before {
+.seatScroll {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  scrollbar-gutter: stable;
+}
+
+.seatScroll::before {
   position: absolute;
-  top: 47px;
-  left: calc(50% - 79px);
+  top: 61px;
+  left: calc(50% - 89px);
   z-index: 0;
-  width: 184px;
-  height: 107px;
+  width: 214px;
+  height: 162px;
   content: '';
   background: rgba(255, 240, 189, 0.5);
   border: 1px solid #ddb04b;
@@ -192,14 +202,34 @@ h1 {
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: 20px repeat(10, 24px);
+  grid-template-columns: 20px max-content;
   align-items: center;
-  justify-content: center;
-  gap: 7px 6px;
+  justify-content: start;
+  gap: 15px;
+  width: max-content;
   min-width: 320px;
 }
 
+.rowSeats {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 9px;
+  width: max-content;
+}
+
+.seatPlaceholder {
+  display: block;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 23px;
+}
+
 .row small {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 20px;
+  background: #fff;
   color: #a0a0a3;
   text-align: center;
 }
@@ -207,13 +237,13 @@ h1 {
 .seat {
   position: relative;
   z-index: 1;
-  width: 22px;
-  height: 19px;
+  width: 26px;
+  height: 23px;
   padding: 0;
   color: transparent;
   background: #fff;
   border: 1px solid #aebbb7;
-  border-radius: 4px 4px 2px 2px;
+  border-radius: 5px 5px 3px 3px;
   font-size: 10px;
 }
 

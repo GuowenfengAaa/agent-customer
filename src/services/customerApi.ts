@@ -242,6 +242,7 @@ function normalizeAgentMemory(raw: RawRecord): AgentMemorySummary {
         memoryId: String(message.memoryId ?? raw.memoryId ?? ''),
         role: message.role ?? 'assistant',
         content: message.content ?? '',
+        cardsJson: message.cardsJson ?? undefined,
         event: message.event ?? undefined,
         intent: message.intent ?? undefined,
         action: message.action ?? undefined,
@@ -404,10 +405,17 @@ export const customerApi = {
       lockedSeats: asOptionalNumber(raw.lockedSeats),
       soldSeats: asOptionalNumber(raw.soldSeats),
       unavailableSeats: asOptionalNumber(raw.unavailableSeats),
-      rows: (raw.rows ?? []).map((row: RawRecord) => ({
-        rowNo: asNumber(row.rowNo),
-        seats: (row.seats ?? []).map(normalizeSeat),
-      })),
+      rows: (raw.rows ?? []).map((row: RawRecord) => {
+        const rowNo = asNumber(row.rowNo);
+        return {
+          rowNo,
+          // 后端排号在 RowVO，SeatVO 不重复返回；补齐后情侣座才能只匹配同一排。
+          seats: (row.seats ?? []).map((seat: RawRecord) => ({
+            ...normalizeSeat(seat),
+            rowNo,
+          })),
+        };
+      }),
     };
   },
 
