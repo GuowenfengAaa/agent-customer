@@ -316,9 +316,21 @@ const Home: React.FC = () => {
                 aria-label={`查看全部 ${hotTotal} 部正在热映电影`}
               >
                 <span className={styles.viewAllPoster}>
-                  <strong>查看全部</strong>
-                  <small>{hotTotal} 部</small>
-                  <i>›</i>
+                  {hotMovies.slice(4, 7).map((movie, previewIndex) => (
+                    movie.posterUrl ? (
+                      <img
+                        key={movie.id}
+                        className={styles.viewAllPosterImage}
+                        src={getPosterThumbnailUrl(movie.posterUrl)}
+                        alt=""
+                        style={{ '--poster-index': previewIndex } as React.CSSProperties}
+                      />
+                    ) : null
+                  ))}
+                  <span className={styles.viewAllPosterOverlay}>
+                    <strong>查看全部</strong>
+                    <small>{hotTotal} 部</small>
+                  </span>
                 </span>
                 <strong>更多热映电影</strong>
                 <span>完整片单</span>
@@ -382,9 +394,21 @@ const Home: React.FC = () => {
                 aria-label={`查看全部 ${upcomingTotal} 部待上映电影`}
               >
                 <span className={styles.viewAllPoster}>
-                  <strong>查看全部</strong>
-                  <small>{upcomingTotal} 部</small>
-                  <i>›</i>
+                  {upcomingMovies.slice(2, 5).map((movie, previewIndex) => (
+                    movie.posterUrl ? (
+                      <img
+                        key={movie.id}
+                        className={styles.viewAllPosterImage}
+                        src={getPosterThumbnailUrl(movie.posterUrl)}
+                        alt=""
+                        style={{ '--poster-index': previewIndex } as React.CSSProperties}
+                      />
+                    ) : null
+                  ))}
+                  <span className={styles.viewAllPosterOverlay}>
+                    <strong>查看全部</strong>
+                    <small>{upcomingTotal} 部</small>
+                  </span>
                 </span>
                 <strong>更多待上映电影</strong>
                 <span>上映日历</span>

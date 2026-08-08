@@ -306,10 +306,17 @@ const Cinemas: React.FC = () => {
                   </em>
                 </div>
               ) : (
-                <div className={styles.tags}>
+                <div className={styles.cinemaInfoRow}>
+                  <div className={styles.tags}>
                   {(cinema.hallTypes || ["普通厅"]).map((type) => (
                     <span key={type}>{type}</span>
                   ))}
+                  </div>
+                  <strong className={styles.cinemaMinPrice}>
+                    {cinema.minPrice
+                      ? `${String.fromCharCode(165)}${(cinema.minPrice / 100).toFixed(0)} \u8d77`
+                      : '\u7968\u4ef7\u5f85\u5b9a'}
+                  </strong>
                 </div>
               )}
             </MobileCard>

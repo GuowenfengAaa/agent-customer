@@ -1,29 +1,32 @@
 .app {
   position: relative;
   width: min(100%, 430px);
-  height: 100%;
-  min-height: 100%;
+  height: 100dvh;
+  min-height: 0;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background: var(--customer-bg);
-  box-shadow: 0 0 42px rgba(37, 39, 42, 0.16);
+  box-shadow: none;
 }
 
 .header {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: rgba(248, 248, 249, 0.96);
+  background: rgba(255, 255, 255, 0.98);
   border-bottom: 1px solid var(--customer-line);
+  box-shadow: 0 3px 12px rgba(26, 40, 35, 0.06);
   backdrop-filter: blur(14px);
 }
 
 .topRow {
   display: grid;
-  height: 42px;
+  height: 48px;
   grid-template-columns: 1fr;
   align-items: center;
-  padding: 3px 14px 1px;
+  padding: 3px 16px 1px;
 }
 
 .topRowWithTitle {
@@ -34,8 +37,8 @@
   grid-column: 2;
   justify-self: center;
   color: var(--customer-ink);
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 750;
   letter-spacing: 0;
   line-height: 1;
   white-space: nowrap;
@@ -83,9 +86,12 @@
   min-width: 0;
   max-width: 100%;
   gap: 4px;
-  padding-left: 6px;
+  padding: 6px 10px;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 700;
+  background: #f2f7f5;
+  border: 1px solid #dbe9e4;
+  border-radius: 999px;
 }
 
 .cityButton > span:first-child {
@@ -101,8 +107,16 @@
 }
 
 .content {
-  min-height: calc(100% - 42px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
   padding-bottom: calc(var(--customer-bottom-height) + 12px);
+}
+
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 .contentStandalone {
@@ -119,10 +133,8 @@
 }
 
 .bottomNav {
-  position: fixed;
-  right: auto;
-  bottom: 0;
-  left: 50%;
+  position: static;
+  flex: 0 0 auto;
   z-index: 46;
   width: min(100%, 430px);
   min-height: 76px;
@@ -135,7 +147,6 @@
   border-radius: 20px 20px 0 0;
   box-shadow: 0 -10px 28px rgba(18, 28, 26, 0.18);
   backdrop-filter: blur(18px);
-  transform: translateX(-50%);
 }
 
 .bottomNav.hidden {
@@ -236,24 +247,29 @@
 @media (max-width: 480px) {
   .app {
     width: 100%;
-    height: 100%;
-    min-height: 100%;
+    height: 100dvh;
+    min-height: 0;
     box-shadow: none;
   }
 }
 
 @media (min-width: 481px) {
   .app {
-    height: 100%;
-    min-height: 100%;
+    height: min(100dvh, 900px);
+    min-height: 0;
+    margin: 0 auto;
     overflow-x: hidden;
     overflow-y: visible;
-    border-radius: 45px;
+  }
+
+  .content {
+    min-height: 0;
+    padding-bottom: 12px;
   }
 
   .bottomNav {
-    width: 100%;
+    width: min(100%, 430px);
     padding-bottom: 21px;
-    border-radius: 20px 20px 44px 44px;
+    margin: 0 auto;
   }
 }

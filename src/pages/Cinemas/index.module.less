@@ -260,7 +260,7 @@ h1 {
 
 .list {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .list p {
@@ -271,16 +271,35 @@ h1 {
 
 .tags {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   gap: 6px;
 }
 
 .tags span {
-  padding: 3px 7px;
+  padding: 4px 8px;
   color: var(--customer-primary-dark);
-  background: var(--customer-primary-soft);
-  border-radius: 6px;
+  background: #f8f1e5;
+  border: 1px solid #f0dfc1;
+  border-radius: 999px;
   font-size: 11px;
+  line-height: 1;
+}
+
+.cinemaInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.cinemaMinPrice {
+  flex: 0 0 auto;
+  color: var(--customer-coral);
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .sessionSummary {
