@@ -990,6 +990,7 @@ h1 {
 .seatLegendSelected { background: #c88b32; }
 .seatLegendSold { background: #bdc5c2; }
 .seatLegendLocked { background: #f8d9a9; border: 1px solid #e1a452; }
+.seatLegendBestViewing { background: #fff0bd; border: 1px solid #ddb04b; }
 
 .seatScreen {
   width: 62%;
@@ -1003,17 +1004,56 @@ h1 {
 }
 
 .seatPreview {
+  position: relative;
   display: grid;
   gap: 6px;
-  overflow-x: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding-bottom: 7px;
+  overscroll-behavior-x: contain;
+  scrollbar-color: #b6c1bd #eef2f0;
+  scrollbar-width: thin;
+}
+
+.seatPreview::-webkit-scrollbar {
+  height: 6px;
+}
+
+.seatPreview::-webkit-scrollbar-track {
+  background: #eef2f0;
+  border-radius: 999px;
+}
+
+.seatPreview::-webkit-scrollbar-thumb {
+  background: #b6c1bd;
+  border-radius: 999px;
+}
+
+.seatPreviewBestViewing::before {
+  position: absolute;
+  top: 45px;
+  left: calc(50% - 97px);
+  z-index: 0;
+  width: 166px;
+  height: 104px;
+  content: '';
+  background: rgba(255, 240, 189, 0.5);
+  border: 1px solid #ddb04b;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(194, 143, 43, 0.1);
+  pointer-events: none;
 }
 
 .seatRow {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 16px minmax(0, 1fr);
+  grid-template-columns: 16px max-content;
   gap: 5px;
   align-items: center;
-  min-width: 240px;
+  width: max-content;
+  min-width: max-content;
+  margin: 0 auto;
 }
 
 .seatRow > small {
@@ -1026,6 +1066,8 @@ h1 {
   display: flex;
   justify-content: flex-start;
   gap: 5px;
+  width: max-content;
+  flex-wrap: nowrap;
 }
 
 .seatButton {

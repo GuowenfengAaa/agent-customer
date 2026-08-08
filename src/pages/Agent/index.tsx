@@ -366,6 +366,17 @@ function AgentCard({
         }, {}),
       )
     : [];
+  const hasBestViewingZone = seatRows.some(([row, seats]) => {
+    const rowNo = Number(row);
+    return (
+      rowNo >= 3 &&
+      rowNo <= 6 &&
+      seats.some((seat) => {
+        const seatNo = Number(seat.number ?? seat.seatNo);
+        return seatNo >= 3 && seatNo <= 8;
+      })
+    );
+  });
 
   const toggleSeat = (seatId: string) => {
     setSelectedSeatIds((current) =>
@@ -490,9 +501,10 @@ function AgentCard({
               <span><i className={styles.seatLegendSelected} />已选</span>
               <span><i className={styles.seatLegendSold} />已售</span>
               <span><i className={styles.seatLegendLocked} />锁定</span>
+              {hasBestViewingZone ? <span><i className={styles.seatLegendBestViewing} />最佳观影区</span> : null}
             </div>
             <div className={styles.seatScreen}>银幕</div>
-            <div className={styles.seatPreview}>
+            <div className={`${styles.seatPreview} ${hasBestViewingZone ? styles.seatPreviewBestViewing : ''}`}>
               {seatRows.map(([row, seats]) => (
                 <div className={styles.seatRow} key={row}>
                   <small>{row || '-'}</small>

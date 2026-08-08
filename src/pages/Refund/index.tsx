@@ -343,6 +343,7 @@ const Refund: React.FC = () => {
               <div className={styles.pendingNotice}>
                 <strong>退款处理中</strong>
                 <span>{refundResult?.message || '系统正在向支付宝确认退款结果，请勿重复提交。'}</span>
+                <span>如果长时间退款不成功，请联系商家。</span>
                 {refundStatusQuery.isError ? <span>状态查询暂时失败，请点击下方刷新。</span> : null}
               </div>
             ) : null}
