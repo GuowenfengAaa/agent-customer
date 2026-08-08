@@ -275,6 +275,11 @@ const Cinemas: React.FC = () => {
           const sessionPreview = sortedShowtimes
             .slice(0, 3)
             .map((showtime) => dayjs(showtime.startAt).format("HH:mm"));
+          const cinemaTags = cinema.services?.length
+            ? cinema.services.slice(0, 3)
+            : cinema.hallTypes?.length
+              ? cinema.hallTypes.slice(0, 3)
+            : ["普通厅"];
           const cinemaPath = movieId
             ? `/cinemas/${cinema.id}/showtimes?movieId=${encodeURIComponent(
                 movieId
@@ -307,16 +312,21 @@ const Cinemas: React.FC = () => {
                 </div>
               ) : (
                 <div className={styles.cinemaInfoRow}>
-                  <div className={styles.tags}>
-                  {(cinema.hallTypes || ["普通厅"]).map((type) => (
-                    <span key={type}>{type}</span>
-                  ))}
+                  <div className={styles.cinemaServiceInfo}>
+                    <small>影厅服务</small>
+                    <div className={styles.tags}>
+                      {cinemaTags.map((type) => (
+                        <span key={type}>{type}</span>
+                      ))}
+                    </div>
                   </div>
-                  <strong className={styles.cinemaMinPrice}>
-                    {cinema.minPrice
-                      ? `${String.fromCharCode(165)}${(cinema.minPrice / 100).toFixed(0)} \u8d77`
-                      : '\u7968\u4ef7\u5f85\u5b9a'}
-                  </strong>
+                  <div className={styles.cinemaPriceInfo}>
+                    <strong className={styles.cinemaMinPrice}>
+                      {cinema.minPrice !== undefined && cinema.minPrice > 0
+                        ? `${String.fromCharCode(165)}${cinema.minPrice.toFixed(2).replace(/\\.00$/, "")} 起`
+                        : "票价待定"}
+                    </strong>
+                  </div>
                 </div>
               )}
             </MobileCard>

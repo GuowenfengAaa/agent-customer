@@ -288,10 +288,30 @@ h1 {
 
 .cinemaInfoRow {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-end;
   gap: 10px;
-  padding-top: 2px;
+  padding-top: 3px;
+}
+
+.cinemaServiceInfo,
+.cinemaPriceInfo {
+  display: grid;
+  gap: 5px;
+}
+
+.cinemaServiceInfo {
+  min-width: 0;
+}
+
+.cinemaPriceInfo {
+  justify-items: end;
+  flex: 0 0 auto;
+}
+
+.cinemaServiceInfo > small {
+  color: #98a39e;
+  font-size: 10px;
+  line-height: 1;
 }
 
 .cinemaMinPrice {

@@ -53,6 +53,21 @@ const asOptionalNumber = (value: unknown): number | undefined => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
 };
+
+// 兼容接口返回数组、JSON 字符串和逗号分隔字符串三种格式。
+const asStringList = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  }
+  if (typeof value !== 'string' || !value.trim()) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return asStringList(parsed);
+  } catch {
+    // 不是 JSON 时按普通分隔文本处理。
+  }
+  return value.split(/[,，、|]/).map((item) => item.trim()).filter(Boolean);
+};
 const asLong = (value: ID): number => {
   const parsed = Number(value);
   if (!Number.isInteger(parsed)) throw new Error('无效的业务 ID');
@@ -85,7 +100,8 @@ function normalizeCinema(raw: RawRecord): CinemaSummary {
     district: raw.district ?? undefined,
     distance: asOptionalNumber(raw.distance),
     minPrice: asOptionalNumber(raw.minPrice),
-    hallTypes: Array.isArray(raw.hallTypes) ? raw.hallTypes : [],
+    services: asStringList(raw.services ?? raw.service ?? raw.serviceTags),
+    hallTypes: asStringList(raw.hallTypes),
   };
 }
 

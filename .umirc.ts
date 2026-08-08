@@ -1,7 +1,7 @@
 import { defineConfig } from '@umijs/max';
 
-const apiBaseUrl = process.env.API_BASE_URL || 'http://localhost:8080';
-const agentBaseUrl = process.env.AGENT_BASE_URL || 'http://127.0.0.1:8001';
+const apiBaseUrl = process.env.API_BASE_URL || 'http://47.93.10.198:8080';
+const agentBaseUrl = process.env.AGENT_BASE_URL || 'http://47.93.10.198:8001';
 
 export default defineConfig({
   define: {

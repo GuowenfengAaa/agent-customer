@@ -49,6 +49,7 @@ export interface CinemaSummary {
   district?: string;
   distance?: number;
   minPrice?: number;
+  services?: string[];
   hallTypes?: string[];
 }
 
