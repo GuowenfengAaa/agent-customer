@@ -739,6 +739,10 @@ function AgentCardCollection({
     const type = String(card.type || '').toUpperCase();
     return type === 'MOVIE_LIST' || type === 'MOVIE';
   });
+  const snackCards = cards.filter((card) => {
+    const type = String(card.type || '').toUpperCase();
+    return type === 'SNACK_LIST' || type === 'SNACK';
+  });
   const otherCards = cards.filter((card) => !movieCards.includes(card));
 
   return (
@@ -756,6 +760,23 @@ function AgentCardCollection({
           onAction={(event, label, payload) => onAction(card, event, label, payload)}
         />
       ))}
+      {snackCards.length ? (
+        <div className={styles.skipSnackAction}>
+          <Button
+            block
+            fill="outline"
+            color="default"
+            disabled={disabled}
+            onClick={() => onAction(
+              snackCards[0],
+              'skip_snacks',
+              '不要零食，直接支付',
+            )}
+          >
+            不要零食，直接支付
+          </Button>
+        </div>
+      ) : null}
     </>
   );
 }
