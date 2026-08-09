@@ -18,7 +18,7 @@ import type { AgentMemorySummary, OrderDetail } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
 import styles from './index.module.less';
 
-const agentBaseUrl = process.env.AGENT_BASE_URL || 'http://127.0.0.1:8001';
+const agentBaseUrl = process.env.AGENT_BASE_URL || '';
 const pendingPaymentStorageKey = 'movie-agent-pending-payment';
 
 function createId() {
