@@ -14,6 +14,7 @@ const MovieDetail: React.FC = () => {
   const { movieId = "" } = useParams<{ movieId: string }>();
   const queryClient = useQueryClient();
   const [changingReviewId, setChangingReviewId] = React.useState<string>();
+  const [togglingWatched, setTogglingWatched] = React.useState(false);
   const query = useQuery({
     queryKey: queryKeys.movie(movieId),
     queryFn: () => customerApi.getMovie(movieId),
@@ -49,14 +50,37 @@ const MovieDetail: React.FC = () => {
       ? "COMING SOON"
       : "NOW SHOWING";
   const wishlistMutation = useWishlistToggle(movieId, Boolean(movie.wanted));
+  const watchedQuery = useQuery({
+    queryKey: queryKeys.movieWatched(movieId),
+    queryFn: () => customerApi.isMovieWatched(movieId),
+    enabled: Boolean(movieId),
+  });
   const reviewsQuery = useQuery({
     queryKey: queryKeys.movieReviews(movieId),
     queryFn: () => customerApi.listMovieReviews(movieId),
     enabled: Boolean(movieId),
   });
   const reviews = reviewsQuery.data?.records || [];
+  const rootReviews = reviews.filter((review) => !review.parentId);
+  const repliesByParent = reviews.reduce<Record<string, typeof reviews>>((result, review) => {
+    if (review.parentId) (result[review.parentId] ||= []).push(review);
+    return result;
+  }, {});
 
   const refreshReviews = () => queryClient.invalidateQueries({ queryKey: queryKeys.movieReviews(movieId) });
+
+  const toggleWatched = async () => {
+    if (togglingWatched) return;
+    setTogglingWatched(true);
+    try {
+      await customerApi.toggleMovieWatched(movieId, Boolean(watchedQuery.data));
+      await queryClient.invalidateQueries({ queryKey: queryKeys.movieWatched(movieId) });
+    } catch (error) {
+      Toast.show({ content: error instanceof Error ? error.message : "操作失败，请稍后重试" });
+    } finally {
+      setTogglingWatched(false);
+    }
+  };
 
   const toggleLike = async (reviewId: string, liked: boolean) => {
     setChangingReviewId(reviewId);
@@ -122,18 +146,29 @@ const MovieDetail: React.FC = () => {
             </strong>
             <span>观众评分</span>
           </div>
-          <Button
-            className={`${styles.wantButton} ${movie.wanted ? styles.wantButtonActive : ""}`}
-            fill="none"
-            loading={wishlistMutation.isPending}
-            onClick={(event) => {
-              event.stopPropagation();
-              wishlistMutation.mutate();
-            }}
-          >
-            <HeartOutline />
-            {movie.wanted ? "已想看" : "想看"}
-          </Button>
+          <div className={styles.movieActions}>
+            <Button
+              className={`${styles.wantButton} ${movie.wanted ? styles.wantButtonActive : ""}`}
+              fill="none"
+              loading={wishlistMutation.isPending}
+              onClick={(event) => {
+                event.stopPropagation();
+                wishlistMutation.mutate();
+              }}
+            >
+              <HeartOutline />
+              {movie.wanted ? "已想看" : "想看"}
+            </Button>
+            <Button
+              className={`${styles.watchedButton} ${watchedQuery.data ? styles.watchedButtonActive : ""}`}
+              fill="none"
+              loading={togglingWatched}
+              disabled={watchedQuery.isLoading || togglingWatched}
+              onClick={toggleWatched}
+            >
+              {watchedQuery.data ? "已看过" : "看过"}
+            </Button>
+          </div>
         </div>
 
         <RightOutline className={styles.introArrow} />
@@ -189,11 +224,11 @@ const MovieDetail: React.FC = () => {
 
         {reviewsQuery.isLoading ? <div className={styles.reviewState}>影评加载中...</div> : null}
         {reviewsQuery.isError ? <div className={styles.reviewState}>影评加载失败，请稍后重试</div> : null}
-        {!reviewsQuery.isLoading && !reviewsQuery.isError && !reviews.length ? (
+        {!reviewsQuery.isLoading && !reviewsQuery.isError && !rootReviews.length ? (
           <div className={styles.reviewState}>还没有影评，来发表第一条吧</div>
         ) : null}
         <div className={styles.reviewList}>
-          {reviews.map((review) => (
+          {rootReviews.map((review) => (
             <article className={styles.reviewItem} key={review.id}>
               <div className={styles.reviewAvatar}>
                 {review.authorAvatarUrl ? <img src={review.authorAvatarUrl} alt="" /> : review.authorName.slice(0, 1)}
@@ -213,12 +248,42 @@ const MovieDetail: React.FC = () => {
                   >
                     <HeartOutline /> {review.liked ? "已赞" : "点赞"}{review.likeCount ? ` ${review.likeCount}` : ""}
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => history.push(`/movies/${movieId}/review?replyTo=${review.id}&name=${encodeURIComponent(review.authorName)}`)}
+                  >
+                    回复
+                  </button>
                   {review.mine ? (
                     <button type="button" disabled={changingReviewId === review.id} onClick={() => deleteReview(review.id)}>
                       删除
                     </button>
                   ) : null}
                 </div>
+                {(repliesByParent[review.id] || []).map((reply) => (
+                  <div className={styles.reviewReply} key={reply.id}>
+                    <div className={styles.replyAuthor}>
+                      <strong>{reply.authorName}</strong>
+                      <span>{reply.createTime ? dayjs(reply.createTime).format("MM-DD HH:mm") : "刚刚"}</span>
+                    </div>
+                    <p>{reply.content}</p>
+                    <div className={styles.reviewActions}>
+                      <button
+                        className={reply.liked ? styles.reviewLiked : ""}
+                        type="button"
+                        disabled={changingReviewId === reply.id}
+                        onClick={() => toggleLike(reply.id, reply.liked)}
+                      >
+                        <HeartOutline /> {reply.liked ? "已赞" : "点赞"}{reply.likeCount ? ` ${reply.likeCount}` : ""}
+                      </button>
+                      {reply.mine ? (
+                        <button type="button" disabled={changingReviewId === reply.id} onClick={() => deleteReview(reply.id)}>
+                          删除
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
               </div>
             </article>
           ))}

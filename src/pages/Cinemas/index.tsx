@@ -1,7 +1,7 @@
-import { Button, Card, ErrorBlock, Skeleton } from "antd-mobile";
+import { Button, Card, ErrorBlock, Skeleton, Toast } from "antd-mobile";
 import { HeartOutline, LeftOutline, RightOutline } from "antd-mobile-icons";
 import { history, useLocation } from "@umijs/max";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React from "react";
 import BookingDateTabs from "@/components/BookingDateTabs";
@@ -35,6 +35,7 @@ const getPriceFen = (showtimes: ShowtimeSummary[], fallback?: number) => {
 };
 
 const Cinemas: React.FC = () => {
+  const queryClient = useQueryClient();
   const location = useLocation();
   const city = useAppStore((state) => state.city);
   const latitude = useAppStore((state) => state.latitude);
@@ -126,6 +127,27 @@ const Cinemas: React.FC = () => {
       : movieQuery.data;
   const canSwitchMovie = carouselMovies.length > 1;
   const wishlistMutation = useWishlistToggle(movie?.id || movieId, Boolean(movie?.wanted));
+  const watchedMovieId = movie?.id || movieId;
+  const [togglingWatched, setTogglingWatched] = React.useState(false);
+  const watchedQuery = useQuery({
+    queryKey: queryKeys.movieWatched(watchedMovieId),
+    queryFn: () => customerApi.isMovieWatched(watchedMovieId),
+    enabled: Boolean(watchedMovieId),
+  });
+
+  const toggleWatched = async () => {
+    if (!watchedMovieId || togglingWatched) return;
+    setTogglingWatched(true);
+    try {
+      await customerApi.toggleMovieWatched(watchedMovieId, Boolean(watchedQuery.data));
+      await queryClient.invalidateQueries({ queryKey: queryKeys.movieWatched(watchedMovieId) });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.watchedMovies });
+    } catch (error) {
+      Toast.show({ content: error instanceof Error ? error.message : "操作失败，请稍后重试" });
+    } finally {
+      setTogglingWatched(false);
+    }
+  };
 
   const switchMovie = (direction: -1 | 1) => {
     if (!canSwitchMovie) return;
@@ -207,18 +229,29 @@ const Cinemas: React.FC = () => {
                 </em>
                 <span>观众评分</span>
               </div>
-              <Button
-                className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
-                fill="none"
-                loading={wishlistMutation.isPending}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  wishlistMutation.mutate();
-                }}
-              >
-                <HeartOutline />
-                {movie?.wanted ? "已想看" : "想看"}
-              </Button>
+              <div className={styles.movieActions}>
+                <Button
+                  className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
+                  fill="none"
+                  loading={wishlistMutation.isPending}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    wishlistMutation.mutate();
+                  }}
+                >
+                  <HeartOutline />
+                  {movie?.wanted ? "已想看" : "想看"}
+                </Button>
+                <Button
+                  className={`${styles.watchedButton} ${watchedQuery.data ? styles.watchedButtonActive : ""}`}
+                  fill="none"
+                  loading={togglingWatched}
+                  disabled={watchedQuery.isLoading || togglingWatched}
+                  onClick={toggleWatched}
+                >
+                  {watchedQuery.data ? "已看过" : "看过"}
+                </Button>
+              </div>
             </div>
           </React.Fragment>
           <button

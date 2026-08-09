@@ -56,6 +56,7 @@ export interface CinemaSummary {
 export interface MovieReviewSummary {
   id: ID;
   movieId: ID;
+  parentId?: ID;
   content: string;
   authorName: string;
   authorAvatarUrl?: string;

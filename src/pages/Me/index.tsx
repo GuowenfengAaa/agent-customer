@@ -461,6 +461,13 @@ const Me: React.FC = () => {
       tone: styles.wishlistIcon,
     },
     {
+      title: '看过的电影',
+      description: '记录看过的影片，随时重温一遍',
+      path: '/me/watched',
+      icon: <EyeOutline />,
+      tone: styles.watchedIcon,
+    },
+    {
       title: '观影偏好',
       description: district ? `常去 ${district}` : '设置影院与座位偏好',
       path: '/me/preferences',

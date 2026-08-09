@@ -1,6 +1,6 @@
 import { Button, ErrorBlock, Skeleton, Tag, Toast } from 'antd-mobile';
 import { HeartOutline } from 'antd-mobile-icons';
-import { history } from '@umijs/max';
+import { history, useLocation } from '@umijs/max';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { queryKeys } from '@/query/keys';
@@ -31,11 +31,15 @@ const formatReleaseDate = (value?: string) => value
   : '上映日期待定';
 
 const Wishlist: React.FC = () => {
+  const location = useLocation();
+  const watchedMode = location.pathname === '/me/watched';
   const queryClient = useQueryClient();
   const query = useInfiniteQuery({
-    queryKey: queryKeys.wishlist,
+    queryKey: watchedMode ? queryKeys.watchedMovies : queryKeys.wishlist,
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => customerApi.listWishlist({ page: pageParam, size: PAGE_SIZE }),
+    queryFn: ({ pageParam }) => watchedMode
+      ? customerApi.listWatched({ page: pageParam, size: PAGE_SIZE })
+      : customerApi.listWishlist({ page: pageParam, size: PAGE_SIZE }),
     getNextPageParam: (lastPage) => {
       const page = lastPage.page ?? 1;
       const size = lastPage.size ?? PAGE_SIZE;
@@ -49,7 +53,7 @@ const Wishlist: React.FC = () => {
     mutationFn: (movieId: string) => customerApi.removeFromWishlist(movieId),
     onSuccess: async (_, movieId) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.wishlist }),
+        queryClient.invalidateQueries({ queryKey: watchedMode ? queryKeys.watchedMovies : queryKeys.wishlist }),
         queryClient.invalidateQueries({ queryKey: queryKeys.movie(movieId) }),
         queryClient.invalidateQueries({ queryKey: ['movies'] }),
       ]);
@@ -61,7 +65,10 @@ const Wishlist: React.FC = () => {
   return (
     <div className={styles.page}>
       <header className={styles.intro}>
-        <div><span>MY WATCHLIST</span><h1>留住每一部期待</h1></div>
+        <div>
+          <span>{watchedMode ? 'MY WATCHED' : 'MY WATCHLIST'}</span>
+          <h1>{watchedMode ? '重温每一部喜欢' : '留住每一部期待'}</h1>
+        </div>
         <strong>{total}<small> 部</small></strong>
       </header>
 
@@ -78,12 +85,12 @@ const Wishlist: React.FC = () => {
       ) : movies.length === 0 ? (
         <section className={styles.empty}>
           <HeartOutline />
-          <strong>还没有想看的电影</strong>
-          <p>看到感兴趣的影片，点击“想看”就会收藏到这里。</p>
+          <strong>{watchedMode ? '还没有看过的电影' : '还没有想看的电影'}</strong>
+          <p>{watchedMode ? '看过的影片会保存在这里，方便再次购票。' : '看到感兴趣的影片，点击“想看”就会收藏到这里。'}</p>
           <Button color="primary" size="small" onClick={() => history.push('/home')}>去发现电影</Button>
         </section>
       ) : (
-        <section className={styles.list} aria-label="想看的电影列表">
+        <section className={styles.list} aria-label={watchedMode ? '看过的电影列表' : '想看的电影列表'}>
           {movies.map((movie, index) => {
             const offline = movie.status === '已下架' || movie.status === 'OFFLINE';
             const upcoming = movie.status === '待上映' || movie.status === 'COMING_SOON';
@@ -105,7 +112,7 @@ const Wishlist: React.FC = () => {
                   </div>
                 </button>
                 <div className={styles.actions}>
-                  <Button
+                  {!watchedMode ? <Button
                     className={styles.removeButton}
                     size="mini"
                     loading={removeMutation.isPending && removeMutation.variables === movie.id}
@@ -113,7 +120,7 @@ const Wishlist: React.FC = () => {
                     onClick={() => removeMutation.mutate(movie.id)}
                   >
                     <HeartOutline /> 已想看
-                  </Button>
+                  </Button> : null}
                   <Button
                     className={offline ? styles.offlineButton : styles.primaryButton}
                     size="mini"
@@ -122,7 +129,7 @@ const Wishlist: React.FC = () => {
                       ? `/movies/${movie.id}`
                       : `/cinemas?movieId=${encodeURIComponent(movie.id)}`)}
                   >
-                    {offline ? '已下架' : upcoming ? '查看详情' : '购票'}
+                    {offline ? '已下架' : watchedMode ? '重温一遍' : upcoming ? '查看详情' : '购票'}
                   </Button>
                 </div>
               </article>

@@ -1,7 +1,7 @@
-import { Button, Card, ErrorBlock, NavBar, Space, Tag } from "antd-mobile";
+import { Button, Card, ErrorBlock, NavBar, Space, Tag, Toast } from "antd-mobile";
 import { HeartOutline, LeftOutline, RightOutline } from "antd-mobile-icons";
 import { history, useLocation, useParams } from "@umijs/max";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import BookingDateTabs from "@/components/BookingDateTabs";
@@ -21,6 +21,7 @@ const movieCarouselFilters = {
 };
 
 const CinemaShowtimes: React.FC = () => {
+  const queryClient = useQueryClient();
   const { cinemaId = "" } = useParams<{ cinemaId: string }>();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -81,6 +82,26 @@ const CinemaShowtimes: React.FC = () => {
     movie?.id || activeMovieId || "",
     Boolean(movie?.wanted),
   );
+  const watchedMovieId = movie?.id || activeMovieId || "";
+  const [togglingWatched, setTogglingWatched] = useState(false);
+  const watchedQuery = useQuery({
+    queryKey: queryKeys.movieWatched(watchedMovieId),
+    queryFn: () => customerApi.isMovieWatched(watchedMovieId),
+    enabled: Boolean(watchedMovieId),
+  });
+  const toggleWatched = async () => {
+    if (!watchedMovieId || togglingWatched) return;
+    setTogglingWatched(true);
+    try {
+      await customerApi.toggleMovieWatched(watchedMovieId, Boolean(watchedQuery.data));
+      await queryClient.invalidateQueries({ queryKey: queryKeys.movieWatched(watchedMovieId) });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.watchedMovies });
+    } catch (error) {
+      Toast.show({ content: error instanceof Error ? error.message : "操作失败，请稍后重试" });
+    } finally {
+      setTogglingWatched(false);
+    }
+  };
   const movieName = movie?.title || query.data?.movie?.name;
   const movieGenreTags = (movie?.genre || "类型待更新")
     .split(/\s*[\/·,，]\s*/)
@@ -159,19 +180,30 @@ const CinemaShowtimes: React.FC = () => {
               </em>
               <span>&#35266;&#20247;&#35780;&#20998;</span>
             </div>
-            <Button
-              className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
-              fill="none"
-              loading={wishlistMutation.isPending}
-              disabled={!activeMovieId}
-              onClick={(event) => {
-                event.stopPropagation();
-                wishlistMutation.mutate();
-              }}
-            >
-              <HeartOutline />
-              {movie?.wanted ? "已想看" : "想看"}
-            </Button>
+            <div className={styles.movieActions}>
+              <Button
+                className={`${styles.wantButton} ${movie?.wanted ? styles.wantButtonActive : ""}`}
+                fill="none"
+                loading={wishlistMutation.isPending}
+                disabled={!activeMovieId}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  wishlistMutation.mutate();
+                }}
+              >
+                <HeartOutline />
+                {movie?.wanted ? "已想看" : "想看"}
+              </Button>
+              <Button
+                className={`${styles.watchedButton} ${watchedQuery.data ? styles.watchedButtonActive : ""}`}
+                fill="none"
+                loading={togglingWatched}
+                disabled={!watchedMovieId || watchedQuery.isLoading || togglingWatched}
+                onClick={toggleWatched}
+              >
+                {watchedQuery.data ? "已看过" : "看过"}
+              </Button>
+            </div>
           </div>
           <button className={styles.carouselArrow} type="button" aria-label="Next movie" title="Next movie" disabled={!canSwitchMovie} onClick={() => switchMovie(1)}>
             <RightOutline />

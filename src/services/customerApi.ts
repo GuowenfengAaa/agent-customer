@@ -110,6 +110,7 @@ function normalizeMovieReview(raw: RawRecord): MovieReviewSummary {
   return {
     id: asId(raw.id),
     movieId: asId(raw.movieId),
+    parentId: raw.parentId === null || raw.parentId === undefined ? undefined : asId(raw.parentId),
     content: raw.content ?? '',
     authorName: raw.authorName ?? '匿名用户',
     authorAvatarUrl: raw.authorAvatarUrl ?? undefined,
@@ -356,6 +357,34 @@ export const customerApi = {
     return normalizeMovie(unwrap(await generatedApi.movieUserController.detail({ id: asLong(movieId) })));
   },
 
+  async isMovieWatched(movieId: string): Promise<boolean> {
+    const result = await openapiRequest<OpenApiResult<boolean>>(
+      `/api/user/watched-movies/${asLong(movieId)}`,
+      { method: 'GET' },
+    );
+    return Boolean(unwrap(result));
+  },
+
+  async toggleMovieWatched(movieId: string, watched: boolean): Promise<void> {
+    await openapiRequest<OpenApiResult<null>>(
+      `/api/user/watched-movies/${asLong(movieId)}`,
+      { method: watched ? 'DELETE' : 'PUT' },
+    );
+  },
+
+  async listWatched(params: { page?: number; size?: number } = {}): Promise<PageResult<MovieSummary>> {
+    const raw = unwrap(await openapiRequest<OpenApiResult<RawRecord>>(
+      `/api/user/watched-movies?page=${params.page || 1}&size=${params.size || 20}`,
+      { method: 'GET' },
+    ));
+    return {
+      records: Array.isArray(raw?.records) ? raw.records.map(normalizeMovie) : [],
+      total: asNumber(raw?.total),
+      page: asNumber(raw?.page) || params.page || 1,
+      size: asNumber(raw?.size) || params.size || 20,
+    };
+  },
+
   async listMovieReviews(movieId: string): Promise<PageResult<MovieReviewSummary>> {
     const result = await openapiRequest<OpenApiResult<RawRecord>>(
       `/api/user/movies/${asLong(movieId)}/reviews?page=1&size=20`,
@@ -370,10 +399,10 @@ export const customerApi = {
     };
   },
 
-  async createMovieReview(movieId: string, content: string): Promise<MovieReviewSummary> {
+  async createMovieReview(movieId: string, content: string, parentId?: string): Promise<MovieReviewSummary> {
     const result = await openapiRequest<OpenApiResult<RawRecord>>(
       `/api/user/movies/${asLong(movieId)}/reviews`,
-      { method: 'POST', data: { content } },
+      { method: 'POST', data: { content, parentId: parentId ? asLong(parentId) : undefined } },
     );
     return normalizeMovieReview(unwrap(result));
   },

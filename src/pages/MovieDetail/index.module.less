@@ -124,14 +124,14 @@
 }
 
 .wantButton {
-  width: 108px;
+  width: 82px;
   min-height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 10px;
-  padding: 0 12px;
+  margin: 0;
+  padding: 0 8px;
   color: #fff;
   background: #858585;
   border: 0;
@@ -396,6 +396,63 @@
 
 .reviewActions .reviewLiked {
   color: var(--customer-coral);
+}
+
+.movieActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.watchedButton {
+  width: 70px;
+  min-height: 30px;
+  padding: 0 8px;
+  color: #f1f1f1;
+  background: #68716e;
+  border: 0;
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+.watchedButtonActive {
+  color: #fff;
+  background: #2e7564;
+}
+
+.reviewReply {
+  margin-top: 11px;
+  padding: 9px 10px;
+  background: #f6f8f7;
+  border-left: 2px solid #d7dfdb;
+  border-radius: 0 6px 6px 0;
+}
+
+.replyAuthor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.replyAuthor strong {
+  overflow: hidden;
+  color: #42524c;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.replyAuthor span {
+  flex: 0 0 auto;
+  color: #98a39e;
+  font-size: 10px;
+}
+
+.reviewReply p {
+  margin: 6px 0 8px;
+  font-size: 12px;
 }
 
 @media (max-width: 360px) {

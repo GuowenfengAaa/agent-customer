@@ -11,5 +11,7 @@ export const queryKeys = {
   profile: ['profile'] as const,
   searchHistory: (limit = 10) => ['searchHistory', limit] as const,
   wishlist: ['wishlist'] as const,
+  movieWatched: (movieId: string) => ['movieWatched', movieId] as const,
+  watchedMovies: ['watchedMovies'] as const,
   movieReviews: (movieId: string) => ['movieReviews', movieId] as const,
 };

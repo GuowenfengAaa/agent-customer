@@ -108,6 +108,11 @@ export default defineConfig({
       wrappers: ['@/wrappers/customer'],
     },
     {
+      path: '/me/watched',
+      component: './Wishlist',
+      wrappers: ['@/wrappers/customer'],
+    },
+    {
       path: '/me/preferences',
       component: './Me',
       wrappers: ['@/wrappers/customer'],
