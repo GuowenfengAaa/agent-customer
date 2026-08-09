@@ -29,6 +29,9 @@ const CustomerLayout: React.FC = () => {
   const isOrderTickets = /^\/orders\/[^/]+\/tickets$/.test(path);
   const isOrderRefund = /^\/orders\/[^/]+\/refund$/.test(path);
   const isMovieList = path === "/movies";
+  const isMovieDetail = /^\/movies\/[^/]+$/.test(path);
+  const isMovieReview = /^\/movies\/[^/]+\/review$/.test(path);
+  const isWishlist = path === "/me/wishlist";
   const active =
     path === "/home" || path.startsWith("/movies") || path.startsWith("/search")
       ? "movies"
@@ -65,6 +68,10 @@ const CustomerLayout: React.FC = () => {
     ? "想看的电影"
     : path === "/cinemas"
     ? isCinemaBooking ? "选择影院" : "影院"
+    : isMovieDetail
+    ? "影片详情"
+    : isMovieReview
+    ? "写影评"
     : path === "/me"
     ? "我的"
     : "";
@@ -87,13 +94,13 @@ const CustomerLayout: React.FC = () => {
       {path !== "/home" && !path.startsWith("/search") && !hideGlobalHeader ? (
         <header className={styles.header}>
           <div className={`${styles.topRow} ${headerTitle ? styles.topRowWithTitle : ""}`}>
-            {isCinemaBooking ? (
+            {isCinemaBooking || isMovieDetail || isMovieReview || isWishlist ? (
               <button
                 className={styles.backButton}
                 type="button"
                 aria-label="返回上一页"
                 title="返回上一页"
-                onClick={() => history.replace('/home')}
+                onClick={() => history.replace(isWishlist ? "/me" : isMovieReview ? path.replace(/\/review$/, "") : "/home")}
               >
                 <LeftOutline />
               </button>

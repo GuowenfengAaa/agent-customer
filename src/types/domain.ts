@@ -53,6 +53,18 @@ export interface CinemaSummary {
   hallTypes?: string[];
 }
 
+export interface MovieReviewSummary {
+  id: ID;
+  movieId: ID;
+  content: string;
+  authorName: string;
+  authorAvatarUrl?: string;
+  likeCount: number;
+  liked: boolean;
+  mine: boolean;
+  createTime?: string;
+}
+
 export interface ShowtimeSummary {
   id: ID;
   movieId?: ID;

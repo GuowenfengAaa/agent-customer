@@ -4,6 +4,7 @@ import type {
   ID,
   LockResult,
   MovieSummary,
+  MovieReviewSummary,
   OrderDetail,
   OrderSummary,
   PageResult,
@@ -102,6 +103,20 @@ function normalizeCinema(raw: RawRecord): CinemaSummary {
     minPrice: asOptionalNumber(raw.minPrice),
     services: asStringList(raw.services ?? raw.service ?? raw.serviceTags),
     hallTypes: asStringList(raw.hallTypes),
+  };
+}
+
+function normalizeMovieReview(raw: RawRecord): MovieReviewSummary {
+  return {
+    id: asId(raw.id),
+    movieId: asId(raw.movieId),
+    content: raw.content ?? '',
+    authorName: raw.authorName ?? '匿名用户',
+    authorAvatarUrl: raw.authorAvatarUrl ?? undefined,
+    likeCount: asNumber(raw.likeCount),
+    liked: Boolean(raw.liked),
+    mine: Boolean(raw.mine),
+    createTime: raw.createTime ?? undefined,
   };
 }
 
@@ -339,6 +354,42 @@ export const customerApi = {
 
   async getMovie(movieId: string): Promise<MovieSummary> {
     return normalizeMovie(unwrap(await generatedApi.movieUserController.detail({ id: asLong(movieId) })));
+  },
+
+  async listMovieReviews(movieId: string): Promise<PageResult<MovieReviewSummary>> {
+    const result = await openapiRequest<OpenApiResult<RawRecord>>(
+      `/api/user/movies/${asLong(movieId)}/reviews?page=1&size=20`,
+      { method: 'GET' },
+    );
+    const raw = unwrap(result);
+    return {
+      records: Array.isArray(raw?.records) ? raw.records.map(normalizeMovieReview) : [],
+      total: asNumber(raw?.total),
+      page: raw?.page,
+      size: raw?.size,
+    };
+  },
+
+  async createMovieReview(movieId: string, content: string): Promise<MovieReviewSummary> {
+    const result = await openapiRequest<OpenApiResult<RawRecord>>(
+      `/api/user/movies/${asLong(movieId)}/reviews`,
+      { method: 'POST', data: { content } },
+    );
+    return normalizeMovieReview(unwrap(result));
+  },
+
+  async toggleMovieReviewLike(movieId: string, reviewId: string, liked: boolean): Promise<void> {
+    await openapiRequest<OpenApiResult<null>>(
+      `/api/user/movies/${asLong(movieId)}/reviews/${asLong(reviewId)}/like`,
+      { method: liked ? 'DELETE' : 'PUT' },
+    );
+  },
+
+  async deleteMovieReview(movieId: string, reviewId: string): Promise<void> {
+    await openapiRequest<OpenApiResult<null>>(
+      `/api/user/movies/${asLong(movieId)}/reviews/${asLong(reviewId)}`,
+      { method: 'DELETE' },
+    );
   },
 
   async listWishlist(params: { page?: number; size?: number } = {}): Promise<PageResult<MovieSummary>> {

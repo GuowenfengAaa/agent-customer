@@ -1,0 +1,43 @@
+.page {
+  min-height: 100%;
+  padding: 16px;
+  background: var(--customer-bg);
+}
+
+.card {
+  border: 1px solid var(--customer-line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.movieName {
+  overflow: hidden;
+  color: var(--customer-ink);
+  font-size: 18px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card p {
+  margin: 7px 0 16px;
+  color: var(--customer-muted);
+  font-size: 13px;
+}
+
+.card :global(.adm-text-area) {
+  padding: 10px;
+  background: #f6f8f7;
+  border: 1px solid #e1e7e4;
+  border-radius: 7px;
+}
+
+.card :global(.adm-text-area-element) {
+  color: var(--customer-ink);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.card :global(.adm-button) {
+  margin-top: 16px;
+}
