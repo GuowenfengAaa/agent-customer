@@ -7,3 +7,5 @@ dist
 .codex-dev.stderr.log
 src/.umi/
 src/.umi-production/
+宝塔面板部署指南.md
+部署文档.md

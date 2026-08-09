@@ -1,7 +1,7 @@
 import { request as umiRequest } from '@umijs/max';
 import { clearSession, getToken } from './storage';
 
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.API_BASE_URL || '';
 
 /** OpenAPI 生成代码使用的请求适配层。 */
 export default async function openapiRequest<T>(url: string, options: Record<string, unknown> = {}): Promise<T> {
