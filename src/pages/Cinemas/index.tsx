@@ -12,6 +12,8 @@ import { useAppStore } from "@/stores/useAppStore";
 import type { CinemaSummary, ShowtimeSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
 import { useWishlistToggle } from "@/hooks/useWishlistToggle";
+import { getToken } from "@/services/storage";
+import { runAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
 interface CinemaWithShowtimes {
@@ -36,6 +38,7 @@ const getPriceFen = (showtimes: ShowtimeSummary[], fallback?: number) => {
 
 const Cinemas: React.FC = () => {
   const queryClient = useQueryClient();
+  const isLoggedIn = Boolean(getToken());
   const location = useLocation();
   const city = useAppStore((state) => state.city);
   const latitude = useAppStore((state) => state.latitude);
@@ -132,10 +135,14 @@ const Cinemas: React.FC = () => {
   const watchedQuery = useQuery({
     queryKey: queryKeys.movieWatched(watchedMovieId),
     queryFn: () => customerApi.isMovieWatched(watchedMovieId),
-    enabled: Boolean(watchedMovieId),
+    enabled: Boolean(watchedMovieId) && isLoggedIn,
   });
 
   const toggleWatched = async () => {
+    if (!isLoggedIn) {
+      await runAuthenticated(async () => undefined);
+      return;
+    }
     if (!watchedMovieId || togglingWatched) return;
     setTogglingWatched(true);
     try {
@@ -236,7 +243,9 @@ const Cinemas: React.FC = () => {
                   loading={wishlistMutation.isPending}
                   onClick={(event) => {
                     event.stopPropagation();
-                    wishlistMutation.mutate();
+                    void runAuthenticated(() => {
+                      wishlistMutation.mutate();
+                    });
                   }}
                 >
                   <HeartOutline />

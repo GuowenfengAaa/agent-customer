@@ -9,6 +9,7 @@ import {
 import { history, Outlet, useLocation } from "@umijs/max";
 import React, { useEffect } from "react";
 import { useAppStore } from "@/stores/useAppStore";
+import { navigateAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
 const CustomerLayout: React.FC = () => {
@@ -165,7 +166,7 @@ const CustomerLayout: React.FC = () => {
             active === "agent" ? styles.aiActive : ""
           }`}
           type="button"
-          onClick={() => history.push("/agent")}
+          onClick={() => navigateAuthenticated("/agent")}
         >
           <span className={styles.aiCircle}>
             <MessageOutline />
@@ -177,7 +178,7 @@ const CustomerLayout: React.FC = () => {
             active === "orders" ? styles.active : ""
           }`}
           type="button"
-          onClick={() => history.push("/me/orders")}
+          onClick={() => navigateAuthenticated("/me/orders")}
         >
           <span className={styles.navIcon}>
             <AppOutline />
@@ -189,7 +190,7 @@ const CustomerLayout: React.FC = () => {
             active === "profile" ? styles.active : ""
           }`}
           type="button"
-          onClick={() => history.push("/me")}
+          onClick={() => navigateAuthenticated("/me")}
         >
           <span className={styles.navIcon}>
             <UserOutline />

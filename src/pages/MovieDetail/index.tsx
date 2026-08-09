@@ -8,11 +8,14 @@ import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import { getPosterThumbnailUrl } from "@/utils/poster";
 import { useWishlistToggle } from "@/hooks/useWishlistToggle";
+import { getToken } from "@/services/storage";
+import { navigateAuthenticated, runAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
 const MovieDetail: React.FC = () => {
   const { movieId = "" } = useParams<{ movieId: string }>();
   const queryClient = useQueryClient();
+  const isLoggedIn = Boolean(getToken());
   const [changingReviewId, setChangingReviewId] = React.useState<string>();
   const [togglingWatched, setTogglingWatched] = React.useState(false);
   const query = useQuery({
@@ -53,7 +56,7 @@ const MovieDetail: React.FC = () => {
   const watchedQuery = useQuery({
     queryKey: queryKeys.movieWatched(movieId),
     queryFn: () => customerApi.isMovieWatched(movieId),
-    enabled: Boolean(movieId),
+    enabled: Boolean(movieId) && isLoggedIn,
   });
   const reviewsQuery = useQuery({
     queryKey: queryKeys.movieReviews(movieId),
@@ -70,6 +73,10 @@ const MovieDetail: React.FC = () => {
   const refreshReviews = () => queryClient.invalidateQueries({ queryKey: queryKeys.movieReviews(movieId) });
 
   const toggleWatched = async () => {
+    if (!isLoggedIn) {
+      await runAuthenticated(async () => undefined);
+      return;
+    }
     if (togglingWatched) return;
     setTogglingWatched(true);
     try {
@@ -83,6 +90,10 @@ const MovieDetail: React.FC = () => {
   };
 
   const toggleLike = async (reviewId: string, liked: boolean) => {
+    if (!isLoggedIn) {
+      await runAuthenticated(async () => undefined);
+      return;
+    }
     setChangingReviewId(reviewId);
     try {
       await customerApi.toggleMovieReviewLike(movieId, reviewId, liked);
@@ -153,7 +164,9 @@ const MovieDetail: React.FC = () => {
               loading={wishlistMutation.isPending}
               onClick={(event) => {
                 event.stopPropagation();
-                wishlistMutation.mutate();
+                void runAuthenticated(() => {
+                  wishlistMutation.mutate();
+                });
               }}
             >
               <HeartOutline />
@@ -216,7 +229,7 @@ const MovieDetail: React.FC = () => {
           <strong>影片影评</strong>
           <div>
             <span>{reviewsQuery.data?.total || 0} 条</span>
-            <Button size="small" color="primary" onClick={() => history.push(`/movies/${movieId}/review`)}>
+            <Button size="small" color="primary" onClick={() => navigateAuthenticated(`/movies/${movieId}/review`)}>
               <span className={styles.reviewButtonText} style={{ color: "#fff", opacity: 1, fontWeight: 800 }}>去评价</span>
             </Button>
           </div>
@@ -250,7 +263,7 @@ const MovieDetail: React.FC = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => history.push(`/movies/${movieId}/review?replyTo=${review.id}&name=${encodeURIComponent(review.authorName)}`)}
+                    onClick={() => navigateAuthenticated(`/movies/${movieId}/review?replyTo=${review.id}&name=${encodeURIComponent(review.authorName)}`)}
                   >
                     回复
                   </button>

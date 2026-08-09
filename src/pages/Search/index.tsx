@@ -6,6 +6,7 @@ import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import type { MovieSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
+import { getToken } from "@/services/storage";
 import styles from "./index.module.less";
 
 const PosterImage: React.FC<{
@@ -36,10 +37,12 @@ const Search: React.FC = () => {
   const [keyword, setKeyword] = useState("");
   const [submittedKeyword, setSubmittedKeyword] = useState("");
   const queryClient = useQueryClient();
+  const isLoggedIn = Boolean(getToken());
 
   const historyQuery = useQuery({
     queryKey: queryKeys.searchHistory(10),
     queryFn: () => customerApi.listSearchHistory(10),
+    enabled: isLoggedIn,
   });
 
   const recordHistoryMutation = useMutation({
@@ -111,11 +114,11 @@ const Search: React.FC = () => {
     setSubmittedKeyword(nextKeyword);
     if (!nextKeyword) return;
 
-    recordHistoryMutation.mutate(nextKeyword);
+    if (isLoggedIn) recordHistoryMutation.mutate(nextKeyword);
   };
 
   const clearHistory = () => {
-    clearHistoryMutation.mutate();
+    if (isLoggedIn) clearHistoryMutation.mutate();
   };
 
   const openMovie = (movieId: string) => history.push(`/movies/${movieId}`);

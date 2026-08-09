@@ -15,6 +15,7 @@ import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import type { MovieSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
+import { navigateAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
 const fallbackPromoMovies: MovieSummary[] = [
@@ -183,7 +184,7 @@ const Home: React.FC = () => {
 
   const goAgent = () => {
     setMode("AI");
-    history.push("/agent");
+    navigateAuthenticated("/agent");
   };
   const openMovie = (movieId: string) => history.push(`/movies/${movieId}`);
   const buyMovie = (movieId: string) => {
@@ -257,11 +258,11 @@ const Home: React.FC = () => {
           <span><EnvironmentOutline /></span>
           附近影院
         </button>
-        <button type="button" onClick={() => history.push("/me/orders")}>
+        <button type="button" onClick={() => navigateAuthenticated("/me/orders")}>
           <span><UnorderedListOutline /></span>
           我的订单
         </button>
-        <button type="button" onClick={() => history.push("/me")}>
+        <button type="button" onClick={() => navigateAuthenticated("/me")}>
           <span><UserSetOutline /></span>
           个人信息
         </button>

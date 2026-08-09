@@ -10,6 +10,8 @@ import { queryKeys } from "@/query/keys";
 import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 import type { ShowtimeSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
+import { getToken } from "@/services/storage";
+import { navigateAuthenticated, runAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
 const movieCarouselFilters = {
@@ -22,6 +24,7 @@ const movieCarouselFilters = {
 
 const CinemaShowtimes: React.FC = () => {
   const queryClient = useQueryClient();
+  const isLoggedIn = Boolean(getToken());
   const { cinemaId = "" } = useParams<{ cinemaId: string }>();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -87,9 +90,13 @@ const CinemaShowtimes: React.FC = () => {
   const watchedQuery = useQuery({
     queryKey: queryKeys.movieWatched(watchedMovieId),
     queryFn: () => customerApi.isMovieWatched(watchedMovieId),
-    enabled: Boolean(watchedMovieId),
+    enabled: Boolean(watchedMovieId) && isLoggedIn,
   });
   const toggleWatched = async () => {
+    if (!isLoggedIn) {
+      await runAuthenticated(async () => undefined);
+      return;
+    }
     if (!watchedMovieId || togglingWatched) return;
     setTogglingWatched(true);
     try {
@@ -188,7 +195,9 @@ const CinemaShowtimes: React.FC = () => {
                 disabled={!activeMovieId}
                 onClick={(event) => {
                   event.stopPropagation();
-                  wishlistMutation.mutate();
+                  void runAuthenticated(() => {
+                    wishlistMutation.mutate();
+                  });
                 }}
               >
                 <HeartOutline />
@@ -259,7 +268,7 @@ const CinemaShowtimes: React.FC = () => {
                 size="small"
                 color="primary"
                 onClick={() =>
-                  history.push(
+                  navigateAuthenticated(
                     activeMovieId
                       ? `/showtimes/${showtime.id}/seats?movieId=${encodeURIComponent(activeMovieId)}`
                       : `/showtimes/${showtime.id}/seats`
