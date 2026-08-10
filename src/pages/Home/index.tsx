@@ -6,7 +6,7 @@ import {
   UnorderedListOutline,
   UserSetOutline,
 } from "antd-mobile-icons";
-import { SearchBar } from "antd-mobile";
+import { SearchBar, Swiper } from "antd-mobile";
 import { history } from "@umijs/max";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -199,6 +199,7 @@ const Home: React.FC = () => {
           title="点击重新定位"
           onClick={() => setCityPickerVisible(true)}
         >
+          <EnvironmentOutline className={styles.homeCityPin} />
           <span>{locationStatus === "locating" ? "定位中" : city}</span>
           <span className={styles.homeCityChevron}>⌄</span>
         </button>
@@ -209,45 +210,141 @@ const Home: React.FC = () => {
         />
       </div>
 
-      <section className={styles.homePromo} aria-label="首页欢迎">
-        <div className={styles.welcomeCopy}>
-          <span>WELCOME</span>
-          <strong>{getWelcomeGreeting()}，今天想看什么？</strong>
-          <small>
-            {hotTotal > 0
-              ? `${city}正在热映 ${hotTotal} 部好片`
-              : "热门影片与附近影院已经为你准备好"}
-          </small>
-        </div>
-        <div className={styles.promoPosters} aria-hidden="true">
-          {promoMovies.slice(0, 3).map((movie, index) => (
-            <Poster
-              key={movie.id}
-              movie={movie}
-              index={index}
-              compact
-              priority={index < 2}
-            />
-          ))}
-        </div>
-      </section>
+      <Swiper
+        className={styles.promoSwiper}
+        aria-label="首页欢迎"
+        autoplay
+        autoplayInterval={6000}
+        loop
+        indicatorProps={{ className: styles.promoIndicator }}
+      >
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=NOW_SHOWING")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>WELCOME</span>
+              <strong>{getWelcomeGreeting()}，今天想看什么？</strong>
+              <small>
+                {hotTotal > 0
+                  ? `${city}正在热映 ${hotTotal} 部好片，点我逛逛`
+                  : "热门影片与附近影院已经为你准备好"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {promoMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=NOW_SHOWING")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>NOW SHOWING</span>
+              <strong>正在热映</strong>
+              <small>
+                {hotTotal > 0
+                  ? `今天 ${city} 有 ${hotTotal} 部好片热映，点我选片`
+                  : "热门影片马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {promoMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=COMING_SOON")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>COMING SOON</span>
+              <strong>待上映</strong>
+              <small>
+                {upcomingTotal > 0
+                  ? `${upcomingTotal} 部新片即将上映，点我预约`
+                  : "新片预告马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {upcomingMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("mustSeeBand")
+                ?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+          >
+            <div className={styles.welcomeCopy}>
+              <span>TODAY'S PICK</span>
+              <strong>今日必看</strong>
+              <small>
+                {mustSeeMovies.length
+                  ? "最新上映的三部佳片，点我直达"
+                  : "今日佳片推荐马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {mustSeeMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+      </Swiper>
 
       <div className={styles.serviceGrid}>
-        <button
-          type="button"
-          onClick={() =>
-            document.getElementById("hotBand")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
+        <button type="button" onClick={() => history.push("/movies?status=NOW_SHOWING")}>
           <span><FireFill /></span>
           热映
         </button>
-        <button
-          type="button"
-          onClick={() =>
-            document.getElementById("upcomingBand")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
+        <button type="button" onClick={() => history.push("/movies?status=COMING_SOON")}>
           <span><CouponOutline /></span>
           待上映
         </button>

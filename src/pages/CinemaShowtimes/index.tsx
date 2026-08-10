@@ -283,13 +283,14 @@ const CinemaShowtimes: React.FC = () => {
             </div>
             <div className={styles.metaRow}>
               <Space wrap>
-                <Tag color="primary">{showtime.hallType || "普通厅"}</Tag>
-                {showtime.language ? <span>{showtime.language}</span> : null}
-                <span>余 {showtime.remainingSeats ?? 0} 座</span>
+                <Tag color="#c88b32">{showtime.hallType || "普通厅"}</Tag>
+                {showtime.language ? <span className={styles.metaChip}>{showtime.language}</span> : null}
+                <span className={styles.metaChip}>余 {showtime.remainingSeats ?? 0} 座</span>
               </Space>
               <Button
                 size="small"
                 color="primary"
+                className={styles.seatButton}
                 onClick={() =>
                   navigateAuthenticated(
                     activeMovieId

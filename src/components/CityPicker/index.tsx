@@ -107,7 +107,7 @@ const CityPicker: React.FC<CityPickerProps> = ({ visible, onClose }) => {
           onClick={handleLocate}
         >
           <EnvironmentOutline />
-          <span>{locationStatus === "locating" ? "定位中..." : "重新定位"}</span>
+          <span>{locationStatus === "locating" ? "定位中..." : "定位当前位置"}</span>
         </button>
 
         <div className={styles.hotRow}>

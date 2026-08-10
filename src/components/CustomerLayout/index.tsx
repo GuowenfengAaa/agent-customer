@@ -31,6 +31,7 @@ const CustomerLayout: React.FC = () => {
   const isOrderPayment = /^\/orders\/[^/]+\/pay$/.test(path);
   const isOrderTickets = /^\/orders\/[^/]+\/tickets$/.test(path);
   const isOrderRefund = /^\/orders\/[^/]+\/refund$/.test(path);
+  const isOrderDetail = /^\/orders\/[^/]+\/detail$/.test(path);
   const isMovieList = path === "/movies";
   const isMovieDetail = /^\/movies\/[^/]+$/.test(path);
   const isMovieReview = /^\/movies\/[^/]+\/review$/.test(path);
@@ -78,6 +79,8 @@ const CustomerLayout: React.FC = () => {
     ? "影片详情"
     : isMovieReview
     ? "写影评"
+    : isOrderDetail
+    ? "订单详情"
     : path === "/me"
     ? "我的"
     : "";
@@ -100,13 +103,32 @@ const CustomerLayout: React.FC = () => {
       {path !== "/home" && !path.startsWith("/search") && !hideGlobalHeader ? (
         <header className={styles.header}>
           <div className={`${styles.topRow} ${headerTitle ? styles.topRowWithTitle : ""}`}>
-            {isCinemaBooking || isMovieDetail || isMovieReview || isWishlist || isWatched ? (
+            {path === "/cinemas" ||
+            path === "/me" ||
+            path === "/me/orders" ||
+            isOrderDetail ||
+            isMovieDetail ||
+            isMovieReview ||
+            isWishlist ||
+            isWatched ? (
               <button
                 className={styles.backButton}
                 type="button"
                 aria-label="返回上一页"
                 title="返回上一页"
-                onClick={() => history.replace(isWishlist || isWatched ? "/me" : isMovieReview ? path.replace(/\/review$/, "") : "/home")}
+                onClick={() =>
+                  history.replace(
+                    isWishlist || isWatched
+                      ? "/me"
+                      : path === "/me/orders"
+                      ? "/me"
+                      : isOrderDetail
+                      ? "/me/orders"
+                      : isMovieReview
+                      ? path.replace(/\/review$/, "")
+                      : "/home"
+                  )
+                }
               >
                 <LeftOutline />
               </button>
@@ -119,6 +141,7 @@ const CustomerLayout: React.FC = () => {
                 title={locationTitle}
                 onClick={() => setCityPickerVisible(true)}
               >
+                <EnvironmentOutline className={styles.cityPin} />
                 <span>{locationStatus === "locating" ? "定位中" : city}</span>
                 <span className={styles.chevron}>⌄</span>
               </button>

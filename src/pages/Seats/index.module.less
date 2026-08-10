@@ -84,10 +84,21 @@
 }
 
 .kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--customer-primary);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
+}
+
+.kicker::before {
+  width: 14px;
+  height: 3px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
 }
 
 h1 {
@@ -120,9 +131,9 @@ h1 {
   left: 0;
   height: 7px;
   content: '';
-  background: #cbd7d3;
+  background: linear-gradient(90deg, #d9a94e, #e2b35b 50%, #d9a94e);
   border-radius: 50% 50% 0 0;
-  box-shadow: 0 7px 16px rgba(54, 89, 79, 0.22);
+  box-shadow: 0 7px 16px rgba(200, 139, 50, 0.25);
 }
 
 .screen {
@@ -130,9 +141,9 @@ h1 {
 }
 
 .card {
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
-  box-shadow: none;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
 }
 
 .legend {
@@ -162,9 +173,14 @@ h1 {
 .selected { background: var(--customer-primary) !important; border-color: var(--customer-primary) !important; }
 .sold { background: #bdc5c2; border-color: #bdc5c2 !important; }
 .locked { background: #f8d9a9; border-color: #e1a452 !important; }
-.bestViewingLegend { background: #fff0bd; border: 1px solid #ddb04b; }
+.bestViewingLegend { background: transparent; border: 1px dashed #ddb04b; }
+
+.bestViewingLegendItem {
+  color: var(--customer-primary-dark);
+  font-weight: 700;
+}
 .unavailable { background: repeating-linear-gradient(45deg, #f2f3f3, #f2f3f3 3px, #d8dddb 3px, #d8dddb 5px); border-color: #d3d7d6 !important; }
-.couple { background: #eaf0fa; border-color: var(--customer-blue) !important; }
+.couple { background: #ffe9f1; border-color: #ef8fb2 !important; }
 
 .map {
   position: relative;
@@ -184,21 +200,6 @@ h1 {
   scrollbar-gutter: stable;
 }
 
-.seatScroll::before {
-  position: absolute;
-  top: 61px;
-  left: calc(50% - 89px);
-  z-index: 0;
-  width: 214px;
-  height: 162px;
-  content: '';
-  background: rgba(255, 240, 189, 0.5);
-  border: 1px solid #ddb04b;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(194, 143, 43, 0.1);
-  pointer-events: none;
-}
-
 .row {
   position: relative;
   display: grid;
@@ -208,6 +209,16 @@ h1 {
   gap: 15px;
   width: max-content;
   min-width: 320px;
+}
+
+/* 最佳观影区：3-6 排 × 3-8 列，清晰虚线矩形框 */
+.bestViewingBox {
+  position: absolute;
+  z-index: 0;
+  border: 1.5px dashed #ddb04b;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(221, 176, 75, 0.08);
+  pointer-events: none;
 }
 
 .rowSeats {
@@ -272,7 +283,7 @@ h1 {
   margin: 18px -14px -24px;
   padding: 12px 14px max(14px, env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.97);
-  border-top: 1px solid var(--customer-line);
+  border-top: 1px solid #f0e9da;
   box-shadow: 0 -7px 22px rgba(37, 39, 42, 0.08);
 }
 
@@ -289,4 +300,21 @@ h1 {
 .footer strong {
   color: var(--customer-coral);
   font-size: 20px;
+}
+
+.confirmButton {
+  height: 44px;
+  color: #fff;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
+  border-radius: 10px;
+  box-shadow: 0 5px 14px rgba(200, 139, 50, 0.28);
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.confirmButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.22);
 }

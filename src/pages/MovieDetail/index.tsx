@@ -270,6 +270,7 @@ const MovieDetail: React.FC = () => {
           <Button
             color="primary"
             block
+            className={styles.buyTicketButton}
             onClick={() =>
               history.push(`/cinemas?movieId=${encodeURIComponent(movieId)}`)
             }

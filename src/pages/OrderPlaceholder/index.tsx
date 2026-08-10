@@ -254,15 +254,16 @@ const OrderItem: React.FC<{
             <Button
               size="small"
               color="primary"
+              className={styles.payOrderButton}
               disabled={cancelling}
               onClick={() => history.push(`/orders/${order.id}/pay`)}
             >
               去支付
             </Button>
           ) : canViewTicket ? (
-            <Button size="small" color="default" onClick={() => history.push(`/orders/${order.id}/tickets`)}>查看详情</Button>
+            <Button size="small" color="default" className={styles.detailOrderButton} onClick={() => history.push(`/orders/${order.id}/tickets`)}>查看详情</Button>
           ) : canViewOrderDetail ? (
-            <Button size="small" color="default" onClick={() => history.push(`/orders/${order.id}/detail`)}>查看详情</Button>
+            <Button size="small" color="default" className={styles.detailOrderButton} onClick={() => history.push(`/orders/${order.id}/detail`)}>查看详情</Button>
           ) : null}
         </div>
       </div>
@@ -455,7 +456,7 @@ const OrderPlaceholder: React.FC = () => {
       <div className={styles.page}>
         <NavBar onBack={() => window.history.back()}>订单确认</NavBar>
         <Card className={styles.orderCard}>
-          <Tag color="warning">{order?.statusDesc || '待确认'}</Tag>
+          <Tag color="#c88b32" className={styles.orderStatusTag}>{order?.statusDesc || '待确认'}</Tag>
           <OrderMovieSummary order={order} />
           <h1>确认你的观影计划</h1>
           <div className={styles.summary}><span>{order?.movie?.name || order?.movieName || '影片待更新'} · {order?.hallName || '影厅待更新'}</span><strong>{order?.startAt ? dayjs(order.startAt).format('HH:mm') : '--:--'}</strong></div>
@@ -473,7 +474,7 @@ const OrderPlaceholder: React.FC = () => {
           <div className={styles.summary}><span>电影票</span><strong>¥{(snackQuery.data?.ticketAmount ?? ((order?.amount ?? 0) - (order?.snackAmount ?? 0))).toFixed(2)}</strong></div>
           <div className={styles.summary}><span>零食</span><strong>¥{(snackQuery.data?.snackAmount ?? order?.snackAmount ?? 0).toFixed(2)}</strong></div>
           <div className={styles.total}><span>应付金额</span><strong>¥{(snackQuery.data?.totalAmount ?? order?.amount ?? 0).toFixed(2)}</strong></div>
-          <Button color="primary" block loading={orderQuery.isLoading || savingSnackId !== null} onClick={() => history.push(`/orders/${orderId}/pay`)}>确认订单</Button>
+          <Button color="primary" block className={styles.confirmCtaButton} loading={orderQuery.isLoading || savingSnackId !== null} onClick={() => history.push(`/orders/${orderId}/pay`)}>确认订单</Button>
         </Card>
       </div>
     );
@@ -484,7 +485,7 @@ const OrderPlaceholder: React.FC = () => {
       <div className={styles.page}>
         <NavBar onBack={() => history.push(`/orders/${orderId}/confirm`)}>确认支付</NavBar>
         <Card className={styles.orderCard}>
-          <Tag color="primary">支付宝沙箱</Tag>
+          <Tag color="#c88b32" className={styles.orderStatusTag}>支付宝沙箱</Tag>
           <OrderMovieSummary order={order} compact />
           <h1>确认支付</h1>
           <p>点击确认后将跳转支付宝沙箱收银台，完成支付后等待订单状态同步。</p>
@@ -492,8 +493,8 @@ const OrderPlaceholder: React.FC = () => {
           <div className={styles.summary}><span>零食</span><strong>¥{(order?.snackAmount ?? 0).toFixed(2)}</strong></div>
           <div className={styles.paymentAmount}>¥{(order?.amount ?? 0).toFixed(2)}</div>
           <Space direction="vertical" block>
-            <Button color="primary" block loading={paying} onClick={pay}>确认支付</Button>
-            <Button block onClick={() => history.push('/me/orders')}>暂不支付</Button>
+            <Button color="primary" block className={styles.payButton} loading={paying} onClick={pay}>确认支付</Button>
+            <Button block className={styles.skipPayButton} onClick={() => history.push('/me/orders')}>暂不支付</Button>
           </Space>
         </Card>
       </div>
@@ -514,7 +515,6 @@ const OrderPlaceholder: React.FC = () => {
 
     return (
       <div className={`${styles.page} ${styles.orderDetailPage}`}>
-        <NavBar onBack={() => history.push('/me/orders')}>订单详情</NavBar>
         <main className={styles.orderDetailContent}>
           {orderQuery.isLoading ? <div className={styles.emptyTicket}>正在加载订单详情...</div> : null}
           {orderQuery.isError ? <div className={styles.emptyTicket}>订单详情加载失败，请稍后重试</div> : null}
@@ -745,12 +745,12 @@ const OrderPlaceholder: React.FC = () => {
             )}
           </section>
           <Space direction="vertical" block>
+            <Button className={styles.ticketBackButton} color="primary" block onClick={() => history.push('/me/orders')}>返回订单</Button>
             {canApplyRefund ? (
-              <Button color="danger" fill="outline" block onClick={() => history.push(`/orders/${orderId}/refund`)}>
+              <Button color="danger" fill="outline" block className={styles.refundCtaButton} onClick={() => history.push(`/orders/${orderId}/refund`)}>
                 申请退票
               </Button>
             ) : null}
-            <Button className={styles.ticketBackButton} color="primary" block onClick={() => history.push('/me/orders')}>返回订单</Button>
           </Space>
         </main>
       </div>

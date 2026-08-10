@@ -2,7 +2,7 @@ import { Button, Card, NavBar, Toast } from 'antd-mobile';
 import { history, useLocation, useParams } from '@umijs/max';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
 import type { SeatSummary } from '@/types/domain';
@@ -41,6 +41,46 @@ const Seats: React.FC = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const rows = query.data?.rows?.length ? query.data.rows : fallbackRows;
+  const seatScrollRef = useRef<HTMLDivElement>(null);
+  const [bestBox, setBestBox] = useState<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null>(null);
+
+  // 根据 3排3座/3排8座/6排3座 的实际位置，画最佳观影区虚线框。
+  useEffect(() => {
+    const scroll = seatScrollRef.current;
+    if (!scroll) {
+      setBestBox(null);
+      return;
+    }
+    const locate = (row: number, col: number) =>
+      scroll.querySelector<HTMLElement>(`[aria-label="${row}排${col}座"]`);
+    const tl = locate(3, 3);
+    const tr = locate(3, 8);
+    const bl = locate(6, 3);
+    if (!tl || !tr || !bl) {
+      setBestBox(null);
+      return;
+    }
+    const update = () => {
+      const sRect = scroll.getBoundingClientRect();
+      const tlRect = tl.getBoundingClientRect();
+      const trRect = tr.getBoundingClientRect();
+      const blRect = bl.getBoundingClientRect();
+      setBestBox({
+        left: tlRect.left - sRect.left + scroll.scrollLeft - 3,
+        top: tlRect.top - sRect.top + scroll.scrollTop - 3,
+        width: trRect.right - tlRect.left + 6,
+        height: blRect.bottom - tlRect.top + 6,
+      });
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [rows]);
   const seatMap = useMemo(() => new Map(rows.flatMap((row) => row.seats.map((seat) => [seat.id, seat]))), [rows]);
   const selectedSeats = selected.map((id) => seatMap.get(id)).filter((seat): seat is SeatSummary => Boolean(seat));
   const amountFen = selectedSeats.reduce((sum, seat) => sum + (seat.priceFen || query.data?.basePriceFen || 0), 0);
@@ -155,13 +195,13 @@ const Seats: React.FC = () => {
           <span><i className={styles.sold} />已售</span>
           <span><i className={styles.locked} />锁定</span>
           <span><i className={styles.couple} />情侣座（成对选）</span>
-          <span><i className={styles.bestViewingLegend} />最佳观影区</span>
+          <span className={styles.bestViewingLegendItem}><i className={styles.bestViewingLegend} />最佳观影区</span>
         </div>
         <div className={styles.map}>
-          <div className={styles.seatScroll}>
+          <div className={styles.seatScroll} ref={seatScrollRef}>
           {rows.map((row) => (
             <div
-              className={`${styles.row} ${row.rowNo >= 3 && row.rowNo <= 6 ? styles.bestViewingRow : ''}`}
+              className={styles.row}
               key={row.rowNo}
             >
               <small>{row.rowNo}</small>
@@ -191,12 +231,24 @@ const Seats: React.FC = () => {
               </div>
             </div>
           ))}
+          {bestBox ? (
+            <div
+              className={styles.bestViewingBox}
+              style={{
+                left: bestBox.left,
+                top: bestBox.top,
+                width: bestBox.width,
+                height: bestBox.height,
+              }}
+              aria-hidden="true"
+            />
+          ) : null}
           </div>
         </div>
       </Card>
       <div className={styles.footer}>
         <div><span>已选 {selected.length} 个座位</span><strong>¥{(amountFen / 100).toFixed(2)}</strong></div>
-        <Button color="primary" block loading={saving} onClick={confirm}>确认选座并锁定</Button>
+        <Button color="primary" block className={styles.confirmButton} loading={saving} onClick={confirm}>确认选座并锁定</Button>
       </div>
     </div>
   );

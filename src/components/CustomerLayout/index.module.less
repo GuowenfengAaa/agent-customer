@@ -86,12 +86,36 @@
   min-width: 0;
   max-width: 100%;
   gap: 4px;
-  padding: 6px 10px;
+  padding: 5px 10px;
   font-size: 14px;
   font-weight: 700;
-  background: #f2f7f5;
-  border: 1px solid #dbe9e4;
+  background: linear-gradient(180deg, #f8fbf9, #eef5f1);
+  border: 1px solid #cfe2d8;
   border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(26, 74, 59, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.cityPin {
+  color: var(--customer-primary);
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* 定位中：图标脉冲 */
+.cityButton[aria-busy="true"] .cityPin {
+  animation: cityPinPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes cityPinPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
 }
 
 .cityButton > span:first-child {
@@ -189,11 +213,30 @@
 
 .navTab.active {
   color: #e5b965;
+  background: linear-gradient(90deg, #e5b965 0%, #fff3d6 50%, #e5b965 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aiLabelShimmer 3.2s linear infinite;
 }
 
 .navTab.active .navIcon {
   color: #fff;
-  background: var(--customer-primary);
+  background: linear-gradient(135deg, #c88b32 0%, #e2b35b 100%);
+  box-shadow: 0 0 0 0 rgba(200, 139, 50, 0.4);
+  animation: navIconPulse 2.4s ease-in-out infinite;
+}
+
+/* 选中 tab 图标呼吸辉光 */
+@keyframes navIconPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 139, 50, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 14px 5px rgba(200, 139, 50, 0.55);
+  }
 }
 
 .aiEntry {
@@ -206,9 +249,22 @@
   justify-self: center;
   gap: 2px;
   color: #ddb35c;
+  background: linear-gradient(90deg, #e2b35b 0%, #fff3d6 50%, #e2b35b 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   border-radius: 8px;
   font-size: 10px;
   font-weight: 760;
+  animation: aiLabelShimmer 3.2s linear infinite;
+}
+
+/* 「妙语」文字流光 */
+@keyframes aiLabelShimmer {
+  to {
+    background-position: -200% center;
+  }
 }
 
 .aiCircle {
@@ -219,13 +275,28 @@
   place-items: center;
   margin-top: -27px;
   color: #fff;
-  background: #25272a;
+  background: radial-gradient(circle at 32% 28%, #f7da9a 0%, #e2b35b 30%, #b9842e 64%, #7a5524 100%);
   border: 5px solid var(--customer-bg);
   border-radius: 50%;
-  box-shadow: 0 7px 18px rgba(37, 39, 42, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 7px 18px rgba(37, 39, 42, 0.28), inset 0 -3px 8px rgba(0, 0, 0, 0.2), inset 0 2px 3px rgba(255, 255, 255, 0.4);
   font-size: 19px;
+  animation:
+    aiGlowPulse 2.6s ease-in-out infinite,
+    aiFloat 4.5s ease-in-out infinite;
 }
 
+/* 环绕轨道 + 彗星亮点 */
+.aiCircle::after {
+  position: absolute;
+  inset: -9px;
+  content: '';
+  border-radius: 50%;
+  border: 1px solid rgba(200, 139, 50, 0.16);
+  background: radial-gradient(circle at 100% 50%, #ffe08a 0 3px, transparent 4px);
+  animation: aiOrbit 4.2s linear infinite;
+}
+
+/* 呼吸状态点 */
 .aiCircle::before {
   position: absolute;
   top: 1px;
@@ -233,15 +304,64 @@
   width: 8px;
   height: 8px;
   content: '';
-  background: #e2b35b;
+  background: #ffe08a;
   border: 2px solid var(--customer-bg);
   border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 224, 138, 1);
+  animation: aiDotBlink 2.4s ease-in-out infinite;
 }
 
 .aiEntry.aiActive .aiCircle {
-  background: var(--customer-primary-dark);
   border-color: #fff0d7;
-  box-shadow: 0 0 0 3px rgba(200, 139, 50, 0.18), 0 8px 20px rgba(122, 85, 36, 0.32);
+  animation-duration: 2s, 4s;
+}
+
+/* 呼吸辉光 */
+@keyframes aiGlowPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 7px 18px rgba(37, 39, 42, 0.28),
+      inset 0 -3px 8px rgba(0, 0, 0, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.4),
+      0 0 0 0 rgba(200, 139, 50, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 7px 18px rgba(37, 39, 42, 0.28),
+      inset 0 -3px 8px rgba(0, 0, 0, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.4),
+      0 0 30px 10px rgba(200, 139, 50, 0.55);
+  }
+}
+
+/* 轻盈悬浮 */
+@keyframes aiFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 彗星绕轨 */
+@keyframes aiOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 状态点闪烁 */
+@keyframes aiDotBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
 @media (max-width: 480px) {

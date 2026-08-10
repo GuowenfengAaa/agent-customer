@@ -124,6 +124,7 @@
 .nameRow h1 {
   overflow: hidden;
   margin: 0;
+  color: #fff;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 19px;
@@ -406,10 +407,21 @@
 }
 
 .settingsHeading > span {
-  color: #24705c;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--customer-primary);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
+}
+
+.settingsHeading > span::before {
+  width: 14px;
+  height: 3px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
 }
 
 .settingsHeading h1 {
@@ -433,8 +445,8 @@
 .passwordPanel {
   overflow: hidden;
   background: #fff;
-  border: 1px solid #e1e8e5;
-  border-radius: 8px;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
   box-shadow: 0 8px 22px rgba(27, 58, 49, 0.05);
 }
 
@@ -466,7 +478,7 @@
 }
 
 .fieldTitle span {
-  color: #24705c;
+  color: var(--customer-primary-dark);
   font-size: 11px;
   font-weight: 650;
 }
@@ -481,20 +493,26 @@
 .choiceButton {
   min-width: 0;
   min-height: 34px;
-  padding: 5px 4px;
-  border: 1px solid #dfe7e3;
-  border-radius: 7px;
+  padding: 5px 6px;
+  border: 1px solid #e2e9e5;
+  border-radius: 999px;
   color: #67736f;
   background: #f8faf9;
   font-size: 11px;
   cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.choiceButton:active {
+  transform: scale(0.95);
 }
 
 .choiceButtonActive {
   color: #fff;
-  background: #1c6a55;
-  border-color: #1c6a55;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
   font-weight: 700;
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.25);
 }
 
 .budgetField > div:first-child {
@@ -527,8 +545,19 @@
 .primaryAction {
   min-height: 44px;
   margin-top: 16px;
-  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
+  border-radius: 10px;
+  box-shadow: 0 5px 14px rgba(200, 139, 50, 0.28);
+  font-size: 15px;
   font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.primaryAction:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.22);
 }
 
 .securitySummary {
