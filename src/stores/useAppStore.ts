@@ -42,6 +42,7 @@ interface AppState {
   agentLocationError: string;
   setMode: (mode: PurchaseMode) => void;
   setCity: (city: string) => void;
+  selectCity: (city: { name: string; latitude: number; longitude: number }) => void;
   locateCurrentPosition: () => void;
   setAgentContext: (context: { sessionId?: string; memoryId?: string; draftId?: string }) => void;
   resetAgentContext: () => void;
@@ -58,6 +59,8 @@ interface AppState {
   resetAgentSessionState: () => void;
 }
 
+let locateToken = 0;
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
@@ -71,6 +74,15 @@ export const useAppStore = create<AppState>()(
       agentLocationError: '',
       setMode: (mode) => set({ mode }),
       setCity: (city) => set({ city }),
+      selectCity: (city) => {
+        locateToken += 1;
+        set({
+          city: city.name,
+          latitude: city.latitude,
+          longitude: city.longitude,
+          locationStatus: 'located',
+        });
+      },
       locateCurrentPosition: () => {
         if (get().locationStatus === 'locating') return;
 
@@ -80,8 +92,10 @@ export const useAppStore = create<AppState>()(
         }
 
         set({ locationStatus: 'locating' });
+        const token = ++locateToken;
         navigator.geolocation.getCurrentPosition(
           ({ coords }) => {
+            if (token !== locateToken) return;
             set({
               city: resolveCurrentCity(coords.latitude, coords.longitude),
               latitude: coords.latitude,
@@ -90,6 +104,7 @@ export const useAppStore = create<AppState>()(
             });
           },
           (error) => {
+            if (token !== locateToken) return;
             set({
               locationStatus:
                 error.code === error.PERMISSION_DENIED ? 'denied' : 'error',
