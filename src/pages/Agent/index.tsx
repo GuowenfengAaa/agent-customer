@@ -16,6 +16,8 @@ import { getSession, getToken } from '@/services/storage';
 import { type AgentChatMessage, useAppStore } from '@/stores/useAppStore';
 import type { AgentMemorySummary, OrderDetail } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
+import { buildOrderQrValue, buildTicketCodesText } from '@/utils/ticketQr';
+import CityPicker from '@/components/CityPicker';
 import styles from './index.module.less';
 
 const agentBaseUrl = process.env.AGENT_BASE_URL || '';
@@ -42,6 +44,7 @@ function cardTypeText(type?: string) {
     LOCATION_PICKER: '位置选择',
     SNACK_LIST: '零食推荐',
     COUPON_LIST: '优惠券',
+    NAVIGATION: '快捷操作',
   };
   return map[type || ''] || type || '卡片';
 }
@@ -188,22 +191,19 @@ function AgentTicketInline({ order }: { order: OrderDetail }) {
       </div>
       {tickets.length ? (
         <div className={styles.agentTicketPasses}>
-          {tickets.map((ticket, index) => (
-            <div className={styles.agentTicketPass} key={ticket.ticketCode || `${order.id}-${index}`}>
-              <b>{ticket.rowNo !== undefined ? `${ticket.rowNo}排${ticket.seatNo}座` : `第${index + 1}张电子票`}</b>
-              <QRCodeSVG
-                value={ticket.qrContent || ticket.ticketCode || `${order.id}-${index}`}
-                size={150}
-                bgColor="#ffffff"
-                fgColor="#102c25"
-                level="M"
-                includeMargin
-                role="img"
-                aria-label={`${title}第${index + 1}张电子票二维码`}
-              />
-              <span>取票码：{ticket.ticketCode || '--'}</span>
-            </div>
-          ))}
+          <div className={styles.agentTicketPass}>
+            <b>{seats}</b>
+            <QRCodeSVG
+              value={buildOrderQrValue(order)}
+              size={150}
+              bgColor="#ffffff"
+              fgColor="#102c25"
+              level="M"
+              role="img"
+              aria-label={`${title}电子票二维码`}
+            />
+            <span>取票码：{buildTicketCodesText(order)}</span>
+          </div>
         </div>
       ) : <div className={styles.agentTicketEmpty}>出票信息暂未生成</div>}
     </div>
@@ -828,6 +828,7 @@ const Agent: React.FC = () => {
     setAgentLocationError,
     clearAgentConversation,
   } = useAppStore();
+  const [cityPickerVisible, setCityPickerVisible] = useState(false);
   const [running, setRunning] = useState(false);
   const [resolvedDraftId, setResolvedDraftId] = useState<string>();
   const [historyReady, setHistoryReady] = useState(false);
@@ -1374,7 +1375,7 @@ const Agent: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.agentTopBar}>
-        <button className={styles.agentCity} type="button" onClick={locateCurrentPosition}>
+        <button className={styles.agentCity} type="button" onClick={() => setCityPickerVisible(true)}>
           <span>{locationStatus === 'locating' ? '定位中' : city}</span>
           <span className={styles.agentCityChevron}>⌄</span>
         </button>
@@ -1563,6 +1564,10 @@ const Agent: React.FC = () => {
           </Button>
         </Space>
       </div>
+      <CityPicker
+        visible={cityPickerVisible}
+        onClose={() => setCityPickerVisible(false)}
+      />
     </div>
   );
 };

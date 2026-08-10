@@ -12,7 +12,8 @@ export type AgentCardType =
   | 'TICKET'
   | 'LOCATION_PICKER'
   | 'SNACK_LIST'
-  | 'COUPON_LIST';
+  | 'COUPON_LIST'
+  | 'NAVIGATION';
 
 export type AgentSseEvent =
   | { event: 'thinking'; data: { traceId: string; status: string; message: string } }

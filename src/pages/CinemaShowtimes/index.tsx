@@ -81,6 +81,12 @@ const CinemaShowtimes: React.FC = () => {
   const movie = validMovieId
     ? carouselMovies[matchedMovieIndex]
     : carouselMovies[0];
+  // 轮播只含已上映影片；待上映影片单独拉取以获取上映日期。
+  const movieInfoQuery = useQuery({
+    queryKey: queryKeys.movie(activeMovieId),
+    queryFn: () => customerApi.getMovie(activeMovieId),
+    enabled: Boolean(activeMovieId),
+  });
   const wishlistMutation = useWishlistToggle(
     movie?.id || activeMovieId || "",
     Boolean(movie?.wanted),
@@ -114,9 +120,26 @@ const CinemaShowtimes: React.FC = () => {
     .split(/\s*[\/·,，]\s*/)
     .filter(Boolean)
     .slice(0, 3);
-  const movieReleaseDate = movie?.releaseDate
-    ? dayjs(movie.releaseDate).format("YYYY-MM-DD")
+  const rawReleaseDate = movie?.releaseDate || movieInfoQuery.data?.releaseDate;
+  const movieReleaseDate = rawReleaseDate
+    ? dayjs(rawReleaseDate).format("YYYY-MM-DD")
     : "上映日期待定";
+  // 待上映影片从上映日起展示 7 天；已上映影片从今天起展示 7 天。
+  const bookingStartDate = React.useMemo(() => {
+    if (!rawReleaseDate) return undefined;
+    const release = dayjs(rawReleaseDate).startOf("day");
+    return release.isAfter(dayjs().startOf("day"))
+      ? release.toDate()
+      : undefined;
+  }, [rawReleaseDate]);
+  useEffect(() => {
+    if (!bookingStartDate) return;
+    setDate((current) =>
+      dayjs(current).startOf("day").isBefore(dayjs(bookingStartDate))
+        ? dayjs(bookingStartDate).toDate()
+        : current
+    );
+  }, [bookingStartDate]);
   const movieIntroSubtitle =
     movie?.status === "即将上映" || movie?.status === "COMING_SOON"
       ? "COMING SOON"
@@ -135,13 +158,9 @@ const CinemaShowtimes: React.FC = () => {
       `/cinemas/${cinemaId}/showtimes?${searchParams.toString()}`
     );
   };
-  const backPath = activeMovieId
-    ? `/cinemas?movieId=${encodeURIComponent(activeMovieId)}&date=${encodeURIComponent(dateValue)}`
-    : "/cinemas";
-
   return (
     <div className={styles.page}>
-      <NavBar onBack={() => history.push(backPath)}>场次选择</NavBar>
+      <NavBar onBack={() => history.replace("/home")}>场次选择</NavBar>
       {activeMovieId ? (
         <section className={styles.movieSummary} aria-label="影片轮播">
           <button className={styles.carouselArrow} type="button" aria-label="Previous movie" title="Previous movie" disabled={!canSwitchMovie} onClick={() => switchMovie(-1)}>
@@ -219,7 +238,11 @@ const CinemaShowtimes: React.FC = () => {
           </button>
         </section>
       ) : null}
-      <BookingDateTabs value={date} onChange={setDate} />
+      <BookingDateTabs
+        value={date}
+        onChange={setDate}
+        startDate={bookingStartDate}
+      />
       <div className={styles.header}>
         <div>
           <div className={styles.kicker}>SHOWTIMES</div>

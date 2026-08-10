@@ -7,9 +7,10 @@ import {
   UserOutline,
 } from "antd-mobile-icons";
 import { history, Outlet, useLocation } from "@umijs/max";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppStore } from "@/stores/useAppStore";
 import { navigateAuthenticated } from "@/utils/authNavigation";
+import CityPicker from "@/components/CityPicker";
 import styles from "./index.module.less";
 
 const CustomerLayout: React.FC = () => {
@@ -19,6 +20,7 @@ const CustomerLayout: React.FC = () => {
   const locateCurrentPosition = useAppStore(
     (state) => state.locateCurrentPosition
   );
+  const [cityPickerVisible, setCityPickerVisible] = useState(false);
   const path = location.pathname;
   const isCinemaBooking =
     path === "/cinemas" &&
@@ -115,7 +117,7 @@ const CustomerLayout: React.FC = () => {
                 aria-label="重新定位"
                 aria-busy={locationStatus === "locating"}
                 title={locationTitle}
-                onClick={locateCurrentPosition}
+                onClick={() => setCityPickerVisible(true)}
               >
                 <span>{locationStatus === "locating" ? "定位中" : city}</span>
                 <span className={styles.chevron}>⌄</span>
@@ -198,6 +200,10 @@ const CustomerLayout: React.FC = () => {
           <span>我的</span>
         </button>
       </nav>
+      <CityPicker
+        visible={cityPickerVisible}
+        onClose={() => setCityPickerVisible(false)}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { customerApi } from '@/services/customerApi';
 import { queryKeys } from '@/query/keys';
 import type { OrderDetail, OrderSummary, SnackOption } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
+import { buildOrderQrValue, buildTicketCodesText } from '@/utils/ticketQr';
 import styles from './index.module.less';
 
 const isPending = (status: string) => status === 'PAYMENT_PENDING' || status === 'PENDING';
@@ -648,6 +649,8 @@ const OrderPlaceholder: React.FC = () => {
     const cinema = order?.cinema?.name || order?.cinemaName || '影院待更新';
     const hall = order?.hallName || '影厅待更新';
     const showtime = order?.startAt ? dayjs(order.startAt).format('MM月DD日 HH:mm') : '场次时间待更新';
+    const orderQrValue = order ? buildOrderQrValue(order) : '电子票';
+    const ticketCodesText = order ? buildTicketCodesText(order) : '--';
     return (
       <div className={`${styles.page} ${styles.ticketPage}`}>
         <NavBar onBack={() => history.push('/me/orders')}>电子票</NavBar>
@@ -707,30 +710,33 @@ const OrderPlaceholder: React.FC = () => {
 
             {ticketReady && tickets.length && !isRefundPendingOrder ? (
               <div className={styles.ticketPasses}>
-                {tickets.map((ticket, index) => (
-                  <article className={styles.ticketPass} key={ticket.ticketCode || `${order?.id}-${index}`}>
-                    <strong className={styles.ticketSeatLabel}>
-                      {ticket.rowNo !== undefined ? `${ticket.rowNo}排${ticket.seatNo}座` : `第${index + 1}张电子票`}
-                    </strong>
-                    <div className={styles.qrFrame}>
-                      <QRCodeSVG
-                        value={ticket.qrContent || ticket.ticketCode || `${order?.id}-${index}`}
-                        size={172}
-                        bgColor="#ffffff"
-                        fgColor="#102c25"
-                        level="M"
-                        includeMargin
-                        role="img"
-                        aria-label={`${title}第${index + 1}张电子票二维码`}
-                      />
-                    </div>
-                    <p className={styles.qrHint}>入场时请向影院工作人员出示此二维码</p>
-                    <div className={styles.ticketCodeRow}>
-                      <span>取票码</span>
-                      <strong>{ticket.ticketCode || '--'}</strong>
-                    </div>
-                  </article>
-                ))}
+                <article className={styles.ticketPass}>
+                  <strong className={styles.ticketSeatLabel}>
+                    {tickets
+                      .map((ticket) =>
+                        ticket.rowNo !== undefined
+                          ? `${ticket.rowNo}排${ticket.seatNo}座`
+                          : '座位'
+                      )
+                      .join('、')}
+                  </strong>
+                  <div className={styles.qrFrame}>
+                    <QRCodeSVG
+                      value={orderQrValue}
+                      size={172}
+                      bgColor="#ffffff"
+                      fgColor="#102c25"
+                      level="M"
+                      role="img"
+                      aria-label={`${title}电子票二维码`}
+                    />
+                  </div>
+                  <p className={styles.qrHint}>入场时请向影院工作人员出示此二维码</p>
+                  <div className={styles.ticketCodeRow}>
+                    <span>取票码</span>
+                    <strong>{ticketCodesText}</strong>
+                  </div>
+                </article>
               </div>
             ) : (
               <div className={styles.emptyTicket}>

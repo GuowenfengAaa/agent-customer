@@ -58,6 +58,23 @@ const Cinemas: React.FC = () => {
     queryFn: () => customerApi.getMovie(movieId),
     enabled: Boolean(movieId),
   });
+  // 待上映影片从上映日起展示 7 天；已上映影片从今天起展示 7 天。
+  const movieReleaseDateRaw = movieQuery.data?.releaseDate;
+  const bookingStartDate = React.useMemo(() => {
+    if (!movieReleaseDateRaw) return undefined;
+    const release = dayjs(movieReleaseDateRaw).startOf("day");
+    return release.isAfter(dayjs().startOf("day"))
+      ? release.toDate()
+      : undefined;
+  }, [movieReleaseDateRaw]);
+  React.useEffect(() => {
+    if (!bookingStartDate) return;
+    setDate((current) =>
+      dayjs(current).startOf("day").isBefore(dayjs(bookingStartDate))
+        ? dayjs(bookingStartDate).toDate()
+        : current
+    );
+  }, [bookingStartDate]);
   const moviesQuery = useQuery({
     queryKey: queryKeys.movies(movieCarouselFilters),
     queryFn: () => customerApi.listMovies(movieCarouselFilters),
@@ -77,7 +94,7 @@ const Cinemas: React.FC = () => {
           ? await customerApi.listNearbyCinemas(
               latitude as number,
               longitude as number,
-              20
+              9999
             )
           : await customerApi.listCinemas({ page: 1, size: 20 });
       const records = result.records || [];
@@ -275,11 +292,17 @@ const Cinemas: React.FC = () => {
           </button>
         </section>
       ) : null}
-      {movieId ? <BookingDateTabs value={date} onChange={setDate} /> : null}
+      {movieId ? (
+        <BookingDateTabs
+          value={date}
+          onChange={setDate}
+          startDate={bookingStartDate}
+        />
+      ) : null}
       <div className={styles.header}>
         <div>
           <div className={styles.kicker}>NEARBY CINEMAS</div>
-          <h1>{movieId ? "选择影院" : "附近的影院"}</h1>
+          <h1>{movieId ? "选择影院" : "营业中的影院"}</h1>
           <p>
             {movieId ? `${city} · ${dateValue} 可售场次` : `当前定位：${city}`}
           </p>

@@ -9,13 +9,14 @@ import {
 import { SearchBar } from "antd-mobile";
 import { history } from "@umijs/max";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { useAppStore } from "@/stores/useAppStore";
 import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import type { MovieSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
 import { navigateAuthenticated } from "@/utils/authNavigation";
+import CityPicker from "@/components/CityPicker";
 import styles from "./index.module.less";
 
 const fallbackPromoMovies: MovieSummary[] = [
@@ -93,8 +94,14 @@ const getWelcomeGreeting = () => {
   return "晚上好";
 };
 
+// 首页"附近影院"只展示该距离（公里）以内的影院。
+const NEARBY_RADIUS_KM = 10;
+
 const Home: React.FC = () => {
   const { city, setMode, locationStatus, locateCurrentPosition } = useAppStore();
+  const latitude = useAppStore((state) => state.latitude);
+  const longitude = useAppStore((state) => state.longitude);
+  const [cityPickerVisible, setCityPickerVisible] = useState(false);
   const hotQuery = useQuery({
     queryKey: queryKeys.movies({
       section: "hot",
@@ -150,8 +157,15 @@ const Home: React.FC = () => {
       }),
   });
   const cinemaQuery = useQuery({
-    queryKey: queryKeys.cinemas({ city }),
-    queryFn: () => customerApi.listCinemas({ page: 1, size: 20 }),
+    queryKey: queryKeys.cinemas({ city, latitude, longitude }),
+    queryFn: () =>
+      Number.isFinite(latitude) && Number.isFinite(longitude)
+        ? customerApi.listNearbyCinemas(
+            latitude as number,
+            longitude as number,
+            NEARBY_RADIUS_KM
+          )
+        : customerApi.listCinemas({ page: 1, size: 20 }),
   });
 
   const hotMovies = hotQuery.data?.records ?? [];
@@ -160,27 +174,10 @@ const Home: React.FC = () => {
   const promoMovies = hotMovies.length ? hotMovies : fallbackPromoMovies;
   const hotTotal = hotQuery.data?.total ?? 0;
   const upcomingTotal = upcomingQuery.data?.total ?? 0;
-  const cinemas = cinemaQuery.data?.records?.length
-    ? cinemaQuery.data.records.slice(0, 2)
-    : [];
-  const nearby = cinemas.length
-    ? cinemas
-    : [
-        {
-          id: "cinema-1",
-          name: "万达影城 · 五角场店",
-          address: "IMAX · 杜比",
-          distance: 2.1,
-          minPrice: 45,
-        },
-        {
-          id: "cinema-2",
-          name: "百丽宫影城 · 环贸店",
-          address: "杜比 · 情侣厅",
-          distance: 3.1,
-          minPrice: 39,
-        },
-      ];
+  const cinemas = (cinemaQuery.data?.records ?? []).filter(
+    (cinema) => (cinema.distance ?? 0) <= NEARBY_RADIUS_KM
+  );
+  const nearby = cinemas;
 
   const goAgent = () => {
     setMode("AI");
@@ -200,7 +197,7 @@ const Home: React.FC = () => {
           aria-label="重新定位"
           aria-busy={locationStatus === "locating"}
           title="点击重新定位"
-          onClick={locateCurrentPosition}
+          onClick={() => setCityPickerVisible(true)}
         >
           <span>{locationStatus === "locating" ? "定位中" : city}</span>
           <span className={styles.homeCityChevron}>⌄</span>
@@ -469,24 +466,28 @@ const Home: React.FC = () => {
           </div>
           <button type="button" onClick={() => history.push("/cinemas")}>查看全部 ›</button>
         </div>
-        <div className={styles.nearbyList}>
-          {nearby.map((cinema) => (
-            <button
-              className={styles.nearbyRow}
-              key={cinema.id}
-              type="button"
-              onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}
-            >
-              <div>
-                <strong>{cinema.name}</strong>
-                <span>
-                  {cinema.address || "特色影厅"} · {cinema.distance ? `${cinema.distance} km` : "附近"}
-                </span>
-              </div>
-              <em>¥{cinema.minPrice || 39} 起</em>
-            </button>
-          ))}
-        </div>
+        {nearby.length ? (
+          <div className={styles.nearbyList}>
+            {nearby.map((cinema) => (
+              <button
+                className={styles.nearbyRow}
+                key={cinema.id}
+                type="button"
+                onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}
+              >
+                <div>
+                  <strong>{cinema.name}</strong>
+                  <span>
+                    {cinema.address || "特色影厅"} · {cinema.distance ? `${cinema.distance.toFixed(1)} km` : "附近"}
+                  </span>
+                </div>
+                <em>¥{cinema.minPrice || 39} 起</em>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.sectionState}>附近暂无影院</div>
+        )}
       </section>
 
       <section className={styles.homeBand}>
@@ -503,6 +504,11 @@ const Home: React.FC = () => {
           <span>›</span>
         </button>
       </section>
+
+      <CityPicker
+        visible={cityPickerVisible}
+        onClose={() => setCityPickerVisible(false)}
+      />
     </div>
   );
 };
