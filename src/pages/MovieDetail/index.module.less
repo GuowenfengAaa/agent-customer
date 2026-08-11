@@ -6,17 +6,17 @@
 
 .movieIntro {
   display: grid;
-  grid-template-columns: 98px minmax(0, 1fr) 18px;
+  grid-template-columns: 20px 98px minmax(0, 1fr) 20px;
   align-items: center;
-  gap: 13px;
+  gap: 10px;
   margin: 14px 0 15px;
   padding: 12px;
   overflow: hidden;
   color: #fff;
-  background: #454545;
-  border: 1px solid #5b5b5b;
+  background: linear-gradient(135deg, #1c3b32, #244d40 60%, #2f5c4b);
+  border: 1px solid rgba(200, 139, 50, 0.35);
   border-radius: 10px;
-  box-shadow: 0 8px 18px rgba(27, 30, 29, 0.16);
+  box-shadow: 0 8px 18px rgba(23, 45, 42, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .introPoster {
@@ -60,6 +60,19 @@
   letter-spacing: 1.2px;
 }
 
+.kickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kickerRow > span {
+  color: #c8d1ce;
+  font-size: 9px;
+  font-weight: 700;
+}
+
 .introContent h1 {
   margin: 5px 0 1px;
   overflow: hidden;
@@ -88,9 +101,10 @@
 
 .genreTags span {
   padding: 2px 6px;
-  color: #d9d9d9;
-  background: #666;
-  border-radius: 3px;
+  color: #e8f1ee;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
   font-size: 10px;
 }
 
@@ -133,8 +147,8 @@
   margin: 0;
   padding: 0 8px;
   color: #fff;
-  background: #858585;
-  border: 0;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 14px;
   font-size: 13px;
 }
@@ -152,20 +166,38 @@
 .wantButtonActive {
   color: #fff;
   background: #d84f5b;
+  border-color: #d84f5b;
 }
 
-.introArrow {
-  align-self: center;
+.carouselArrow {
+  width: 20px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
   color: #d6d6d6;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
   font-size: 22px;
+}
+
+.carouselArrow:active:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.carouselArrow:disabled {
+  opacity: 0.25;
 }
 
 .castSection {
   margin: 0 0 15px;
   padding: 14px 12px 13px;
   background: #fff;
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
 }
 
 .castHeading {
@@ -178,6 +210,17 @@
 .castHeading strong {
   color: var(--customer-ink);
   font-size: 17px;
+}
+
+.castHeading strong::before {
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  margin-right: 8px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
 }
 
 .castHeading span,
@@ -236,14 +279,25 @@
 
 .card {
   margin-top: 0;
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
-  box-shadow: none;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
 }
 
 .sectionTitle {
   font-size: 17px;
   font-weight: 700;
+}
+
+.sectionTitle::before {
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  margin-right: 8px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
 }
 
 .copy {
@@ -253,12 +307,31 @@
   line-height: 1.8;
 }
 
+.buyTicketButton {
+  margin-top: 4px;
+  height: 42px;
+  color: #fff;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
+  border-radius: 10px;
+  box-shadow: 0 5px 14px rgba(200, 139, 50, 0.28);
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.buyTicketButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.22);
+}
+
 .reviewSection {
   margin-top: 14px;
   padding: 15px 12px;
   background: #fff;
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
 }
 
 .reviewHeading,
@@ -272,6 +345,17 @@
 .reviewHeading strong {
   color: var(--customer-ink);
   font-size: 17px;
+}
+
+.reviewHeading strong::before {
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  margin-right: 8px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
 }
 
 .reviewHeading > div {
@@ -328,18 +412,19 @@
   display: flex;
   gap: 10px;
   padding-top: 15px;
-  border-top: 1px solid #eef1ef;
+  border-top: 1px solid #f0e9da;
 }
 
 .reviewAvatar {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   display: grid;
-  flex: 0 0 34px;
+  flex: 0 0 36px;
   place-items: center;
   overflow: hidden;
   color: #fff;
-  background: #8ca49a;
+  background: linear-gradient(145deg, #7ca092, #3f5c52);
+  border: 2px solid #eeddbb;
   border-radius: 50%;
   font-size: 14px;
   font-weight: 700;
@@ -383,19 +468,28 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 0;
-  color: #8a9691;
-  background: transparent;
-  border: 0;
+  padding: 3px 9px;
+  color: #7d8b85;
+  background: #f4f7f5;
+  border: 1px solid #e4ebe7;
+  border-radius: 999px;
   font-size: 11px;
+  transition: transform 120ms ease, background 120ms ease;
 }
 
 .reviewActions button:disabled {
   opacity: 0.5;
 }
 
+.reviewActions button:active {
+  transform: scale(0.94);
+  background: #eef3f0;
+}
+
 .reviewActions .reviewLiked {
   color: var(--customer-coral);
+  background: #fff2f0;
+  border-color: #f0c9c4;
 }
 
 .movieActions {
@@ -410,8 +504,8 @@
   min-height: 30px;
   padding: 0 8px;
   color: #f1f1f1;
-  background: #68716e;
-  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 14px;
   font-size: 13px;
 }
@@ -419,13 +513,14 @@
 .watchedButtonActive {
   color: #fff;
   background: #2e7564;
+  border-color: #2e7564;
 }
 
 .reviewReply {
   margin-top: 11px;
   padding: 9px 10px;
-  background: #f6f8f7;
-  border-left: 2px solid #d7dfdb;
+  background: #fbf7ee;
+  border-left: 2px solid #d9a94e;
   border-radius: 0 6px 6px 0;
 }
 
@@ -457,7 +552,7 @@
 
 @media (max-width: 360px) {
   .movieIntro {
-    grid-template-columns: 82px minmax(0, 1fr) 16px;
+    grid-template-columns: 16px 82px minmax(0, 1fr) 16px;
     gap: 10px;
   }
 

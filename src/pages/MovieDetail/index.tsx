@@ -1,5 +1,5 @@
 import { Button, Card, Space, Toast } from "antd-mobile";
-import { HeartOutline, RightOutline } from "antd-mobile-icons";
+import { HeartOutline, LeftOutline, RightOutline } from "antd-mobile-icons";
 import { history, useParams } from "@umijs/max";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -12,6 +12,14 @@ import { getToken } from "@/services/storage";
 import { navigateAuthenticated, runAuthenticated } from "@/utils/authNavigation";
 import styles from "./index.module.less";
 
+const movieCarouselFilters = {
+  page: 1,
+  size: 100,
+  status: "NOW_SHOWING" as const,
+  sortBy: "releaseDate" as const,
+  sortOrder: "desc" as const,
+};
+
 const MovieDetail: React.FC = () => {
   const { movieId = "" } = useParams<{ movieId: string }>();
   const queryClient = useQueryClient();
@@ -21,6 +29,11 @@ const MovieDetail: React.FC = () => {
   const query = useQuery({
     queryKey: queryKeys.movie(movieId),
     queryFn: () => customerApi.getMovie(movieId),
+    enabled: Boolean(movieId),
+  });
+  const moviesQuery = useQuery({
+    queryKey: queryKeys.movies(movieCarouselFilters),
+    queryFn: () => customerApi.listMovies(movieCarouselFilters),
     enabled: Boolean(movieId),
   });
   const movie = query.data || {
@@ -52,6 +65,26 @@ const MovieDetail: React.FC = () => {
     movie.status === "即将上映" || movie.status === "COMING_SOON"
       ? "COMING SOON"
       : "NOW SHOWING";
+  const carouselMovies = React.useMemo(() => {
+    const records = moviesQuery.data?.records || [];
+    const currentMovie = query.data;
+    if (currentMovie && !records.some((item) => item.id === currentMovie.id)) {
+      return [currentMovie, ...records];
+    }
+    return records;
+  }, [moviesQuery.data?.records, query.data]);
+  const matchedMovieIndex = carouselMovies.findIndex((item) => item.id === movieId);
+  const currentMovieIndex = matchedMovieIndex >= 0 ? matchedMovieIndex : 0;
+  const canSwitchMovie = carouselMovies.length > 1;
+
+  const switchMovie = (direction: -1 | 1) => {
+    if (!canSwitchMovie) return;
+    const nextIndex = (currentMovieIndex + direction + carouselMovies.length) % carouselMovies.length;
+    const nextMovie = carouselMovies[nextIndex];
+    if (nextMovie && nextMovie.id !== movieId) {
+      history.replace(`/movies/${encodeURIComponent(nextMovie.id)}`);
+    }
+  };
   const wishlistMutation = useWishlistToggle(movieId, Boolean(movie.wanted));
   const watchedQuery = useQuery({
     queryKey: queryKeys.movieWatched(movieId),
@@ -121,6 +154,16 @@ const MovieDetail: React.FC = () => {
   return (
     <div className={styles.page}>
       <section className={styles.movieIntro} aria-label="影片信息">
+        <button
+          className={styles.carouselArrow}
+          type="button"
+          aria-label="上一部影片"
+          title="上一部影片"
+          disabled={!canSwitchMovie}
+          onClick={() => switchMovie(-1)}
+        >
+          <LeftOutline />
+        </button>
         <div className={styles.introPoster}>
           <div className={styles.introFallback}>
             {movie.title.slice(0, 1) || "影"}
@@ -139,7 +182,10 @@ const MovieDetail: React.FC = () => {
         </div>
 
         <div className={styles.introContent}>
-          <div className={styles.kicker}>MOVIE INTRO</div>
+          <div className={styles.kickerRow}>
+            <div className={styles.kicker}>MOVIE INTRO</div>
+            {carouselMovies.length ? <span>{currentMovieIndex + 1}/{carouselMovies.length}</span> : null}
+          </div>
           <h1>{movie.title}</h1>
           <p className={styles.introSubtitle}>{introSubtitle}</p>
           <div className={styles.genreTags}>
@@ -184,7 +230,16 @@ const MovieDetail: React.FC = () => {
           </div>
         </div>
 
-        <RightOutline className={styles.introArrow} />
+        <button
+          className={styles.carouselArrow}
+          type="button"
+          aria-label="下一部影片"
+          title="下一部影片"
+          disabled={!canSwitchMovie}
+          onClick={() => switchMovie(1)}
+        >
+          <RightOutline />
+        </button>
       </section>
 
       <section className={styles.castSection} aria-label="演职人员">
@@ -215,6 +270,7 @@ const MovieDetail: React.FC = () => {
           <Button
             color="primary"
             block
+            className={styles.buyTicketButton}
             onClick={() =>
               history.push(`/cinemas?movieId=${encodeURIComponent(movieId)}`)
             }

@@ -6,16 +6,17 @@ import {
   UnorderedListOutline,
   UserSetOutline,
 } from "antd-mobile-icons";
-import { SearchBar } from "antd-mobile";
+import { SearchBar, Swiper } from "antd-mobile";
 import { history } from "@umijs/max";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { useAppStore } from "@/stores/useAppStore";
 import { customerApi } from "@/services/customerApi";
 import { queryKeys } from "@/query/keys";
 import type { MovieSummary } from "@/types/domain";
 import { getPosterThumbnailUrl } from "@/utils/poster";
 import { navigateAuthenticated } from "@/utils/authNavigation";
+import CityPicker from "@/components/CityPicker";
 import styles from "./index.module.less";
 
 const fallbackPromoMovies: MovieSummary[] = [
@@ -93,8 +94,14 @@ const getWelcomeGreeting = () => {
   return "晚上好";
 };
 
+// 首页"附近影院"只展示该距离（公里）以内的影院。
+const NEARBY_RADIUS_KM = 10;
+
 const Home: React.FC = () => {
   const { city, setMode, locationStatus, locateCurrentPosition } = useAppStore();
+  const latitude = useAppStore((state) => state.latitude);
+  const longitude = useAppStore((state) => state.longitude);
+  const [cityPickerVisible, setCityPickerVisible] = useState(false);
   const hotQuery = useQuery({
     queryKey: queryKeys.movies({
       section: "hot",
@@ -150,8 +157,15 @@ const Home: React.FC = () => {
       }),
   });
   const cinemaQuery = useQuery({
-    queryKey: queryKeys.cinemas({ city }),
-    queryFn: () => customerApi.listCinemas({ page: 1, size: 20 }),
+    queryKey: queryKeys.cinemas({ city, latitude, longitude }),
+    queryFn: () =>
+      Number.isFinite(latitude) && Number.isFinite(longitude)
+        ? customerApi.listNearbyCinemas(
+            latitude as number,
+            longitude as number,
+            NEARBY_RADIUS_KM
+          )
+        : customerApi.listCinemas({ page: 1, size: 20 }),
   });
 
   const hotMovies = hotQuery.data?.records ?? [];
@@ -160,27 +174,10 @@ const Home: React.FC = () => {
   const promoMovies = hotMovies.length ? hotMovies : fallbackPromoMovies;
   const hotTotal = hotQuery.data?.total ?? 0;
   const upcomingTotal = upcomingQuery.data?.total ?? 0;
-  const cinemas = cinemaQuery.data?.records?.length
-    ? cinemaQuery.data.records.slice(0, 2)
-    : [];
-  const nearby = cinemas.length
-    ? cinemas
-    : [
-        {
-          id: "cinema-1",
-          name: "万达影城 · 五角场店",
-          address: "IMAX · 杜比",
-          distance: 2.1,
-          minPrice: 45,
-        },
-        {
-          id: "cinema-2",
-          name: "百丽宫影城 · 环贸店",
-          address: "杜比 · 情侣厅",
-          distance: 3.1,
-          minPrice: 39,
-        },
-      ];
+  const cinemas = (cinemaQuery.data?.records ?? []).filter(
+    (cinema) => (cinema.distance ?? 0) <= NEARBY_RADIUS_KM
+  );
+  const nearby = cinemas;
 
   const goAgent = () => {
     setMode("AI");
@@ -200,8 +197,9 @@ const Home: React.FC = () => {
           aria-label="重新定位"
           aria-busy={locationStatus === "locating"}
           title="点击重新定位"
-          onClick={locateCurrentPosition}
+          onClick={() => setCityPickerVisible(true)}
         >
+          <EnvironmentOutline className={styles.homeCityPin} />
           <span>{locationStatus === "locating" ? "定位中" : city}</span>
           <span className={styles.homeCityChevron}>⌄</span>
         </button>
@@ -212,45 +210,141 @@ const Home: React.FC = () => {
         />
       </div>
 
-      <section className={styles.homePromo} aria-label="首页欢迎">
-        <div className={styles.welcomeCopy}>
-          <span>WELCOME</span>
-          <strong>{getWelcomeGreeting()}，今天想看什么？</strong>
-          <small>
-            {hotTotal > 0
-              ? `${city}正在热映 ${hotTotal} 部好片`
-              : "热门影片与附近影院已经为你准备好"}
-          </small>
-        </div>
-        <div className={styles.promoPosters} aria-hidden="true">
-          {promoMovies.slice(0, 3).map((movie, index) => (
-            <Poster
-              key={movie.id}
-              movie={movie}
-              index={index}
-              compact
-              priority={index < 2}
-            />
-          ))}
-        </div>
-      </section>
+      <Swiper
+        className={styles.promoSwiper}
+        aria-label="首页欢迎"
+        autoplay
+        autoplayInterval={6000}
+        loop
+        indicatorProps={{ className: styles.promoIndicator }}
+      >
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=NOW_SHOWING")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>WELCOME</span>
+              <strong>{getWelcomeGreeting()}，今天想看什么？</strong>
+              <small>
+                {hotTotal > 0
+                  ? `${city}正在热映 ${hotTotal} 部好片，点我逛逛`
+                  : "热门影片与附近影院已经为你准备好"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {promoMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=NOW_SHOWING")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>NOW SHOWING</span>
+              <strong>正在热映</strong>
+              <small>
+                {hotTotal > 0
+                  ? `今天 ${city} 有 ${hotTotal} 部好片热映，点我选片`
+                  : "热门影片马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {promoMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() => history.push("/movies?status=COMING_SOON")}
+          >
+            <div className={styles.welcomeCopy}>
+              <span>COMING SOON</span>
+              <strong>待上映</strong>
+              <small>
+                {upcomingTotal > 0
+                  ? `${upcomingTotal} 部新片即将上映，点我预约`
+                  : "新片预告马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {upcomingMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+
+        <Swiper.Item>
+          <button
+            className={styles.homePromo}
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("mustSeeBand")
+                ?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+          >
+            <div className={styles.welcomeCopy}>
+              <span>TODAY'S PICK</span>
+              <strong>今日必看</strong>
+              <small>
+                {mustSeeMovies.length
+                  ? "最新上映的三部佳片，点我直达"
+                  : "今日佳片推荐马上就来"}
+              </small>
+            </div>
+            <div className={styles.promoPosters} aria-hidden="true">
+              {mustSeeMovies.slice(0, 3).map((movie, index) => (
+                <Poster
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
+                  compact
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+          </button>
+        </Swiper.Item>
+      </Swiper>
 
       <div className={styles.serviceGrid}>
-        <button
-          type="button"
-          onClick={() =>
-            document.getElementById("hotBand")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
+        <button type="button" onClick={() => history.push("/movies?status=NOW_SHOWING")}>
           <span><FireFill /></span>
           热映
         </button>
-        <button
-          type="button"
-          onClick={() =>
-            document.getElementById("upcomingBand")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
+        <button type="button" onClick={() => history.push("/movies?status=COMING_SOON")}>
           <span><CouponOutline /></span>
           待上映
         </button>
@@ -469,24 +563,28 @@ const Home: React.FC = () => {
           </div>
           <button type="button" onClick={() => history.push("/cinemas")}>查看全部 ›</button>
         </div>
-        <div className={styles.nearbyList}>
-          {nearby.map((cinema) => (
-            <button
-              className={styles.nearbyRow}
-              key={cinema.id}
-              type="button"
-              onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}
-            >
-              <div>
-                <strong>{cinema.name}</strong>
-                <span>
-                  {cinema.address || "特色影厅"} · {cinema.distance ? `${cinema.distance} km` : "附近"}
-                </span>
-              </div>
-              <em>¥{cinema.minPrice || 39} 起</em>
-            </button>
-          ))}
-        </div>
+        {nearby.length ? (
+          <div className={styles.nearbyList}>
+            {nearby.map((cinema) => (
+              <button
+                className={styles.nearbyRow}
+                key={cinema.id}
+                type="button"
+                onClick={() => history.push(`/cinemas/${cinema.id}/showtimes`)}
+              >
+                <div>
+                  <strong>{cinema.name}</strong>
+                  <span>
+                    {cinema.address || "特色影厅"} · {cinema.distance ? `${cinema.distance.toFixed(1)} km` : "附近"}
+                  </span>
+                </div>
+                <em>¥{cinema.minPrice || 39} 起</em>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.sectionState}>附近暂无影院</div>
+        )}
       </section>
 
       <section className={styles.homeBand}>
@@ -503,6 +601,11 @@ const Home: React.FC = () => {
           <span>›</span>
         </button>
       </section>
+
+      <CityPicker
+        visible={cityPickerVisible}
+        onClose={() => setCityPickerVisible(false)}
+      />
     </div>
   );
 };

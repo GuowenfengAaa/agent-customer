@@ -1,0 +1,125 @@
+.pickerBody {
+  right: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  max-height: 70vh;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background: var(--customer-surface);
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 70vh;
+  padding-top: 16px;
+}
+
+.pickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 14px;
+}
+
+.pickerHeader strong {
+  color: var(--customer-ink);
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  color: var(--customer-muted);
+  background: transparent;
+  border: 0;
+  font-size: 18px;
+}
+
+.locateButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  margin: 0 16px 16px;
+  color: var(--customer-primary);
+  background: var(--customer-primary-soft);
+  border: 1px solid var(--customer-primary);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.locateButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.locateButton svg {
+  font-size: 18px;
+}
+
+.hotRow {
+  padding: 0 16px 14px;
+  border-bottom: 1px solid var(--customer-line);
+}
+
+.hotLabel {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--customer-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hotGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px 8px;
+}
+
+.cityCell {
+  min-height: 34px;
+  padding: 0 6px;
+  color: var(--customer-ink);
+  background: var(--customer-bg);
+  border: 1px solid var(--customer-line);
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cityCell:active {
+  background: #f0f2f3;
+}
+
+.cityCell.active {
+  color: var(--customer-primary);
+  background: var(--customer-primary-soft);
+  border-color: var(--customer-primary);
+  font-weight: 700;
+}
+
+.listArea {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.groupCities {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px 8px;
+  padding: 12px 40px 16px 16px;
+}
+
+/* 主题化 IndexBar 高亮的当前字母圆点 */
+.listArea :global(.adm-index-bar-sidebar-item-active) {
+  background-color: var(--customer-primary);
+}

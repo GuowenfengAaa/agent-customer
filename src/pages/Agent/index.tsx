@@ -1,5 +1,5 @@
-import { Button, Card, NavBar, Space, Stepper, Tag, TextArea, Toast } from 'antd-mobile';
-import { EnvironmentOutline, MoreOutline, LeftOutline, RightOutline } from 'antd-mobile-icons';
+import { Button, Card, Space, Stepper, Tag, TextArea, Toast } from 'antd-mobile';
+import { EnvironmentOutline, LeftOutline, RightOutline } from 'antd-mobile-icons';
 import { QRCodeSVG } from 'qrcode.react';
 import dayjs from 'dayjs';
 import { history, useSearchParams } from '@umijs/max';
@@ -16,6 +16,7 @@ import { getSession, getToken } from '@/services/storage';
 import { type AgentChatMessage, useAppStore } from '@/stores/useAppStore';
 import type { AgentMemorySummary, OrderDetail } from '@/types/domain';
 import { getPosterThumbnailUrl } from '@/utils/poster';
+import { buildOrderQrValue, buildTicketCodesText } from '@/utils/ticketQr';
 import styles from './index.module.less';
 
 const agentBaseUrl = process.env.AGENT_BASE_URL || '';
@@ -42,6 +43,7 @@ function cardTypeText(type?: string) {
     LOCATION_PICKER: '位置选择',
     SNACK_LIST: '零食推荐',
     COUPON_LIST: '优惠券',
+    NAVIGATION: '快捷操作',
   };
   return map[type || ''] || type || '卡片';
 }
@@ -188,22 +190,19 @@ function AgentTicketInline({ order }: { order: OrderDetail }) {
       </div>
       {tickets.length ? (
         <div className={styles.agentTicketPasses}>
-          {tickets.map((ticket, index) => (
-            <div className={styles.agentTicketPass} key={ticket.ticketCode || `${order.id}-${index}`}>
-              <b>{ticket.rowNo !== undefined ? `${ticket.rowNo}排${ticket.seatNo}座` : `第${index + 1}张电子票`}</b>
-              <QRCodeSVG
-                value={ticket.qrContent || ticket.ticketCode || `${order.id}-${index}`}
-                size={150}
-                bgColor="#ffffff"
-                fgColor="#102c25"
-                level="M"
-                includeMargin
-                role="img"
-                aria-label={`${title}第${index + 1}张电子票二维码`}
-              />
-              <span>取票码：{ticket.ticketCode || '--'}</span>
-            </div>
-          ))}
+          <div className={styles.agentTicketPass}>
+            <b>{seats}</b>
+            <QRCodeSVG
+              value={buildOrderQrValue(order)}
+              size={150}
+              bgColor="#ffffff"
+              fgColor="#102c25"
+              level="M"
+              role="img"
+              aria-label={`${title}电子票二维码`}
+            />
+            <span>取票码：{buildTicketCodesText(order)}</span>
+          </div>
         </div>
       ) : <div className={styles.agentTicketEmpty}>出票信息暂未生成</div>}
     </div>
@@ -232,6 +231,14 @@ function getSeatLabel(seat: Record<string, unknown>, index: number) {
       : `${row}排${number}座`;
   }
   return getSeatId(seat, index);
+}
+
+function isCoupleSeat(seat: Record<string, unknown>) {
+  return (
+    String(seat.zone || '').toUpperCase() === 'COUPLE' ||
+    String(seat.type || '').toUpperCase() === 'COUPLE' ||
+    String(seat.status || '').toUpperCase() === 'COUPLE'
+  );
 }
 
 function parseCardsJson(cardsJson?: string): AgentCardPayload[] {
@@ -283,6 +290,13 @@ function AgentCard({
 }) {
   const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
   const [snackQuantity, setSnackQuantity] = useState(0);
+  const seatPreviewRef = useRef<HTMLDivElement>(null);
+  const [bestBox, setBestBox] = useState<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const cardType = String(card.type || '').toUpperCase();
   const isSeatMap = cardType === 'SEAT_MAP';
   const isMovieCard = cardType === 'MOVIE_LIST' || cardType === 'MOVIE';
@@ -390,12 +404,72 @@ function AgentCard({
     );
   });
 
-  const toggleSeat = (seatId: string) => {
-    setSelectedSeatIds((current) =>
-      current.includes(seatId)
-        ? current.filter((item) => item !== seatId)
-        : [...current, seatId],
-    );
+  // 根据 3排3座/3排8座/6排3座 实际位置画最佳观影区虚线框。
+  useEffect(() => {
+    const scroll = seatPreviewRef.current;
+    if (!scroll) {
+      setBestBox(null);
+      return;
+    }
+    const locate = (row: number, col: number) =>
+      scroll.querySelector<HTMLElement>(`[aria-label="${row}排${col}座"]`);
+    const tl = locate(3, 3);
+    const tr = locate(3, 8);
+    const bl = locate(6, 3);
+    if (!tl || !tr || !bl) {
+      setBestBox(null);
+      return;
+    }
+    const update = () => {
+      const sRect = scroll.getBoundingClientRect();
+      const tlRect = tl.getBoundingClientRect();
+      const trRect = tr.getBoundingClientRect();
+      const blRect = bl.getBoundingClientRect();
+      setBestBox({
+        left: tlRect.left - sRect.left + scroll.scrollLeft - 3,
+        top: tlRect.top - sRect.top + scroll.scrollTop - 3,
+        width: trRect.right - tlRect.left + 6,
+        height: blRect.bottom - tlRect.top + 6,
+      });
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [card.seats]);
+
+  const couplePartner = (seat: Record<string, unknown>) => {
+    if (!isCoupleSeat(seat)) return undefined;
+    const seatNo = Number(seat.number ?? seat.seatNo);
+    if (!Number.isFinite(seatNo)) return undefined;
+    const partnerNo = seatNo % 2 === 1 ? seatNo + 1 : seatNo - 1;
+    const row = String(seat.row ?? seat.rowNo ?? '');
+    return seatRows
+      .find(([r]) => r === row)?.[1]
+      ?.find((candidate) => Number(candidate.number ?? candidate.seatNo) === partnerNo);
+  };
+
+  const toggleSeat = (seat: Record<string, unknown>, seatIndex: number) => {
+    const status = String(seat.status || '').toLowerCase();
+    if (['locked', 'sold', 'unavailable'].includes(status)) return;
+    const seatId = getSeatId(seat, seatIndex);
+    const partner = couplePartner(seat);
+    const ids = partner ? [seatId, getSeatId(partner, seatIndex)] : [seatId];
+    if (partner) {
+      const partnerStatus = String(partner.status || '').toLowerCase();
+      if (['locked', 'sold', 'unavailable'].includes(partnerStatus)) {
+        Toast.show({ content: '情侣座必须选择相邻的两个座位，另一个座位当前不可选' });
+        return;
+      }
+    }
+    setSelectedSeatIds((current) => {
+      const isSelected = ids.every((id) => current.includes(id));
+      if (isSelected) return current.filter((id) => !ids.includes(id));
+      if (current.length + ids.filter((id) => !current.includes(id)).length > 6) {
+        Toast.show({ content: '最多选择 6 个座位' });
+        return current;
+      }
+      return Array.from(new Set([...current, ...ids]));
+    });
   };
 
   const actionPayload = (action: NonNullable<AgentCardPayload['actions']>[number]) => {
@@ -513,11 +587,12 @@ function AgentCard({
               <span><i className={styles.seatLegendSelected} />已选</span>
               <span><i className={styles.seatLegendSold} />已售</span>
               <span><i className={styles.seatLegendLocked} />锁定</span>
+              <span><i className={styles.seatLegendCouple} />情侣座（成对选）</span>
               {hasBestViewingZone ? <span><i className={styles.seatLegendBestViewing} />最佳观影区</span> : null}
             </div>
             <div className={styles.seatScreen}>银幕</div>
-            <div className={styles.seatPreview}>
-              <div className={`${styles.seatPreviewInner} ${hasBestViewingZone ? styles.seatPreviewBestViewing : ''}`}>
+            <div className={styles.seatPreview} ref={seatPreviewRef}>
+              <div className={styles.seatPreviewInner}>
               {seatRows.map(([row, seats]) => (
                 <div className={styles.seatRow} key={row}>
                   <small>{row || '-'}</small>
@@ -540,6 +615,7 @@ function AgentCard({
                       const status = String(seat.status || '').toLowerCase();
                       const unavailable = ['locked', 'sold', 'unavailable'].includes(status);
                       const selected = selectedSeatIds.includes(seatId);
+                      const coupleClass = isCoupleSeat(seat) ? styles.seatCouple : '';
                       return (
                         <button
                           key={seatId}
@@ -551,9 +627,10 @@ function AgentCard({
                             status === 'locked' ? styles.seatLocked : '',
                             selected ? styles.seatSelected : '',
                             unavailable ? styles.seatUnavailable : '',
+                            coupleClass,
                           ].filter(Boolean).join(' ')}
                           disabled={disabled || unavailable}
-                          onClick={() => toggleSeat(seatId)}
+                          onClick={() => toggleSeat(seat, seatIndex)}
                         >
                           {seatLabel}
                         </button>
@@ -562,6 +639,18 @@ function AgentCard({
                   </div>
                 </div>
               ))}
+              {bestBox ? (
+                <div
+                  className={styles.agentBestViewingBox}
+                  style={{
+                    left: bestBox.left,
+                    top: bestBox.top,
+                    width: bestBox.width,
+                    height: bestBox.height,
+                  }}
+                  aria-hidden="true"
+                />
+              ) : null}
               </div>
             </div>
           </div>
@@ -805,8 +894,6 @@ const Agent: React.FC = () => {
   const {
     setMode,
     city,
-    locationStatus,
-    locateCurrentPosition,
     setAgentContext,
     memoryId,
     sessionId,
@@ -1374,13 +1461,17 @@ const Agent: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.agentTopBar}>
-        <button className={styles.agentCity} type="button" onClick={locateCurrentPosition}>
-          <span>{locationStatus === 'locating' ? '定位中' : city}</span>
-          <span className={styles.agentCityChevron}>⌄</span>
+        <button
+          className={styles.agentBack}
+          type="button"
+          aria-label="返回首页"
+          onClick={() => history.push('/home')}
+        >
+          <LeftOutline />
         </button>
         <strong className={styles.agentTitle}>AI 智能购票</strong>
         <Space align="center" className={styles.navActions}>
-          <Button fill="none" size="mini" loading={newConversationSaving} onClick={startNewConversation}>
+          <Button fill="none" size="mini" className={styles.newSessionButton} loading={newConversationSaving} onClick={startNewConversation}>
             新会话
           </Button>
           <Button fill="none" size="mini" className={styles.historyButton} onClick={openSessionList}>
@@ -1388,31 +1479,6 @@ const Agent: React.FC = () => {
           </Button>
         </Space>
       </div>
-      <NavBar className={styles.legacyNavBar}
-        onBack={() => history.push('/home')}
-        right={
-          <Space align="center" className={styles.navActions}>
-            <Button
-              fill="none"
-              size="mini"
-              loading={newConversationSaving}
-              onClick={startNewConversation}
-            >
-              新会话
-            </Button>
-            <Button
-              fill="none"
-              size="mini"
-              className={styles.moreButton}
-              onClick={openSessionList}
-            >
-              <MoreOutline />
-            </Button>
-          </Space>
-        }
-      >
-        AI 智能购票
-      </NavBar>
       {sessionListVisible ? (
         <div className={styles.sessionMenu}>
           <div className={styles.sessionPanelHeader}>
@@ -1459,9 +1525,6 @@ const Agent: React.FC = () => {
           </div>
         </div>
       ) : null}
-      <button className={styles.heroBack} type="button" aria-label="返回首页" onClick={() => history.push('/home')}>
-        <LeftOutline />
-      </button>
       <div className={styles.hero}>
         <div className={styles.avatar}>✦</div>
         <div>
@@ -1558,7 +1621,7 @@ const Agent: React.FC = () => {
         />
         <Space justify="between" block align="center">
           <span className={styles.tip} aria-hidden="true" />
-          <Button color="primary" size="small" disabled={running || !agentInput.trim()} onClick={() => send()}>
+          <Button color="primary" size="small" className={styles.sendButton} disabled={running || !agentInput.trim()} onClick={() => send()}>
             发送
           </Button>
         </Space>

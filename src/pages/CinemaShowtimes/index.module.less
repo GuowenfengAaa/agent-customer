@@ -13,10 +13,10 @@
   padding: 9px;
   overflow: hidden;
   color: #f7fbf9;
-  background: #454545;
-  border: 1px solid #5b5b5b;
+  background: linear-gradient(135deg, #1c3b32, #244d40 60%, #2f5c4b);
+  border: 1px solid rgba(200, 139, 50, 0.35);
   border-radius: 10px;
-  box-shadow: 0 8px 18px rgba(27, 30, 29, 0.16);
+  box-shadow: 0 8px 18px rgba(23, 45, 42, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .moviePoster {
@@ -109,10 +109,11 @@
 }
 
 .movieGenreTags span {
-  padding: 2px 5px;
-  color: #d9d9d9;
-  background: #666;
-  border-radius: 3px;
+  padding: 2px 6px;
+  color: #e8f1ee;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
   font-size: 9px;
 }
 
@@ -156,8 +157,8 @@
   margin: 0;
   padding: 0 7px;
   color: #fff;
-  background: #858585;
-  border: 0;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 13px;
   font-size: 12px;
 }
@@ -175,6 +176,7 @@
 .wantButtonActive {
   color: #fff;
   background: #d84f5b;
+  border-color: #d84f5b;
 }
 
 .movieActions {
@@ -189,8 +191,8 @@
   min-height: 26px;
   padding: 0 7px;
   color: #f1f1f1;
-  background: #68716e;
-  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 13px;
   font-size: 12px;
 }
@@ -198,6 +200,7 @@
 .watchedButtonActive {
   color: #fff;
   background: #2e7564;
+  border-color: #2e7564;
 }
 
 .carouselArrow {
@@ -246,10 +249,21 @@
 }
 
 .kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--customer-primary);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
+}
+
+.kicker::before {
+  width: 14px;
+  height: 3px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
 }
 
 h1 {
@@ -271,9 +285,9 @@ h1 {
 .stateCard,
 .emptyCard {
   margin-bottom: 12px;
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
-  box-shadow: none;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
 }
 
 .stateCard strong,
@@ -295,9 +309,10 @@ h1 {
 }
 
 .showtimeCard {
-  border: 1px solid var(--customer-line);
-  border-radius: 8px;
-  box-shadow: none;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffefb, #ffffff);
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .timeRow,
@@ -309,8 +324,9 @@ h1 {
 }
 
 .timeRow strong {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 820;
+  color: var(--customer-primary-dark);
 }
 
 .timeRow span {
@@ -330,6 +346,39 @@ h1 {
   margin-top: 12px;
   color: var(--customer-muted);
   font-size: 11px;
+}
+
+.metaRow :global(.adm-tag) {
+  --border-radius: 999px;
+  margin: 0;
+}
+
+.metaChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  color: #5f7168;
+  background: #f4f7f5;
+  border: 1px solid #e4ebe7;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.seatButton {
+  min-width: 56px;
+  color: #fff;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.28);
+  font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.seatButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 6px rgba(200, 139, 50, 0.22);
 }
 
 @media (max-width: 360px) {

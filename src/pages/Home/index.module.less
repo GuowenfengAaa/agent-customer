@@ -36,15 +36,38 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 0 9px;
+  gap: 4px;
+  padding: 5px 10px;
   color: var(--customer-ink);
-  background: #f2f7f5;
-  border: 1px solid #dbe9e4;
+  background: linear-gradient(180deg, #f8fbf9, #eef5f1);
+  border: 1px solid #cfe2d8;
   border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(26, 74, 59, 0.07);
+  box-shadow: 0 2px 8px rgba(26, 74, 59, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   font-size: 13px;
   font-weight: 700;
+}
+
+.homeCityPin {
+  color: var(--customer-primary);
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* 定位中：图标脉冲 */
+.homeCity[aria-busy="true"] .homeCityPin {
+  animation: homeCityPinPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes homeCityPinPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
 }
 
 .homeCityChevron {
@@ -60,6 +83,16 @@
   overflow: hidden;
 }
 
+.search :global(.adm-search-bar-input-box-icon) {
+  color: var(--customer-primary);
+}
+
+.search:global(.adm-search-bar-active) :global(.adm-search-bar-input-box) {
+  border-color: var(--customer-primary);
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(200, 139, 50, 0.12);
+}
+
 .search :global(.adm-search-bar-input-box) {
   height: 38px;
   border: 1px solid #dfe3e1;
@@ -69,16 +102,36 @@
   box-sizing: border-box;
 }
 
+.promoSwiper {
+  --height: 120px;
+  --border-radius: 8px;
+  --width: calc(100% - 28px);
+  margin: 13px 14px 6px;
+}
+
+.promoIndicator {
+  --dot-color: rgba(255, 255, 255, 0.45);
+  --active-dot-color: #e2b35b;
+  --dot-size: 5px;
+  --active-dot-size: 14px;
+  --dot-border-radius: 3px;
+  --active-dot-border-radius: 3px;
+  --dot-spacing: 4px;
+}
+
 .homePromo {
-  min-height: 104px;
+  width: 100%;
+  height: 100%;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 120px;
   align-items: center;
-  margin: 13px 14px 12px;
   padding: 16px 13px 16px 16px;
   overflow: hidden;
   color: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
   background: #172d2a;
   border: 1px solid rgba(200, 139, 50, 0.5);
   border-radius: 8px;
@@ -172,6 +225,11 @@
   border: 0;
   font-size: 10px;
   font-weight: 650;
+  transition: transform 120ms ease;
+}
+
+.serviceGrid button:active {
+  transform: scale(0.9);
 }
 
 .serviceGrid button span {
@@ -232,11 +290,19 @@
 }
 
 .bandHead button {
-  padding: 4px 0 4px 8px;
+  padding: 5px 12px;
   color: #946724;
-  background: transparent;
-  border: 0;
-  font-size: 12px;
+  background: #fff4e0;
+  border: 1px solid #eeddb4;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.bandHead button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 6px rgba(200, 139, 50, 0.22);
 }
 
 .sectionState {
@@ -393,10 +459,12 @@
   font-size: 11px;
   font-weight: 750;
   cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
 }
 
 .posterBuyButton:active {
   background: var(--customer-primary-dark);
+  transform: scale(0.94);
 }
 
 .posterDetailButton {
@@ -411,6 +479,11 @@
   font-size: 9px;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.posterDetailButton:active {
+  transform: scale(0.94);
 }
 
 .compactMovieMain > .releaseDate {
@@ -712,7 +785,7 @@
   font-size: 13px;
 }
 .nearbyRow span {
-  color: var(--customer-muted);
+  color: var(--customer-ink);
   font-size: 11px;
 }
 .nearbyRow em {
@@ -722,7 +795,12 @@
   font-weight: 800;
 }
 
+.nearbyRow:active {
+  background: #f6faf7;
+}
+
 .aiBanner {
+  position: relative;
   width: calc(100% - 28px);
   min-height: 64px;
   display: grid;
@@ -730,12 +808,30 @@
   gap: 9px;
   align-items: center;
   margin: 0 14px;
-  padding: 9px 11px;
+  padding: 9px 11px 9px 15px;
+  overflow: hidden;
   color: var(--customer-ink);
   text-align: left;
-  background: var(--customer-primary-soft);
+  background: linear-gradient(135deg, var(--customer-primary-soft), #ffffff);
   border: 1px solid #c8e1d7;
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(200, 139, 50, 0.1);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.aiBanner::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  content: '';
+  background: linear-gradient(180deg, #e2b35b, var(--customer-primary));
+}
+
+.aiBanner:active {
+  transform: scale(0.99);
+  box-shadow: 0 2px 8px rgba(200, 139, 50, 0.16);
 }
 
 .aiBannerIcon {

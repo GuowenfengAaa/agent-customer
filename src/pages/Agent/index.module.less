@@ -6,7 +6,7 @@
   flex-direction: column;
   overflow: hidden;
   padding: 0 14px 18px;
-  background: #f5f6f5;
+  background: linear-gradient(180deg, #f7faf8, #eef3f0);
 }
 
 .agentTopBar {
@@ -23,30 +23,24 @@
   backdrop-filter: blur(14px);
 }
 
-.agentCity {
-  display: inline-flex;
-  align-items: center;
+.agentBack {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
   justify-self: start;
-  gap: 3px;
-  min-width: 0;
   padding: 0;
-  overflow: hidden;
-  color: #2d3633;
-  background: transparent;
-  border: 0;
-  font-size: 13px;
-  font-weight: 700;
+  color: #303437;
+  background: #fff;
+  border: 1px solid #e0e2e3;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(37, 39, 42, 0.08);
+  font-size: 18px;
 }
 
-.agentCity > span:first-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.agentCityChevron {
-  color: var(--customer-primary);
-  font-size: 16px;
+.agentBack:active {
+  background: #f5f6f6;
+  transform: scale(0.94);
 }
 
 .agentTitle {
@@ -61,12 +55,31 @@
 }
 
 .agentTopBar .navActions :global(.adm-button) {
-  color: #7a5524;
-  font-size: 12px;
+  min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 0 17px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.legacyNavBar {
-  display: none;
+.agentTopBar .navActions .newSessionButton {
+  color: #fff;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
+  border-color: #c88b32;
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.28);
+}
+
+.agentTopBar .navActions .historyButton {
+  color: var(--customer-primary-dark);
+  background: #fdf3e0;
+  border: 1px solid #eeddb4;
+}
+
+.agentTopBar .navActions :global(.adm-button):active {
+  transform: scale(0.94);
 }
 
 .navActions {
@@ -91,50 +104,53 @@
   flex: 0 0 auto;
   min-height: 76px;
   margin: 12px 0 10px;
-  padding: 10px 14px 10px 66px;
+  padding: 10px 14px;
   border: 1px solid #e0e6e2;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 7px 18px rgba(31, 42, 39, 0.06), inset 3px 0 #d6a34d;
-}
-
-.heroBack {
-  position: absolute;
-  top: 80px;
-  left: 24px;
-  z-index: 4;
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  color: #303437;
-  background: #fff;
-  border: 1px solid #e0e2e3;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(37, 39, 42, 0.08);
-  font-size: 20px;
-}
-
-.heroBack:active {
-  background: #f5f6f6;
-  transform: scale(0.94);
-}
-
-.heroBack + .hero {
-  margin-left: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffffff, #f2f8f4);
+  box-shadow: 0 7px 18px rgba(31, 42, 39, 0.07), inset 3px 0 #d6a34d, inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .avatar {
+  position: relative;
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   place-items: center;
+  flex: none;
   color: #fff;
-  background: #c88b32;
-  border-radius: 8px;
-  box-shadow: 0 7px 16px rgba(200, 139, 50, 0.25);
-  font-size: 24px;
+  background: radial-gradient(circle at 32% 28%, #f7da9a 0%, #e2b35b 30%, #b9842e 64%, #7a5524 100%);
+  border-radius: 50%;
+  box-shadow: 0 7px 16px rgba(200, 139, 50, 0.3), inset 0 -3px 8px rgba(0, 0, 0, 0.2), inset 0 2px 3px rgba(255, 255, 255, 0.4);
+  font-size: 22px;
+  animation: heroOrbGlow 2.6s ease-in-out infinite;
+}
+
+/* 彗星环绕 */
+.avatar::after {
+  position: absolute;
+  inset: -7px;
+  content: '';
+  border-radius: 50%;
+  border: 1px solid rgba(200, 139, 50, 0.18);
+  background: radial-gradient(circle at 100% 50%, #ffe08a 0 3px, transparent 4px);
+  animation: heroOrbit 4.2s linear infinite;
+}
+
+@keyframes heroOrbGlow {
+  0%,
+  100% {
+    box-shadow: 0 7px 16px rgba(200, 139, 50, 0.3), inset 0 -3px 8px rgba(0, 0, 0, 0.2), inset 0 2px 3px rgba(255, 255, 255, 0.4), 0 0 0 0 rgba(200, 139, 50, 0.35);
+  }
+  50% {
+    box-shadow: 0 7px 16px rgba(200, 139, 50, 0.3), inset 0 -3px 8px rgba(0, 0, 0, 0.2), inset 0 2px 3px rgba(255, 255, 255, 0.4), 0 0 22px 7px rgba(200, 139, 50, 0.5);
+  }
+}
+
+@keyframes heroOrbit {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .kicker {
@@ -151,13 +167,32 @@ h1 {
   letter-spacing: 0;
 }
 
+/* 「告诉我你的观影计划」金色流光 */
+.hero h1 {
+  background: linear-gradient(90deg, #b9842e 0%, #e2b35b 50%, #b9842e 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroTitleShimmer 3.5s linear infinite;
+}
+
+@keyframes heroTitleShimmer {
+  to {
+    background-position: -200% center;
+  }
+}
+
 .hero p {
-  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin: 3px 0 0;
   overflow: hidden;
-  color: var(--customer-muted);
+  color: #5f7168;
   font-size: 12px;
+  line-height: 1.55;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .locationBar {
@@ -225,14 +260,12 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 11px;
-  flex: 0 0 clamp(340px, calc(100dvh - 276px), 600px);
-  height: clamp(340px, calc(100dvh - 276px), 600px);
-  min-height: clamp(340px, calc(100dvh - 276px), 600px);
-  max-height: clamp(340px, calc(100dvh - 276px), 600px);
+  flex: 1 1 0;
+  min-height: 0;
   align-content: start;
   overflow-y: auto;
   margin-top: 10px;
-  padding: 13px 12px 86px;
+  padding: 13px 12px;
   background: #fff;
   border: 1px solid #e1e7e4;
   border-radius: 8px;
@@ -257,25 +290,41 @@ h1 {
 
 .agentMessage,
 .userMessage {
+  position: relative;
   max-width: 88%;
   border: 0;
   border-radius: 14px;
   font-size: 13px;
   line-height: 1.7;
+  animation: bubbleIn 220ms ease-out;
 }
 
 .agentMessage {
-  border: 1px solid #e1e7e4;
-  border-left: 3px solid #e2b75e;
-  background: #fff;
-  box-shadow: 0 5px 14px rgba(31, 42, 39, 0.06);
+  border: 1px solid #d9a94e;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fffef9, #fcf4e3);
+  box-shadow: 0 5px 14px rgba(200, 139, 50, 0.1);
   white-space: pre-line;
 }
 
 .userMessage {
   justify-self: end;
   color: #fff;
-  background: #25332f;
+  border: 1px solid #27413a;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #3a5a51, #1f322c);
+  box-shadow: 0 5px 14px rgba(31, 42, 39, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .statusText {
@@ -304,9 +353,9 @@ h1 {
   overflow: hidden;
   color: #25312e;
   background: #fff;
-  border: 1px solid #e2e6e4;
-  border-radius: 8px;
-  box-shadow: 0 5px 14px rgba(31, 42, 39, 0.06);
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(31, 42, 39, 0.07);
 }
 
 .agentCarouselArrow {
@@ -446,11 +495,10 @@ h1 {
 
 .agentCard {
   overflow: hidden;
-  border: 1px solid var(--customer-line);
-  border-color: #e1e6e3;
+  border: 1px solid #e7dfcf;
   border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 5px 14px rgba(31, 42, 39, 0.06);
+  background: linear-gradient(180deg, #fffefb, #ffffff);
+  box-shadow: 0 6px 18px rgba(31, 42, 39, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .movieAgentCard {
@@ -543,13 +591,24 @@ h1 {
   justify-content: space-between;
   gap: 10px;
   padding-bottom: 9px;
-  border-bottom: 1px solid #eef1ef;
+  border-bottom: 1px solid #f0e9da;
 }
 
 .cardHeader strong {
   min-width: 0;
   font-size: 14px;
   overflow-wrap: anywhere;
+}
+
+.cardHeader strong::before {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  margin-right: 7px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
 }
 
 .cardSubtitle {
@@ -990,7 +1049,8 @@ h1 {
 .seatLegendSelected { background: #c88b32; }
 .seatLegendSold { background: #bdc5c2; }
 .seatLegendLocked { background: #f8d9a9; border: 1px solid #e1a452; }
-.seatLegendBestViewing { background: #fff0bd; border: 1px solid #ddb04b; }
+.seatLegendCouple { background: #ffe9f1; border: 1px solid #ef8fb2; }
+.seatLegendBestViewing { background: transparent; border: 1px dashed #ddb04b; }
 
 .seatScreen {
   width: 70%;
@@ -1035,18 +1095,12 @@ h1 {
   border-radius: 999px;
 }
 
-.seatPreviewBestViewing::before {
+.agentBestViewingBox {
   position: absolute;
-  top: 55px;
-  left: 93px;
   z-index: 0;
-  width: 202px;
-  height: 143px;
-  content: '';
-  background: rgba(255, 240, 189, 0.5);
-  border: 1px solid #ddb04b;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(194, 143, 43, 0.1);
+  border: 1.5px dashed #ddb04b;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(221, 176, 75, 0.08);
   pointer-events: none;
 }
 
@@ -1124,6 +1178,11 @@ h1 {
 .seatButton.seatLocked {
   background: #f8d9a9;
   border-color: #e1a452;
+}
+
+.seatButton.seatCouple {
+  background: #ffe9f1;
+  border-color: #ef8fb2;
 }
 
 .seatButton.seatSelected {
@@ -1217,9 +1276,10 @@ h1 {
 
 .quickActions {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 10px 0 36px;
+  margin: 8px 0 10px;
 }
 
 .quickActions :global(.adm-button) {
@@ -1240,20 +1300,22 @@ h1 {
 }
 
 .composer {
-  position: fixed;
-  right: auto;
-  bottom: 64px;
-  left: 50%;
-  z-index: 45;
-  width: min(calc(100% - 28px), 402px);
-  transform: translateX(-50%);
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
   min-height: 82px;
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.98);
-  border-radius: 8px;
-  border: 1px solid #dfe4e1;
-  box-shadow: 0 8px 24px rgba(24, 62, 51, 0.14);
+  border-radius: 18px;
+  border: 1px solid #e7dfcf;
+  box-shadow: 0 8px 24px rgba(24, 62, 51, 0.12);
   backdrop-filter: blur(14px);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.composer:focus-within {
+  border-color: #c88b32;
+  box-shadow: 0 8px 24px rgba(24, 62, 51, 0.12), 0 0 0 2px rgba(200, 139, 50, 0.12);
 }
 
 .composer :global(.adm-text-area) {
@@ -1262,7 +1324,7 @@ h1 {
 
 .composer :global(.adm-text-area-element) {
   min-height: 60px;
-  padding: 8px 78px 8px 0;
+  padding: 8px 80px 8px 2px;
   box-sizing: border-box;
   color: #27312e;
   font-size: 14px;
@@ -1271,25 +1333,39 @@ h1 {
 }
 
 .composer :global(.adm-text-area-element)::placeholder {
-  color: #aeb5b2;
+  color: #a3ada9;
 }
 
 .composer :global(.adm-space) {
   position: absolute;
-  right: 12px;
-  bottom: 10px;
+  right: 10px;
+  bottom: 24px;
   padding: 0;
 }
 
-.composer :global(.adm-button-primary) {
+.composer .sendButton {
+  height: 34px;
   min-width: 62px;
-  height: 36px;
+  margin: 0;
+  padding: 0 18px;
   color: #fff;
-  background: #c88b32;
+  background: linear-gradient(135deg, #dba44e, #c88b32);
   border-color: #c88b32;
-  border-radius: 7px;
-  box-shadow: 0 4px 10px rgba(200, 139, 50, 0.25);
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(200, 139, 50, 0.32);
+  font-size: 13px;
   font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.composer .sendButton:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(200, 139, 50, 0.28);
+}
+
+.composer .sendButton:disabled {
+  opacity: 0.45;
+  box-shadow: none;
 }
 
 .tip {
@@ -1332,8 +1408,8 @@ h1 {
   left: 16px;
   z-index: 20;
   overflow: hidden;
-  border: 1px solid rgba(25, 70, 58, 0.1);
-  border-radius: 8px;
+  border: 1px solid #e7dfcf;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.98);
   box-shadow:
     0 18px 40px rgba(20, 48, 40, 0.16),
@@ -1345,7 +1421,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   padding: 12px 12px 9px;
-  border-bottom: 1px solid #eef3f1;
+  border-bottom: 1px solid #f0e9da;
 }
 
 .sessionPanelHeader > div {
@@ -1356,6 +1432,27 @@ h1 {
 .sessionPanelHeader strong {
   color: #14231f;
   font-size: 14px;
+}
+
+.sessionPanelHeader strong::before {
+  display: inline-block;
+  width: 3px;
+  height: 13px;
+  margin-right: 7px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
+}
+
+.sessionPanelHeader :global(.adm-button) {
+  padding: 0 11px;
+  color: var(--customer-primary-dark);
+  background: #fdf3e0;
+  border: 1px solid #eeddb4;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .sessionPanelHeader span {
@@ -1374,12 +1471,13 @@ h1 {
   display: grid;
   width: 100%;
   gap: 4px;
-  padding: 10px;
+  padding: 11px 12px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 10px;
   color: #172622;
   background: transparent;
   text-align: left;
+  transition: background 120ms ease;
 }
 
 .sessionItem + .sessionItem {
@@ -1387,11 +1485,12 @@ h1 {
 }
 
 .sessionItem:active {
-  background: #eef6f3;
+  background: #f3f7f5;
 }
 
 .sessionItemActive {
-  background: #edf8f4;
+  background: #fdf4e0;
+  box-shadow: inset 3px 0 #c88b32;
 }
 
 .sessionTitle {

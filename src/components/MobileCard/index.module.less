@@ -1,8 +1,14 @@
 .card {
   border: 1px solid var(--customer-line);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--customer-surface);
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(27, 50, 42, 0.06);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.card:active {
+  transform: scale(0.99);
+  box-shadow: 0 2px 8px rgba(27, 50, 42, 0.1);
 }
 
 .cardWithMedia {
@@ -41,6 +47,11 @@
 .header span {
   color: var(--customer-muted);
   font-size: 12px;
+}
+
+.cardWithMedia .header span {
+  color: var(--customer-primary);
+  font-weight: 700;
 }
 
 .body {

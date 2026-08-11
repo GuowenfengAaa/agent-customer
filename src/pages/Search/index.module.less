@@ -14,10 +14,12 @@
 }
 
 .searchHeader {
+  position: relative;
   padding: 17px 16px 18px;
   color: #f7faf8;
-  background: #1d2c28;
+  background: linear-gradient(160deg, #16251f 0%, #1d2c28 55%, #274035 100%);
   border-bottom: 3px solid #c88b32;
+  box-shadow: 0 8px 20px rgba(18, 40, 32, 0.16);
 }
 
 .searchRow {
@@ -29,18 +31,35 @@
 
 .searchBar {
   --background: #fff;
-  --border-radius: 8px;
+  --border-radius: 999px;
+  --padding-left: 12px;
   min-width: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.searchBar :global(.adm-search-bar-input-box) {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.searchBar :global(.adm-search-bar-input-box-icon) {
+  color: var(--customer-primary);
+}
+
+.searchBar:global(.adm-search-bar-active) :global(.adm-search-bar-input-box) {
+  border-color: var(--customer-primary);
+  box-shadow: 0 0 0 2px rgba(200, 139, 50, 0.25);
 }
 
 .submitButton {
   height: 36px;
   padding: 0 7px;
   color: #2a2114;
-  background: #e2b75e;
+  background: linear-gradient(180deg, #efc779, #dba44e);
   border: 1px solid #f0cf8c;
   border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(200, 139, 50, 0.28);
   font-size: 12px;
   font-weight: 700;
 }
@@ -74,6 +93,17 @@
   font-size: 15px;
 }
 
+.groupTitle strong::before {
+  display: inline-block;
+  width: 3px;
+  height: 13px;
+  margin-right: 7px;
+  content: '';
+  background: var(--customer-primary);
+  border-radius: 2px;
+  vertical-align: -2px;
+}
+
 .groupTitle button {
   padding: 3px 0;
   color: var(--customer-muted);
@@ -92,20 +122,24 @@
 .keywordList button {
   max-width: 100%;
   overflow: hidden;
-  padding: 7px 11px;
+  padding: 7px 13px;
   color: #40514b;
-  background: #fff;
+  background: linear-gradient(180deg, #ffffff, #f4f8f5);
   border: 1px solid #dfe6e2;
-  border-radius: 8px;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(29, 50, 43, 0.08);
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .keywordList button:active {
   color: #8a6425;
-  background: #fff4df;
+  background: linear-gradient(180deg, #fff4df, #ffe9c0);
   border-color: #e7c27e;
+  box-shadow: 0 2px 6px rgba(200, 139, 50, 0.22);
+  transform: translateY(1px);
 }
 
 .sectionTitle {
@@ -220,15 +254,26 @@
   border-bottom: 0;
 }
 
+.topRow:active {
+  background: #f9fbf9;
+}
+
 .rank {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
   color: #98a49f;
-  font-size: 16px;
+  border-radius: 6px;
+  font-size: 13px;
   font-weight: 800;
-  text-align: center;
 }
 
 .rankHighlight {
-  color: #c88b32;
+  color: #fff;
+  background: linear-gradient(135deg, #c88b32, #e2b35b);
+  box-shadow: 0 3px 8px rgba(200, 139, 50, 0.32);
 }
 
 .topPoster {
